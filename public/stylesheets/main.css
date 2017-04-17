@@ -118,13 +118,8 @@ li a:hover {
   html,body, .mainContainer{
     background: black;
   }
-  #resultsForm{
+  #abi{
     max-width: 90%;
     min-width:90%;
-  }
-  #donation-form{
-    max-width: 90%;
-    min-width:90%;
-    margin-left: 0px;
   }
 }

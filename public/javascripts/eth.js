@@ -1,3 +1,8 @@
+//web3.js requirements
+let Web3 = require('web3');
+let web3 = new Web3();
+let provider = "https://rawtestrpc.metamask.io/" || "http://localhost:8545/";
+
 module.exports = {
 
      extractAbiFunctions : (abi) =>
@@ -17,6 +22,22 @@ module.exports = {
         console.log(arrayOfFunctionObjects);
 
         return arrayOfFunctionObjects;
+    },
+
+    getContract : (abi, address) =>
+    {
+        return web3.eth.contract(abi).at(address);
+    },
+
+    createFunctionsFromAbi : (abi) =>
+    {
+         let functionsInAbi = [];
+         for(functionInAbi of abi)
+         {
+            let newFunction = new Function(functionInAbi);
+            functionInAbi.push(newFunction);
+         }
+         return functionsInAbi;
     }
 
 };

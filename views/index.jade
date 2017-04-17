@@ -7,7 +7,7 @@ html(lang='en')
       ––––––––––––––––––––––––––––––––––––––––––––––––––
     meta(charset='utf-8')
 
-    title = 'EtherExe'
+    title EtherExe
 
     meta(name='description', content='')
 
@@ -32,12 +32,10 @@ html(lang='en')
     //
       Favicon
       ––––––––––––––––––––––––––––––––––––––––––––––––––
-    link(rel='icon', type='image/png', href='https://bitcoin.org/img/icons/opengraph.png')
+    link(rel='icon', type='image/png', href='http://cryptoyeti.com/wp-content/uploads/2016/03/icon2x-300x300.png')
   body
-    //script(src='js/bundle.js')
-    //
-      Primary Page Layout
-      ––––––––––––––––––––––––––––––––––––––––––––––––––
+      //Primary Page Layout
+      //––––––––––––––––––––––––––––––––––––––––––––––––––
     .container
       .header
         h1
@@ -48,13 +46,15 @@ html(lang='en')
           | Run your live ethereum smart contracts here!
 
       #abiDiv
-        #inputForm
+        #abiForm
           p
 
-          input#ABI(type='text', name='ABI')
+          textarea#ABI(name='ABI' ) #{abiVal}
+          textarea#contractAddress(name='contractAddress' ) #{addressVal}
 
         #button
             button submit ABI
+
 
       .twelve.columns
 
