@@ -1,5 +1,66 @@
-extends layout
+//extends layout
+doctype html
+html(lang='en')
+  head
+    //
+      Basic Page Needs
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+    meta(charset='utf-8')
 
-block content
-  h1= title
-  p Welcome to #{title}
+    title = 'EtherExe'
+
+    meta(name='description', content='')
+
+    meta(name='author', content='')
+    //
+      Mobile Specific Metas
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    //
+      FONT
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+    // <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    //
+      CSS
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+    link(rel='stylesheet', href='/stylesheets/normalize.css')
+
+    link(rel='stylesheet', href='/stylesheets/skeleton.css')
+
+    link(rel='stylesheet', href='/stylesheets/main.css')
+    // JS files
+    //
+      Favicon
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+    link(rel='icon', type='image/png', href='https://bitcoin.org/img/icons/opengraph.png')
+  body
+    //script(src='js/bundle.js')
+    //
+      Primary Page Layout
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+    .container
+      .header
+        h1
+          | EtherExe
+
+      .twelve.columns
+        h6
+          | Run your live ethereum smart contracts here!
+
+      #abiDiv
+        #inputForm
+          p
+
+          input#ABI(type='text', name='ABI')
+
+        #button
+            button submit ABI
+
+      .twelve.columns
+
+      .twelve.columns
+html
+
+      //End Document
+      //––––––––––––––––––––––––––––––––––––––––––––––––––
+
