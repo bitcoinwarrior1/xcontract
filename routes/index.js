@@ -11,6 +11,7 @@ let provider = "https://rawtestrpc.metamask.io/" || "http://localhost:8545/";
 //TODO handle button clicks
 //TODO handle function execution
 //TODO add register and search
+//TODO patch up frontend index.jade
 
 //set the provider to metamask testnet, if user doesn't have metamask go to default localhost for ethereum
 web3.setProvider(new web3.providers.HttpProvider(provider));
@@ -27,23 +28,23 @@ router.get('/api/:abi/:address', (req,res,next) => {
     //parameters
     let abi = req.params.abi;
     let contractAddress = req.params.address;
-
     let abiJson = JSON.parse(abi);
     let abiFunctions = web3Handler.extractAbiFunctions(abiJson);
 
-    for(abiFunction of abiFunctions)
+    for(abiFunc of abiFunctions)
     {
-        //create a jade element for each function in the abi
-        //var functionElement = res.createElement("#" + abiFunction.name);
-        let params = abiFunction.inputs;
+        //creates a jade element for each function in the abi
+        let params = abiFunc.inputs;
         //sets the param requirements hint in a new input text element
-        //var requiredParamsTextBox = res.createElement("#requiredParams");
-
-        console.log(abiFunction.name);
+        console.log(abiFunc.name);
     }
 
+    //TODO render multiple functions
     res.render('index', { abiVal: JSON.stringify(abiJson),
-        addressVal: contractAddress });
+        addressVal: contractAddress, functionButton: abiFunctions.name,
+        paramVal: abiFunctions.input
+    });
+
 });
 
 module.exports = router;
