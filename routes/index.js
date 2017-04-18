@@ -40,18 +40,25 @@ router.get('/api/:abi/:address', (req,res,next) => {
         console.log("here is the function name: " + functionName + " " +  i);
         console.log("here is the input name: " + functionParams + " " +  i);
         //create jade elements for each function with name and param
-        res.append("button", "<button>" + functionName + "</button>");
-        res.append("input", "<input>" + functionParams + "/>");
+        // res.append("button", "<button>" + functionName + "</button>");
+        // res.append("input", "<input>" + functionParams + "/>");
 
         i++;
     }
 
-    res.render('index', { abiVal: JSON.stringify(abiJson),
+    res.render('index', {
+        abiVal: JSON.stringify(abiJson),
         addressVal: contractAddress, functionVal: abiFunctions[0].name,
         paramVals: JSON.stringify(abiFunctions[0].inputs[0]),
+        functionName : abiFunctions[0].name,
         statusLabel:"Welcome!"
     });
 
 });
+
+router.get("/function/:functionInfo/:abi/:address", (req,res,next) => {
+    //handle function calls here by handling button clicks
+});
+
 
 module.exports = router;
