@@ -14,5 +14,8 @@
     "morgan": "~1.8.1",
     "serve-favicon": "~2.4.2",
     "web3": "^0.18.4"
+  },
+  "devDependencies": {
+    "tape": "^4.6.3"
   }
 }

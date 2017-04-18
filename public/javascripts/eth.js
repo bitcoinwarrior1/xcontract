@@ -11,7 +11,7 @@ module.exports = {
 
         for(i=0; i < abi.length; i++)
         {
-            console.log("here is each element: " + JSON.stringify(abi[i]));
+            console.log("Eth: here is each element: " + JSON.stringify(abi[i]));
 
             if(abi[i].type == "function")
             {
@@ -19,24 +19,28 @@ module.exports = {
             }
         }
 
-        console.log(arrayOfFunctionObjects);
+        console.log("Eth: " + JSON.stringify(arrayOfFunctionObjects));
 
         return arrayOfFunctionObjects;
     },
 
-    getContract : (abi, address) =>
+    getContract : (abi, address, provider) =>
     {
+        web3.setProvider(new web3.providers.HttpProvider(provider));
         return web3.eth.contract(abi).at(address);
     },
 
-    createFunctionsFromAbi : (abi) =>
+    createFunctionsFromAbi : (abi, address) =>
     {
          let functionsInAbi = [];
+
          for(functionInAbi of abi)
          {
-            let newFunction = new Function(functionInAbi);
+            let newFunction = new Function("web3.sendTransaction." + [functionInAbi.name.toString()] +
+                "(" + functionsInAbi.inputs + ").to(" + address + ")");
             functionInAbi.push(newFunction);
          }
+
          return functionsInAbi;
     }
 
