@@ -69,14 +69,13 @@ html(lang='en')
           if(typeof (functionNames) != 'undefined' && typeof (functionParams) != 'undefined')
             each functionName in functionNames
               #div
-                button(name=functionName, id=functionName) #{functionName}
+                -var index = 0;
+                button(name=functionName, id=functionName + index++) #{functionName}
             each param in functionParams
               #div
-                textarea(name=param, placeholder = param, id = param)
-
-
-
-
+                -var index = 0;
+                textarea(name=param, placeholder = param, id = param + index++)
+            
       .twelve.columns
 
       .twelve.columns
