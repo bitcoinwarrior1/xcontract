@@ -35,7 +35,8 @@ router.get('/api/:abi/:address', (req,res,next) => {
     for(abiFunc of abiFunctions)
     {
         let functionName = abiFunc.name;
-        let functionParams = JSON.stringify(abiFunc.inputs[0]);
+        let functionParams = JSON.stringify(abiFunc.inputs[0]).toString();
+        console.log("Index: " + functionName);
         //create jade elements for each function with name and param
         functionNameFields.push(functionName);
         functionParamFields.push(functionParams);
@@ -44,7 +45,7 @@ router.get('/api/:abi/:address', (req,res,next) => {
     res.render('index', {
         abiVal: JSON.stringify(abiJson),
         addressVal: contractAddress,
-        functionNames: JSON.stringify(functionNameFields),
+        functionNames: functionNameFields,
         functionParams : functionParamFields,
         statusLabel: "Welcome!"
     });

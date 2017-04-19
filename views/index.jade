@@ -59,12 +59,15 @@ html(lang='en')
 
         #functionDiv
             p functions
-            functionNames = []
-            functionParams = []
-            each functionName in functionNames
-              button#functionButton(name=functionName) #{functionNames[functionName]}
-            each param in functionParams
-              input#paramBox(name=param, placeholder = functionParams[param])
+            functionNames
+            functionParams
+
+          each functionName in functionNames
+            #div
+              button#functionButton(name=functionName) #{functionName}
+          each param in functionParams
+            #div
+              textarea#paramBox(name=param, placeholder = param)
 
       .twelve.columns
 
