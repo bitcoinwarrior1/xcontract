@@ -14,6 +14,8 @@ let provider = "https://rawtestrpc.metamask.io/" || "http://localhost:8545/";
 web3.setProvider(new web3.providers.HttpProvider(provider));
 
 /* GET home page. */
+//MVP dictates that abi and contract address must be provided via HTTP,
+// so a sample will be provided if home page is request
 router.get('/', (req, res, next) => {
     res.render('index', { title: 'ContractExecutor' });
 });

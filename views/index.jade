@@ -27,9 +27,7 @@ html(lang='en')
       CSS
       ––––––––––––––––––––––––––––––––––––––––––––––––––
     link(rel='stylesheet', href='/stylesheets/normalize.css')
-
     link(rel='stylesheet', href='/stylesheets/skeleton.css')
-
     link(rel='stylesheet', href='/stylesheets/main.css')
     // JS files
     //
@@ -68,13 +66,15 @@ html(lang='en')
             p functions
             functionNames
             functionParams
+          if(typeof (functionNames) != 'undefined' && typeof (functionParams) != 'undefined')
+            each functionName in functionNames
+              #div
+                button(name=functionName, id=functionName) #{functionName}
+            each param in functionParams
+              #div
+                textarea(name=param, placeholder = param, id = param)
 
-          each functionName in functionNames
-            #div
-              button(name=functionName, id=functionName) #{functionName}
-          each param in functionParams
-            #div
-              textarea(name=param, placeholder = param, id = param)
+
 
 
       .twelve.columns
