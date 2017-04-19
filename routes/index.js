@@ -1,7 +1,7 @@
 //Globals:
 let express = require('express');
 let router = express.Router();
-let web3Handler = require("../public/javascripts/eth.js");
+let web3Handler = require("../public/javascripts/Web3Handler.js");
 //web3.js requirements
 let Web3 = require('web3');
 let web3 = new Web3();
@@ -9,8 +9,6 @@ let provider = "https://rawtestrpc.metamask.io/" || "http://localhost:8545/";
 
 //TODO handle button clicks for submitting ABI and executing functions
 //TODO handle function execution
-//TODO add register and search
-//TODO patch up frontend index.jade
 
 //set the provider to metamask testnet, if user doesn't have metamask go to default localhost for ethereum
 web3.setProvider(new web3.providers.HttpProvider(provider));
@@ -29,14 +27,14 @@ router.get('/api/:abi/:address', (req,res,next) => {
     let abiJson = JSON.parse(abi);
     let abiFunctions = web3Handler.extractAbiFunctions(abiJson);
     //function and param names
-    let functionObj = web3Handler.getContractFunctionNamesAndParams(abiFunctions);
+    let functionNameAndParamObj = web3Handler.getContractFunctionNamesAndParams(abiFunctions);
     //sets up function calls to contract from UI
 
     res.render('index', {
         abiVal: JSON.stringify(abiJson),
         addressVal: contractAddress,
-        functionNames: functionObj.names,
-        functionParams : functionObj.params,
+        functionNames: functionNameAndParamObj.names,
+        functionParams : functionNameAndParamObj.params,
         statusLabel: "Welcome!"
     });
 

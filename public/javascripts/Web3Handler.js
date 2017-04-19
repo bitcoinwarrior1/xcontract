@@ -57,14 +57,28 @@ module.exports = {
     {
          let functionsInAbi = [];
 
-         for(functionInContract of abi)
+         for(i = 0; i < functionNames.length; i ++)
          {
-            let newFunction = new Function("web3.sendTransaction." + [functionInAbi.name.toString()] +
-                "(" + functionsInAbi.inputs + ").to(" + address + ")");
-            functionInAbi.push(newFunction);
+             let contractFunction = new Function(params)
+             {
+                 web3.eth[functionNames[i].toString()].sendTransaction(params,
+                     {to: address, from:eth.coinbase });
+             }
+
+             functionsInAbi.push(contractFunction);
          }
 
          return functionsInAbi;
+    },
+
+    executeFunction : (functionItself, params) =>
+    {
+         functionItself(params);
+    },
+
+    sendEtherToContract : (value, contractAddress) =>
+    {
+         web3.eth.sendTransaction({to: contractAddress, from: eth.coinbase, value: value });
     }
 
 };
