@@ -31,27 +31,45 @@ router.get('/api/:abi/:address', (req,res,next) => {
     let abiFunctions = web3Handler.extractAbiFunctions(abiJson);
 
     let i = 1;
+    let functionNameFields = [];
+    let functionParamFields = [];
 
     for(abiFunc of abiFunctions)
     {
         let functionName = abiFunc.name;
         let functionParams = JSON.stringify(abiFunc.inputs[0]);
-
-        console.log("here is the function name: " + functionName + " " +  i);
-        console.log("here is the input name: " + functionParams + " " +  i);
         //create jade elements for each function with name and param
-        // res.append("button", "<button>" + functionName + "</button>");
-        // res.append("input", "<input>" + functionParams + "/>");
-
+        // functionNameFields += "button#functionButton" + i + "(value=" + functionName + ")";
+        // functionParamFields += "input#paramBox(placeholder=" + functionParams + ")";
+        functionNameFields.push(functionName);
+        functionParamFields.push(functionParams);
         i++;
     }
-
+    //TODO make dynamic after testing
     res.render('index', {
         abiVal: JSON.stringify(abiJson),
-        addressVal: contractAddress, functionVal: abiFunctions[0].name,
-        paramVals: JSON.stringify(abiFunctions[0].inputs[0]),
-        functionName : abiFunctions[0].name,
-        statusLabel:"Welcome!"
+        addressVal: contractAddress,
+        functionName: JSON.stringify(functionNameFields[0]),
+        paramVals : functionParamFields[0],
+        functionName2: JSON.stringify(functionNameFields[1]),
+        paramVals2 : functionParamFields[1],
+        functionName3: JSON.stringify(functionNameFields[2]),
+        paramVals3 : functionParamFields[2],
+        functionName4: JSON.stringify(functionNameFields[3]),
+        paramVals4 : functionParamFields[3],
+        functionName5: JSON.stringify(functionNameFields[4]),
+        paramVals5 : functionParamFields[4],
+        functionName6: JSON.stringify(functionNameFields[5]),
+        paramVals6 : functionParamFields[5],
+        functionName7: JSON.stringify(functionNameFields[6]),
+        paramVals7 : functionParamFields[6],
+        functionName8: JSON.stringify(functionNameFields[7]),
+        paramVals8 : functionParamFields[7],
+        functionName9: JSON.stringify(functionNameFields[8]),
+        paramVals9 : functionParamFields[8],
+        functionName10: JSON.stringify(functionNameFields[9]),
+        paramVals10 : functionParamFields[9],
+        statusLabel: "Welcome!"
     });
 
 });
