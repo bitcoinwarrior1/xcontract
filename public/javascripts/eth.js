@@ -30,11 +30,34 @@ module.exports = {
         return web3.eth.contract(abi).at(address);
     },
 
-    createFunctionsFromAbi : (abi, address) =>
+    getContractFunctionNamesAndParams : (abiFunctions) =>
+    {
+        let nameAndParamObj = {};
+
+        let functionNameFields = [];
+        let functionParamFields = [];
+
+        for(abiFunc of abiFunctions)
+        {
+            let functionName = abiFunc.name;
+            let functionParams = JSON.stringify(abiFunc.inputs[0]);
+            console.log("Index: " + functionName);
+            //create jade elements for each function with name and param
+            functionNameFields.push(functionName);
+            functionParamFields.push(functionParams);
+        }
+
+        nameAndParamObj.names = functionNameFields;
+        nameAndParamObj.params = functionParamFields;
+
+        return nameAndParamObj;
+    },
+
+    createFunctionsFromAbi : (functionNames, functionParams, address) =>
     {
          let functionsInAbi = [];
 
-         for(functionInAbi of abi)
+         for(functionInContract of abi)
          {
             let newFunction = new Function("web3.sendTransaction." + [functionInAbi.name.toString()] +
                 "(" + functionsInAbi.inputs + ").to(" + address + ")");

@@ -28,25 +28,15 @@ router.get('/api/:abi/:address', (req,res,next) => {
     let contractAddress = req.params.address;
     let abiJson = JSON.parse(abi);
     let abiFunctions = web3Handler.extractAbiFunctions(abiJson);
-
-    let functionNameFields = [];
-    let functionParamFields = [];
-
-    for(abiFunc of abiFunctions)
-    {
-        let functionName = abiFunc.name;
-        let functionParams = JSON.stringify(abiFunc.inputs[0]).toString();
-        console.log("Index: " + functionName);
-        //create jade elements for each function with name and param
-        functionNameFields.push(functionName);
-        functionParamFields.push(functionParams);
-    }
+    //function and param names
+    let functionObj = web3Handler.getContractFunctionNamesAndParams(abiFunctions);
+    //sets up function calls to contract from UI
 
     res.render('index', {
         abiVal: JSON.stringify(abiJson),
         addressVal: contractAddress,
-        functionNames: functionNameFields,
-        functionParams : functionParamFields,
+        functionNames: functionObj.names,
+        functionParams : functionObj.params,
         statusLabel: "Welcome!"
     });
 
@@ -54,6 +44,7 @@ router.get('/api/:abi/:address', (req,res,next) => {
 
 router.get("/function/:functionInfo/:abi/:address", (req,res,next) => {
     //handle function calls here by handling button clicks
+    res.send("nothing here yet!");
 });
 
 
