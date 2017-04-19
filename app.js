@@ -43,4 +43,11 @@ app.use( (err, req, res, next) =>
   res.render('error');
 });
 
+//TODO handle function calls here
+app.get("/function/:functionInfo/:abi/:address", (req,res,next) =>
+{
+    //handle function calls here by handling button clicks
+    res.send("nothing here yet!");
+});
+
 module.exports = app;

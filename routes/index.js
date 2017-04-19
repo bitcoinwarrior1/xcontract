@@ -35,7 +35,7 @@ router.get('/api/:abi/:address', (req,res,next) => {
         addressVal: contractAddress,
         functionNames: functionNameAndParamObj.names,
         functionParams : functionNameAndParamObj.params,
-        statusLabel: "Welcome!"
+        statusLabel: "Network: " + provider
     });
 
 });

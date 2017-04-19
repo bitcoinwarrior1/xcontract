@@ -35,6 +35,10 @@ html(lang='en')
     //
       Favicon
       ––––––––––––––––––––––––––––––––––––––––––––––––––
+
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+    script(src="../public/javascripts/buttonClickHandler.js")
+
     link(rel='icon', type='image/png', href='http://cryptoyeti.com/wp-content/uploads/2016/03/icon2x-300x300.png')
   body
       //Primary Page Layout
@@ -67,10 +71,11 @@ html(lang='en')
 
           each functionName in functionNames
             #div
-              button#functionButton(name=functionName) #{functionName}
+              button(name=functionName, id=functionName) #{functionName}
           each param in functionParams
             #div
-              textarea#paramBox(name=param, placeholder = param)
+              textarea(name=param, placeholder = param, id = param)
+
 
       .twelve.columns
 
