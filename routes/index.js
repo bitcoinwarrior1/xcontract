@@ -17,7 +17,7 @@ web3.setProvider(new web3.providers.HttpProvider(provider));
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-    res.render('index', { title: 'EtherExe' });
+    res.render('index', { title: 'ContractExecutor' });
 });
 
 //handle user giving abi in url param
