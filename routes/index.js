@@ -40,8 +40,31 @@ router.get('/api/:abi/:address', (req,res,next) => {
 
 });
 
-router.get("/function/:functionInfo/:abi/:address", (req,res,next) => {
+router.get("/function/:functionInfo/:abi/:address/:filledOutParams", (req,res,next) =>
+{
     //handle function calls here by handling button clicks
+    let functionName = req.param.functionInfo;
+    let abi = req.param.abi;
+    let contractAddress = req.param.address;
+    let filledOutParams = req.param.filledOutParams;
+
+    // //TODO do this more elegantly
+    // let functionNamesAndParamsObj = web3Handler.getContractFunctionNamesAndParams(abi);
+    // let correctParams = "";
+    //
+    // for(i = 0; i < functionNamesAndParamsObj.names.length; i++)
+    // {
+    //     if(functionName == functionNamesAndParamsObj.names[i])
+    //     {
+    //         correctParams = functionNamesAndParamsObj.params[i];
+    //     }
+    // }
+    //
+    // let functionToCall = web3Handler.createContractFunction(functionName,abi,
+    //     contractAddress,correctParams);
+    //
+    // web3Handler.executeFunction(functionToCall, filledOutParams);
+
     res.send("nothing here yet!");
 });
 

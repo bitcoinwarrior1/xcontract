@@ -5,6 +5,7 @@ let request = require("superagent");
 
 $(function()
 {
+    //TODO get params
     $(':button').click(function(e)
     {
         let abi = $("#ABI").val();
@@ -14,15 +15,17 @@ $(function()
             alert("missing abi and/or contract");
             return;
         }
-        let idClicked = e.target.id;
-        console.log("Button " + idClicked + " was clicked!");
+        let functionCalled = e.target.id;
+        console.log("Button " + functionCalled + " was clicked!");
 
-        callServerToExecuteFunction(idClicked, abi, contractAddress);
+        callServerToExecuteFunction(functionCalled, abi, contractAddress);
     });
 
-    function callServerToExecuteFunction(functionCalled, abi, contractAddress)
+    //TODO use object for param
+    function callServerToExecuteFunction(functionCalled, abi, contractAddress, filledOutParams)
     {
-        request.get("/function/" + functionCalled + "/" + abi + "/" + contractAddress, (err, data) =>
+        request.get("/function/" + functionCalled + "/" + abi + "/" + contractAddress +
+            "/" + filledOutParams, (err, data) =>
         {
             if(err)
             {
@@ -30,6 +33,7 @@ $(function()
             }
             else
             {
+                console.log(data.body);
                 alert("function call successful");
             }
         });

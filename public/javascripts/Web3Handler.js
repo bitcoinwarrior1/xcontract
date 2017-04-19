@@ -67,6 +67,16 @@ module.exports = {
          return functionsInAbi;
     },
 
+    createContractFunction : (functionName, abi, contractAddress, params) =>
+    {
+         let contractFunction = new Function(params)
+         {
+             web3.eth.functionName.sendTransaction(params, {to:contractAddress, from:eth.coinbase});
+         }
+
+         return contractFunction;
+    },
+
     executeFunction : (functionItself, params) =>
     {
          functionItself(params);
