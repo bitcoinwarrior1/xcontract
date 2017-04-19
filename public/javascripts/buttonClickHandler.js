@@ -3,23 +3,36 @@
  */
 let request = require("superagent");
 
-$("button").click(function(e)
+$(function()
 {
-    let idClicked = e.target.id;
-    console.log("Button " + idClicked + " was clicked!");
-});
-
-function callServerToExecuteFunction(functionCalled, abi, contractAddress)
-{
-    request.get("/function/" + functionCalled + "/" + abi + "/" + contractAddress, (err, data) =>
+    $(':button').click(function(e)
     {
-        if(err)
+        let abi = $("#ABI").val();
+        let contractAddress = $("#contractAddress").val();
+        if(abi == "" || contractAddress == "")
         {
-            alert("error, function call failed, reason: " + err);
+            alert("missing abi and/or contract");
+            return;
         }
-        else
-        {
-            alert("function call successful");
-        }
+        let idClicked = e.target.id;
+        console.log("Button " + idClicked + " was clicked!");
+
+        callServerToExecuteFunction(idClicked, abi, contractAddress);
     });
-}
+
+    function callServerToExecuteFunction(functionCalled, abi, contractAddress)
+    {
+        request.get("/function/" + functionCalled + "/" + abi + "/" + contractAddress, (err, data) =>
+        {
+            if(err)
+            {
+                alert("error, function call failed, reason: " + err);
+            }
+            else
+            {
+                alert("function call successful");
+            }
+        });
+    }
+
+});
