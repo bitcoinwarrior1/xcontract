@@ -1,21 +1,18 @@
 //Globals:
 let express = require('express');
 let router = express.Router();
-let web3Handler = require("../public/javascripts/eth.js");
+let web3Handler = require("../public/javascripts/Web3Handler.js");
 //web3.js requirements
 let Web3 = require('web3');
 let web3 = new Web3();
 let provider = "https://rawtestrpc.metamask.io/" || "http://localhost:8545/";
 
-//TODO handle button clicks for submitting ABI and executing functions
-//TODO handle function execution
-//TODO add register and search
-//TODO patch up frontend index.jade
-
 //set the provider to metamask testnet, if user doesn't have metamask go to default localhost for ethereum
 web3.setProvider(new web3.providers.HttpProvider(provider));
 
 /* GET home page. */
+//MVP dictates that abi and contract address must be provided via HTTP,
+// so a sample will be provided if home page is request
 router.get('/', (req, res, next) => {
     res.render('index', { title: 'ContractExecutor' });
 });
@@ -28,33 +25,37 @@ router.get('/api/:abi/:address', (req,res,next) => {
     let contractAddress = req.params.address;
     let abiJson = JSON.parse(abi);
     let abiFunctions = web3Handler.extractAbiFunctions(abiJson);
-
-    let functionNameFields = [];
-    let functionParamFields = [];
-
-    for(abiFunc of abiFunctions)
-    {
-        let functionName = abiFunc.name;
-        let functionParams = JSON.stringify(abiFunc.inputs[0]).toString();
-        console.log("Index: " + functionName);
-        //create jade elements for each function with name and param
-        functionNameFields.push(functionName);
-        functionParamFields.push(functionParams);
-    }
+    //function and param names
+    let functionNameAndParamObj = web3Handler.getContractFunctionNamesAndParams(abiFunctions);
+    //sets up function calls to contract from UI
 
     res.render('index', {
         abiVal: JSON.stringify(abiJson),
         addressVal: contractAddress,
-        functionNames: functionNameFields,
-        functionParams : functionParamFields,
-        statusLabel: "Welcome!"
+        functionNames: functionNameAndParamObj.names,
+        functionParams : functionNameAndParamObj.params,
+        statusLabel: "Network: " + provider
     });
 
 });
 
-router.get("/function/:functionInfo/:abi/:address", (req,res,next) => {
+//TODO move to appropriate place
+router.get("/function/:functionInfo/:abi/:address/:filledOutParams", (req,res,next) =>
+{
+    console.log("Server to handle function call");
     //handle function calls here by handling button clicks
-});
+    let functionName = req.param.functionInfo;
+    let abi = req.param.abi;
+    let contractAddress = req.param.address;
+    let filledOutParams = req.param.filledOutParams;
+    console.log(filledOutParams);
+    let contract = web3Handler.getContract(abi, contractAddress);
 
+    console.log("here is the web3js contract: " + contract);
+
+    web3Handler.executeContractFunction(functionName, contractAddress, filledOutParams, contract);
+
+    res.send("function executed");
+});
 
 module.exports = router;

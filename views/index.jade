@@ -1,4 +1,7 @@
 //extends layout
+//TODO add register and search
+//TODO patch up frontend index.jade
+
 doctype html
 html(lang='en')
   head
@@ -24,14 +27,16 @@ html(lang='en')
       CSS
       ––––––––––––––––––––––––––––––––––––––––––––––––––
     link(rel='stylesheet', href='/stylesheets/normalize.css')
-
     link(rel='stylesheet', href='/stylesheets/skeleton.css')
-
     link(rel='stylesheet', href='/stylesheets/main.css')
     // JS files
     //
       Favicon
       ––––––––––––––––––––––––––––––––––––––––––––––––––
+
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+    script(src="/javascripts/bundle.js")
+
     link(rel='icon', type='image/png', href='http://cryptoyeti.com/wp-content/uploads/2016/03/icon2x-300x300.png')
   body
       //Primary Page Layout
@@ -39,7 +44,7 @@ html(lang='en')
     .container
       .header
         h1
-          | ContractExecutor
+          | Contract Executor
 
       .twelve.columns
         h6
@@ -54,20 +59,26 @@ html(lang='en')
           textarea#ABI(name='ABI' ) #{abiVal}
           textarea#contractAddress(name='contractAddress' ) #{addressVal}
 
-        #button
-            button submit ABI
+        //#button
+        //    button submit ABI
 
-        #functionDiv
+        #paramAndFunctionDiv
             p functions
             functionNames
             functionParams
-
-          each functionName in functionNames
-            #div
-              button#functionButton(name=functionName) #{functionName}
-          each param in functionParams
-            #div
-              textarea#paramBox(name=param, placeholder = param)
+          #functionsDiv
+          if(typeof (functionNames) != 'undefined' && typeof (functionParams) != 'undefined')
+            -var index = 0;
+            each functionName in functionNames
+              -index++
+              div(id="function" + index)
+                button(name=functionName, id=functionName + index) #{functionName}
+          #paramDiv
+            -var index = 0;
+            each param in functionParams
+              -index++
+              div(id = index)
+                textarea(value=param, placeholder = param, id = param + index)
 
       .twelve.columns
 
