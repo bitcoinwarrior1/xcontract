@@ -7,10 +7,6 @@ let Web3 = require('web3');
 let web3 = new Web3();
 let provider = "https://rawtestrpc.metamask.io/" || "http://localhost:8545/";
 
-//TODO handle button clicks for submitting ABI and executing functions
-//TODO handle function execution
-//TODO write a proper test suite for all major functions
-
 //set the provider to metamask testnet, if user doesn't have metamask go to default localhost for ethereum
 web3.setProvider(new web3.providers.HttpProvider(provider));
 
@@ -43,6 +39,7 @@ router.get('/api/:abi/:address', (req,res,next) => {
 
 });
 
+//TODO move to appropriate place
 router.get("/function/:functionInfo/:abi/:address/:filledOutParams", (req,res,next) =>
 {
     //handle function calls here by handling button clicks
@@ -50,25 +47,10 @@ router.get("/function/:functionInfo/:abi/:address/:filledOutParams", (req,res,ne
     let abi = req.param.abi;
     let contractAddress = req.param.address;
     let filledOutParams = req.param.filledOutParams;
+    let contract = web3Handler.getContract(abi, contractAddress);
+    web3Handler.executeContractFunction(functionName, contractAddress, filledOutParams, contract);
 
-    // //TODO do this more elegantly
-    // let functionNamesAndParamsObj = web3Handler.getContractFunctionNamesAndParams(abi);
-    // let correctParams = "";
-    //
-    // for(i = 0; i < functionNamesAndParamsObj.names.length; i++)
-    // {
-    //     if(functionName == functionNamesAndParamsObj.names[i])
-    //     {
-    //         correctParams = functionNamesAndParamsObj.params[i];
-    //     }
-    // }
-    //
-    // let functionToCall = web3Handler.createContractFunction(functionName,abi,
-    //     contractAddress,correctParams);
-    //
-    // web3Handler.executeFunction(functionToCall, filledOutParams);
-
-    res.send("nothing here yet!");
+    res.send("function executed");
 });
 
 module.exports = router;

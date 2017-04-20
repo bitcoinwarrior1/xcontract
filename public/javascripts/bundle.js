@@ -1956,6 +1956,9 @@ exports.cleanHeader = function(header, shouldStripCookie){
 /**
  * Created by sangalli on 19/4/17.
  */
+
+//TODO refactor
+
 let request = require("superagent");
 
 $(function()
@@ -1972,21 +1975,27 @@ $(function()
         }
         let functionCalled = e.target.id;
         console.log("Button " + functionCalled + " was clicked!");
-        //remove strings and get number
-        let params = getParamsFromFunctionName(functionCalled.replace( /^\D+/g, ''));
+        //remove strings and get index number
+        let paramNumber = functionCalled.replace( /^\D+/g, '');
+        let params = getParamsFromFunctionName(paramNumber);
 
         let serverObj = {};
         serverObj.functionCalled = functionCalled;
         serverObj.abi = abi;
         serverObj.contractAddress = contractAddress;
-        serverObj.filledOutParams = params;
+        serverObj.filledOutParams = document.getElementById(params).value; //gets the user input from textbox
+
+        console.log("filled out params from user input: " + serverObj.filledOutParams);
 
         callServerToExecuteFunction(serverObj);
+
     });
 
     function getParamsFromFunctionName(paramNumber)
     {
         console.log("here is the param number " + paramNumber);
+
+        let element = null;
 
         $(':input').not("#ABI, #contractAddress, button").each(function()
             {
@@ -2000,16 +2009,17 @@ $(function()
                     let index = 0;
                     if(id.includes(paramNumber) && !id.includes("function")) //separates from function names
                     {
-                        let element = $(this).attr("id");
+                        element = $(this).attr("id");
                         console.log("these are the params for the function: " + element);
-                        return element;
+                        break;
                     }
                 }
 
-                return null; //will return null if it is a parameter-less function
             }
         );
 
+        //will return null if it is a parameter-less function
+        return element;
     }
 
     function callServerToExecuteFunction(serverObj)

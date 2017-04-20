@@ -21,7 +21,7 @@ module.exports = {
         return arrayOfFunctionObjects;
     },
 
-    getContract : (abi, address, provider) =>
+    getContract : (abi, address) =>
     {
         return web3.eth.contract(abi).at(address);
     },
@@ -67,19 +67,10 @@ module.exports = {
          return functionsInAbi;
     },
 
-    createContractFunction : (functionName, abi, contractAddress, params) =>
+    executeContractFunction : (functionName, contractAddress, params, contract) =>
     {
-         let contractFunction = new Function(params)
-         {
-             web3.eth.functionName.sendTransaction(params, {to:contractAddress, from:eth.coinbase});
-         }
-
-         return contractFunction;
-    },
-
-    executeFunction : (functionItself, params) =>
-    {
-         functionItself(params);
+         //must use bracket notation as function name is passed as a string
+         web3.eth[functionName].sendTransaction(params, {to:contractAddress, from:eth.coinbase});
     },
 
     sendEtherToContract : (value, contractAddress) =>
