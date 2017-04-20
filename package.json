@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "bundle": "browserify ./public/javascripts/buttonClickHandler > ./public/javascripts/bundle.js"
+    "bundle": "browserify ./public/javascripts/buttonClickHandler > ./public/javascripts/bundle.js",
+    "watch": "watchify ./public/javascripts/buttonClickHandler -o ./public/javascripts/bundle.js"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "browserify": "^14.3.0",
-    "tape": "^4.6.3"
+    "tape": "^4.6.3",
+    "watchify": "^3.9.0"
   }
 }

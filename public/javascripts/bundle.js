@@ -1960,24 +1960,64 @@ let request = require("superagent");
 
 $(function()
 {
+
     $(':button').click(function(e)
     {
         let abi = $("#ABI").val();
         let contractAddress = $("#contractAddress").val();
+
         if(abi == "" || contractAddress == "")
         {
             alert("missing abi and/or contract");
             return;
         }
-        let idClicked = e.target.id;
-        console.log("Button " + idClicked + " was clicked!");
+        let functionCalled = e.target.id;
+        console.log("Button " + functionCalled + " was clicked!");
+        //remove strings and get number
+        let params = getParamsFromFunctionName(functionCalled.replace( /^\D+/g, ''));
 
-        callServerToExecuteFunction(idClicked, abi, contractAddress);
+        let serverObj = {};
+        serverObj.functionCalled = functionCalled;
+        serverObj.abi = abi;
+        serverObj.contractAddress = contractAddress;
+        serverObj.filledOutParams = params;
+
+        callServerToExecuteFunction(serverObj);
     });
 
-    function callServerToExecuteFunction(functionCalled, abi, contractAddress)
+    function getParamsFromFunctionName(paramNumber)
     {
-        request.get("/function/" + functionCalled + "/" + abi + "/" + contractAddress, (err, data) =>
+        console.log("here is the param number " + paramNumber);
+
+        $(':input').not("#ABI, #contractAddress, button").each(function()
+            {
+                let inputId = $(this).attr("id");
+
+                //removes false positives with var types such as uint256
+                let filteredInput = inputId.substring(inputId.indexOf("}"));
+
+                for(id of filteredInput)
+                {
+                    let index = 0;
+                    if(id.includes(paramNumber) && !id.includes("function")) //separates from function names
+                    {
+                        console.log("Here is the id: " + id);
+                        let element = $(this).attr("id");
+                        console.log("these are the params for the function: " + element);
+                        return element;
+                    }
+                }
+            }
+        );
+
+    }
+
+
+    function callServerToExecuteFunction(serverObj)
+    {
+        request.get("/function/" + serverObj.functionCalled + "/" + serverObj.abi + "/" +
+            serverObj.contractAddress +
+            "/" + serverObj.filledOutParams, (err, data) =>
         {
             if(err)
             {
@@ -1985,6 +2025,7 @@ $(function()
             }
             else
             {
+                console.log(data.body);
                 alert("function call successful");
             }
         });

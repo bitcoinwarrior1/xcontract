@@ -9,6 +9,7 @@ let provider = "https://rawtestrpc.metamask.io/" || "http://localhost:8545/";
 
 //TODO handle button clicks for submitting ABI and executing functions
 //TODO handle function execution
+//TODO write a proper test suite for all major functions
 
 //set the provider to metamask testnet, if user doesn't have metamask go to default localhost for ethereum
 web3.setProvider(new web3.providers.HttpProvider(provider));

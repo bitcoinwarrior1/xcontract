@@ -5,13 +5,11 @@ let request = require("superagent");
 
 $(function()
 {
-    //TODO get id number from name and match it to params id number
-    //TODO then use that to get param and send it to server
+
     $(':button').click(function(e)
     {
         let abi = $("#ABI").val();
         let contractAddress = $("#contractAddress").val();
-        let param = "";
 
         if(abi == "" || contractAddress == "")
         {
@@ -20,15 +18,51 @@ $(function()
         }
         let functionCalled = e.target.id;
         console.log("Button " + functionCalled + " was clicked!");
+        //remove strings and get number
+        let params = getParamsFromFunctionName(functionCalled.replace( /^\D+/g, ''));
 
-        callServerToExecuteFunction(functionCalled, abi, contractAddress);
+        let serverObj = {};
+        serverObj.functionCalled = functionCalled;
+        serverObj.abi = abi;
+        serverObj.contractAddress = contractAddress;
+        serverObj.filledOutParams = params;
+
+        callServerToExecuteFunction(serverObj);
     });
 
-    //TODO use object for param
-    function callServerToExecuteFunction(functionCalled, abi, contractAddress, filledOutParams)
+    function getParamsFromFunctionName(paramNumber)
     {
-        request.get("/function/" + functionCalled + "/" + abi + "/" + contractAddress +
-            "/" + filledOutParams, (err, data) =>
+        console.log("here is the param number " + paramNumber);
+
+        $(':input').not("#ABI, #contractAddress, button").each(function()
+            {
+                let inputId = $(this).attr("id");
+
+                //removes false positives with var types such as uint256
+                let filteredInput = inputId.substring(inputId.indexOf("}"));
+
+                for(id of filteredInput)
+                {
+                    let index = 0;
+                    if(id.includes(paramNumber) && !id.includes("function")) //separates from function names
+                    {
+                        console.log("Here is the id: " + id);
+                        let element = $(this).attr("id");
+                        console.log("these are the params for the function: " + element);
+                        return element;
+                    }
+                }
+            }
+        );
+
+    }
+
+
+    function callServerToExecuteFunction(serverObj)
+    {
+        request.get("/function/" + serverObj.functionCalled + "/" + serverObj.abi + "/" +
+            serverObj.contractAddress +
+            "/" + serverObj.filledOutParams, (err, data) =>
         {
             if(err)
             {
