@@ -2,8 +2,6 @@
  * Created by sangalli on 19/4/17.
  */
 
-//TODO refactor
-
 let request = require("superagent");
 
 $(function()
@@ -67,22 +65,22 @@ $(function()
         return element;
     }
 
-    function callServerToExecuteFunction(serverObj)
-    {
-        request.get("/function/" + serverObj.functionCalled + "/" + serverObj.abi + "/" +
-            serverObj.contractAddress +
-            "/" + serverObj.filledOutParams, (err, data) =>
-        {
-            if(err)
-            {
-                alert("error, function call failed, reason: " + err);
-            }
-            else
-            {
-                console.log(data.body);
-                alert("function call successful");
-            }
-        });
-    }
+    // function callServerToExecuteFunction(serverObj)
+    // {
+    //     request.get("/function/" + serverObj.functionCalled + "/" + serverObj.abi + "/" +
+    //         serverObj.contractAddress +
+    //         "/" + serverObj.filledOutParams, (err, data) =>
+    //     {
+    //         if(err)
+    //         {
+    //             alert("error, function call failed, reason: " + err);
+    //         }
+    //         else
+    //         {
+    //             console.log(data.body);
+    //             alert("function call successful");
+    //         }
+    //     });
+    // }
 
 });

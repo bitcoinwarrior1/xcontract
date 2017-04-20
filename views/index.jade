@@ -44,7 +44,7 @@ html(lang='en')
     .container
       .header
         h1
-          | ContractExecutor
+          | Contract Executor
 
       .twelve.columns
         h6
@@ -62,16 +62,18 @@ html(lang='en')
         //#button
         //    button submit ABI
 
-        #functionDiv
+        #paramAndFunctionDiv
             p functions
             functionNames
             functionParams
+          #functionsDiv
           if(typeof (functionNames) != 'undefined' && typeof (functionParams) != 'undefined')
             -var index = 0;
             each functionName in functionNames
               -index++
               div(id="function" + index)
                 button(name=functionName, id=functionName + index) #{functionName}
+          #paramDiv
             -var index = 0;
             each param in functionParams
               -index++

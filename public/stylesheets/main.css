@@ -35,10 +35,8 @@ html, body, #container {
 }
 
 
-body{
-  background-position: center relative;
-  background-color: #222930;
-  /*background: url("http://coinivore.com/wp-content/uploads/2015/05/bitcoin-and-future-space-cover.jpg") no-repeat center center fixed;*/
+body {
+    background: black center;
 }
 
 html{
@@ -100,6 +98,7 @@ li a {
   margin-bottom: 25px;
 }
 
+
 /*body input {*/
   /*width:600px;*/
 /*}*/
@@ -112,6 +111,15 @@ li a:hover {
   color: yellow;
 }
 
+#functionsDiv
+{
+
+}
+
+#paramDiv
+{
+
+}
 
 /*media queries*/
 @media (max-width: 750px) {
@@ -122,4 +130,9 @@ li a:hover {
     max-width: 90%;
     min-width:90%;
   }
+
+    #functionsDiv, #paramDiv
+    {
+
+    }
 }
