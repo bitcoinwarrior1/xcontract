@@ -5,7 +5,6 @@ let request = require("superagent");
 
 $(function()
 {
-
     $(':button').click(function(e)
     {
         let abi = $("#ABI").val();
@@ -46,17 +45,17 @@ $(function()
                     let index = 0;
                     if(id.includes(paramNumber) && !id.includes("function")) //separates from function names
                     {
-                        console.log("Here is the id: " + id);
                         let element = $(this).attr("id");
                         console.log("these are the params for the function: " + element);
                         return element;
                     }
                 }
+
+                return null; //will return null if it is a parameter-less function
             }
         );
 
     }
-
 
     function callServerToExecuteFunction(serverObj)
     {

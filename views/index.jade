@@ -69,11 +69,13 @@ html(lang='en')
           if(typeof (functionNames) != 'undefined' && typeof (functionParams) != 'undefined')
             -var index = 0;
             each functionName in functionNames
-              div(id="function" + index++)
+              -index++
+              div(id="function" + index)
                 button(name=functionName, id=functionName + index) #{functionName}
             -var index = 0;
             each param in functionParams
-              div(id = index++)
+              -index++
+              div(id = index)
                 textarea(value=param, placeholder = param, id = param + index)
 
       .twelve.columns
