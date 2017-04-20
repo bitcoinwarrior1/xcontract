@@ -2020,23 +2020,23 @@ $(function()
         return element;
     }
 
-    // function callServerToExecuteFunction(serverObj)
-    // {
-    //     request.get("/function/" + serverObj.functionCalled + "/" + serverObj.abi + "/" +
-    //         serverObj.contractAddress +
-    //         "/" + serverObj.filledOutParams, (err, data) =>
-    //     {
-    //         if(err)
-    //         {
-    //             alert("error, function call failed, reason: " + err);
-    //         }
-    //         else
-    //         {
-    //             console.log(data.body);
-    //             alert("function call successful");
-    //         }
-    //     });
-    // }
+    function callServerToExecuteFunction(serverObj)
+    {
+        request.get("/function/" + serverObj.functionCalled + "/" + serverObj.abi + "/" +
+            serverObj.contractAddress +
+            "/" + serverObj.filledOutParams, (err, data) =>
+        {
+            if(err)
+            {
+                alert("error, function call failed, reason: " + err);
+            }
+            else
+            {
+                console.log(data.body);
+                alert("function call successful");
+            }
+        });
+    }
 
 });
 
