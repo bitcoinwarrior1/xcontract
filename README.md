@@ -1,9 +1,6 @@
 # xcontract
 A smart contract user interface which allows you to run live smart contracts on an easy to use UI. You can pass the abi and contract address in the URL parameters like below or enter them in the text boxes on the page
 
-This version is a simplified MVP that takes the smart contract ABI in the url params and is then able to manipulate
-it using web3.js
-
 Website url: https://xcontract.herokuapp.com/
 
 Example url call for OpenRep contract: 
