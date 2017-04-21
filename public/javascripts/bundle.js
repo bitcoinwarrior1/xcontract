@@ -24,16 +24,24 @@ $(function()
             web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
         }
 
-        // let's assume that coinbase is our account
+        //let's assume that coinbase is our account
         web3.eth.defaultAccount = web3.eth.coinbase;
 
         //sets the contract
-        contract = web3.eth.contract(abi).at(contractAddress);
+        try
+        {
+            contract = web3.eth.contract(abi).at(contractAddress);
+        }
+        catch(exception)
+        {
+            console.log("contract failed to load, error: " + exception);
+        }
+
     }
 
     $(':button').click(function(e)
     {
-        let abi = $("#ABI").val();
+        let abi = JSON.parse($("#ABI").val());
         let contractAddress = $("#contractAddress").val();
 
         if(abi == "" || contractAddress == "")
