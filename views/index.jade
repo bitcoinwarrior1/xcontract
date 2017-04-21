@@ -71,12 +71,12 @@ html(lang='en')
               -index++
               div(id="function" + index)
                 button(name=functionName, id=functionName + index) #{functionName}
-          #paramDiv
-            -var index = 0;
-            each param in functionParams
-              -index++
-              div(id = index)
-                textarea(value=param, placeholder = param, id = param + index)
+            #paramDiv
+              -var index = 0;
+              each param in functionParams
+                -index++
+                div(id = index)
+                  textarea(value=param, placeholder = param, id = param + index)
 
       .twelve.columns
 
