@@ -60,11 +60,11 @@ $(function()
 
     });
 
-    //TODO make sure regex does not remove & symbol
     function extractTransactionInfo(functionCalled, abi, contractAddress)
     {
         //remove strings and get index number
-        let paramNumber = functionCalled.replace( /^\D+/g, '');
+        let functionParamPos = functionCalled.substring(functionCalled.indexOf("&"));
+        let paramNumber = functionParamPos.replace( /^\D+/g, '');
         let params = getParamsFromFunctionName(paramNumber);
 
         let txObj = {};
