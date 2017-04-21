@@ -63,7 +63,22 @@ module.exports = {
     executeContractFunction : (contract, functionName, params) =>
     {
          //must use bracket notation as function name is passed as a string
-         contract[functionName](params);
+         if(params == null)
+         {
+             contract[functionName](function(err, data)
+             {
+                 if(err) console.log("error: " + err);
+                 else console.log("here is the response from web3: " + data);
+             });
+         }
+         else
+         {
+             contract[functionName](params, function(err, data)
+             {
+                 if(err) console.log("error: " + err);
+                 else console.log("here is the response from web3: " + data);
+             });
+         }
     },
 
     sendEtherToContract : (value, contractAddress, web3) =>

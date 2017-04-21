@@ -16,11 +16,13 @@ $(function()
             injectedProvider = window.web3.currentProvider;
             web3 = new Web3(injectedProvider);
             console.log("injected provider used: " + injectedProvider);
+            alert("using provider: " + injectedProvider);
         }
         else
         {
             console.log("no injected provider found, using localhost:8545");
             web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+            alert("no injected provider found, using localhost:8545");
         }
 
         //let's assume that coinbase is our account
@@ -58,6 +60,7 @@ $(function()
 
     });
 
+    //TODO handle removed index number without accidental remove of function name numbers
     function extractTransactionInfo(functionCalled, abi, contractAddress)
     {
         //remove strings and get index number
@@ -65,7 +68,8 @@ $(function()
         let params = getParamsFromFunctionName(paramNumber);
 
         let txObj = {};
-        txObj.functionCalled = functionCalled;
+        //remove html index number from method call name
+        txObj.functionCalled = functionCalled.replace(paramNumber, '');
         txObj.abi = abi;
         txObj.contractAddress = contractAddress;
 
