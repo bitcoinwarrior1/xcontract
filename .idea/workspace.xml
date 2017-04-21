@@ -22,8 +22,8 @@
       <file leaf-file-name="index.jade" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../xcontract/views/index.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="277">
-              <caret line="59" column="27" lean-forward="false" selection-start-line="59" selection-start-column="27" selection-end-line="59" selection-end-column="27" />
+            <state relative-caret-position="210">
+              <caret line="50" column="50" lean-forward="true" selection-start-line="50" selection-start-column="50" selection-end-line="50" selection-end-column="50" />
               <folding />
             </state>
           </provider>
@@ -32,7 +32,7 @@
       <file leaf-file-name="EventHandler.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../xcontract/public/javascripts/EventHandler.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
+            <state relative-caret-position="1860">
               <caret line="134" column="13" lean-forward="true" selection-start-line="134" selection-start-column="13" selection-end-line="134" selection-end-column="13" />
               <folding />
             </state>
@@ -52,7 +52,7 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../xcontract/routes/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
+            <state relative-caret-position="420">
               <caret line="28" column="7" lean-forward="true" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
               <folding />
             </state>
@@ -363,7 +363,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="66298000" />
+    <option name="totallyTimeSpent" value="67068000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="36" y="23" width="1260" height="677" extended-state="0" />
@@ -760,14 +760,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../xcontract/public/javascripts/EventHandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="134" column="13" lean-forward="true" selection-start-line="134" selection-start-column="13" selection-end-line="134" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../xcontract/public/javascripts/Web3Handler.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1185">
@@ -778,16 +770,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../xcontract/routes/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
+        <state relative-caret-position="420">
           <caret line="28" column="7" lean-forward="true" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../xcontract/public/javascripts/EventHandler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1860">
+          <caret line="134" column="13" lean-forward="true" selection-start-line="134" selection-start-column="13" selection-end-line="134" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../xcontract/views/index.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="277">
-          <caret line="59" column="27" lean-forward="false" selection-start-line="59" selection-start-column="27" selection-end-line="59" selection-end-column="27" />
+        <state relative-caret-position="210">
+          <caret line="50" column="50" lean-forward="true" selection-start-line="50" selection-start-column="50" selection-end-line="50" selection-end-column="50" />
           <folding />
         </state>
       </provider>
