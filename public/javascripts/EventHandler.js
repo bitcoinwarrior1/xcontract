@@ -1,24 +1,33 @@
 /**
  * Created by sangalli on 19/4/17.
  */
-let request = require("superagent");
+
 let injectedProvider;
 let web3;
 let web3Handler = require("./Web3Handler.js");
+let contract;
 
-//TODO handle callback from server to then execute web3 transaction on the client side
 $(function()
 {
-    if (typeof window.web3 !== 'undefined')
+    function setWeb3(abi, contractAddress)
     {
-        injectedProvider = window.web3.currentProvider;
-        web3 = new Web3(injectedProvider);
-        console.log("injected provider used: " + injectedProvider);
-    }
-    else
-    {
-        console.log("no injected provider found, using localhost:8545");
-        web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+        if (typeof window.web3 !== 'undefined')
+        {
+            injectedProvider = window.web3.currentProvider;
+            web3 = new Web3(injectedProvider);
+            console.log("injected provider used: " + injectedProvider);
+        }
+        else
+        {
+            console.log("no injected provider found, using localhost:8545");
+            web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+        }
+
+        // let's assume that coinbase is our account
+        web3.eth.defaultAccount = web3.eth.coinbase;
+
+        //sets the contract
+        contract = web3.eth.contract(abi).at(contractAddress);
     }
 
     $(':button').click(function(e)
@@ -31,34 +40,56 @@ $(function()
             alert("missing abi and/or contract");
             return;
         }
+
+        setWeb3(abi, contractAddress);
+
         let functionCalled = e.target.id;
         console.log("Button " + functionCalled + " was clicked!");
+
+        extractTransactionInfo(functionCalled, abi, contractAddress);
+
+    });
+
+    function extractTransactionInfo(functionCalled, abi, contractAddress)
+    {
         //remove strings and get index number
         let paramNumber = functionCalled.replace( /^\D+/g, '');
         let params = getParamsFromFunctionName(paramNumber);
 
-        let serverObj = {};
-        serverObj.functionCalled = functionCalled;
-        serverObj.abi = abi;
-        serverObj.contractAddress = contractAddress;
+        let txObj = {};
+        txObj.functionCalled = functionCalled;
+        txObj.abi = abi;
+        txObj.contractAddress = contractAddress;
+
         try
         {
-            serverObj.filledOutParams = document.getElementById(params).value; //gets the user input from textbox
+            //handles NPE on parameter-less contract functions
+            txObj.filledOutParams = document.getElementById(params).value; //gets the user input from textbox
         }
         catch(exception)
         {
             console.log("param is null: " + exception);
+            txObj.filledOutParams = null;
         }
-        finally
+
+        console.log("filled out params from user input: " + txObj.filledOutParams);
+
+        initTransaction(txObj);
+    }
+
+    function initTransaction(txObj)
+    {
+        console.log("transaction initiated");
+
+        try
         {
-            serverObj.filledOutParams = null;
+            web3Handler.executeContractFunction(contract, txObj.functionCalled, txObj.filledOutParams);
         }
-
-        console.log("filled out params from user input: " + serverObj.filledOutParams);
-
-        callServerToExecuteFunction(serverObj);
-
-    });
+        catch(exception)
+        {
+            console.log("transaction failed. Error: " + exception);
+        }
+    }
 
     function getParamsFromFunctionName(paramNumber)
     {
@@ -86,28 +117,8 @@ $(function()
 
             }
         );
-
         //will return null if it is a parameter-less function
         return element;
-    }
-
-    ///function/:functionInfo/:abi/:address/:filledOutParams
-    function callServerToExecuteFunction(serverObj)
-    {
-        request.get("/function/" + serverObj.functionCalled + "/" + serverObj.abi + "/" +
-            serverObj.contractAddress +
-            "/" + serverObj.filledOutParams, (err, data) =>
-        {
-            if(err)
-            {
-                alert("error, function call failed, reason: " + err);
-            }
-            else
-            {
-                console.log(data.body);
-                alert("function call successful");
-            }
-        });
     }
 
 });

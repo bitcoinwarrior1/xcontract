@@ -29,25 +29,4 @@ router.get('/api/:abi/:address', (req,res,next) => {
 
 });
 
-//handle function calls to contract via HTTP
-router.get("/function/:functionInfo/:abi/:address/:filledOutParams", (req,res,next) =>
-{
-    console.log("Server to handle function call");
-    //handle function calls here by handling button clicks
-    let functionName = req.param.functionInfo;
-    let abi = req.param.abi;
-    let contractAddress = req.param.address;
-    let filledOutParams = req.param.filledOutParams;
-
-    console.log("here are the filled out params from the client: " + filledOutParams);
-
-    let contract = web3Handler.getContract(abi, contractAddress);
-
-    console.log("here is the web3js contract: " + contract);
-
-    web3Handler.executeContractFunction(functionName, contractAddress, filledOutParams, contract);
-
-    res.send("function executed");
-});
-
 module.exports = router;

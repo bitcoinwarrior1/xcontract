@@ -60,13 +60,13 @@ module.exports = {
          return functionsInAbi;
     },
 
-    executeContractFunction : (functionName, contractAddress, params, contract) =>
+    executeContractFunction : (contract, functionName, params) =>
     {
          //must use bracket notation as function name is passed as a string
-         web3.eth[functionName].sendTransaction(params, {to:contractAddress, from:eth.coinbase});
+         contract[functionName](params);
     },
 
-    sendEtherToContract : (value, contractAddress) =>
+    sendEtherToContract : (value, contractAddress, web3) =>
     {
          web3.eth.sendTransaction({to: contractAddress, from: eth.coinbase, value: value });
     }
