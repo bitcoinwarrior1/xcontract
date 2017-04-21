@@ -2,17 +2,8 @@
 let express = require('express');
 let router = express.Router();
 let web3Handler = require("../public/javascripts/Web3Handler.js");
-//web3.js requirements
-let Web3 = require('web3');
-let web3 = new Web3();
-let provider = "https://rawtestrpc.metamask.io/" || "http://localhost:8545/";
-
-//set the provider to metamask testnet, if user doesn't have metamask go to default localhost for ethereum
-web3.setProvider(new web3.providers.HttpProvider(provider));
 
 /* GET home page. */
-//MVP dictates that abi and contract address must be provided via HTTP,
-// so a sample will be provided if home page is request
 router.get('/', (req, res, next) => {
     res.render('index', { title: 'ContractExecutor' });
 });
@@ -33,13 +24,13 @@ router.get('/api/:abi/:address', (req,res,next) => {
         abiVal: JSON.stringify(abiJson),
         addressVal: contractAddress,
         functionNames: functionNameAndParamObj.names,
-        functionParams : functionNameAndParamObj.params,
-        statusLabel: "Network: " + provider
+        functionParams : functionNameAndParamObj.params//,
+        // statusLabel: "Network: " + provider
     });
 
 });
 
-//TODO move to appropriate place
+//handle function calls to contract via HTTP
 router.get("/function/:functionInfo/:abi/:address/:filledOutParams", (req,res,next) =>
 {
     console.log("Server to handle function call");
@@ -48,7 +39,9 @@ router.get("/function/:functionInfo/:abi/:address/:filledOutParams", (req,res,ne
     let abi = req.param.abi;
     let contractAddress = req.param.address;
     let filledOutParams = req.param.filledOutParams;
-    console.log(filledOutParams);
+
+    console.log("here are the filled out params from the client: " + filledOutParams);
+
     let contract = web3Handler.getContract(abi, contractAddress);
 
     console.log("here is the web3js contract: " + contract);

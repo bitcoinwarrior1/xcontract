@@ -3,9 +3,24 @@
  */
 
 let request = require("superagent");
+let injectedProvider;
+let web3;
 
+//TODO handle callback from server to then execute web3 transaction on the client side
 $(function()
 {
+    if (typeof window.web3 !== 'undefined')
+    {
+        injectedProvider = window.web3.currentProvider;
+        web3 = new Web3(injectedProvider);
+        console.log("injected provider used: " + injectedProvider);
+    }
+    else
+    {
+        console.log("no injected provider found, using localhost:8545");
+        web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+    }
+
     $(':button').click(function(e)
     {
         let abi = $("#ABI").val();
@@ -26,7 +41,18 @@ $(function()
         serverObj.functionCalled = functionCalled;
         serverObj.abi = abi;
         serverObj.contractAddress = contractAddress;
-        serverObj.filledOutParams = document.getElementById(params).value; //gets the user input from textbox
+        try
+        {
+            serverObj.filledOutParams = document.getElementById(params).value; //gets the user input from textbox
+        }
+        catch(exception)
+        {
+            console.log("param is null: " + exception);
+        }
+        finally
+        {
+            serverObj.filledOutParams = null;
+        }
 
         console.log("filled out params from user input: " + serverObj.filledOutParams);
 
@@ -65,6 +91,7 @@ $(function()
         return element;
     }
 
+    ///function/:functionInfo/:abi/:address/:filledOutParams
     function callServerToExecuteFunction(serverObj)
     {
         request.get("/function/" + serverObj.functionCalled + "/" + serverObj.abi + "/" +

@@ -1,9 +1,19 @@
 //web3.js requirements
 let Web3 = require('web3');
-let web3 = new Web3();
-let provider = "https://rawtestrpc.metamask.io/" || "http://localhost:8545/";
-//init web3 provider
-web3.setProvider(new web3.providers.HttpProvider(provider));
+let web3;
+let injectedProvider;
+
+// if (typeof window.web3 !== 'undefined')
+// {
+//     injectedProvider = window.web3.currentProvider;
+//     web3 = new Web3(injectedProvider);
+//     console.log("injected provider used: " + injectedProvider);
+// }
+// else
+// {
+//     console.log("no injected provider found, using localhost:8545");
+//     web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+// }
 
 module.exports = {
 
