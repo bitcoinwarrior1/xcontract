@@ -5,7 +5,7 @@ let web3Handler = require("../public/javascripts/Web3Handler.js");
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-    res.render('index', { title: 'ContractExecutor' });
+    res.render('index', { title: 'xcontract' });
 });
 
 //handle user giving abi in url param
