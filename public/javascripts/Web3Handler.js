@@ -1,10 +1,3 @@
-//web3.js requirements
-let Web3 = require('web3');
-let web3 = new Web3();
-let provider = "https://rawtestrpc.metamask.io/" || "http://localhost:8545/";
-//init web3 provider
-web3.setProvider(new web3.providers.HttpProvider(provider));
-
 module.exports = {
 
      extractAbiFunctions : (abi) =>
@@ -67,13 +60,28 @@ module.exports = {
          return functionsInAbi;
     },
 
-    executeContractFunction : (functionName, contractAddress, params, contract) =>
+    executeContractFunction : (contract, functionName, params) =>
     {
          //must use bracket notation as function name is passed as a string
-         web3.eth[functionName].sendTransaction(params, {to:contractAddress, from:eth.coinbase});
+         if(params == null)
+         {
+             contract[functionName](function(err, data)
+             {
+                 if(err) console.log("error: " + err);
+                 else console.log("here is the response from web3: " + data);
+             });
+         }
+         else
+         {
+             contract[functionName](params, function(err, data)
+             {
+                 if(err) console.log("error: " + err);
+                 else console.log("here is the response from web3: " + data);
+             });
+         }
     },
 
-    sendEtherToContract : (value, contractAddress) =>
+    sendEtherToContract : (value, contractAddress, web3) =>
     {
          web3.eth.sendTransaction({to: contractAddress, from: eth.coinbase, value: value });
     }

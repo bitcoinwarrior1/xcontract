@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "bundle": "browserify ./public/javascripts/buttonClickHandler > ./public/javascripts/bundle.js",
-    "watch": "watchify ./public/javascripts/buttonClickHandler -o ./public/javascripts/bundle.js",
+    "bundle": "browserify ./public/javascripts/EventHandler > ./public/javascripts/bundle.js",
+    "watch": "watchify ./public/javascripts/EventHandler -o ./public/javascripts/bundle.js",
     "test" : "node ./tests/*.js"
   },
   "dependencies": {
