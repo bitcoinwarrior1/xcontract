@@ -61,7 +61,7 @@ $(function()
 
     });
 
-    //TODO handle removed index number without accidental remove of function name numbers
+    //TODO make sure regex does not remove & symbol
     function extractTransactionInfo(functionCalled, abi, contractAddress)
     {
         //remove strings and get index number
@@ -70,7 +70,7 @@ $(function()
 
         let txObj = {};
         //remove html index number from method call name
-        txObj.functionCalled = functionCalled.replace(paramNumber, '');
+        txObj.functionCalled = functionCalled.replace("&" + paramNumber, '');
         txObj.abi = abi;
         txObj.contractAddress = contractAddress;
 

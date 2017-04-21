@@ -70,7 +70,7 @@ html(lang='en')
             each functionName in functionNames
               -index++
               div(id="function" + index)
-                button(name=functionName, id=functionName + index) #{functionName}
+                button(name=functionName, id=functionName + "&" + index) #{functionName}
             #paramDiv
               -var index = 0;
               each param in functionParams
