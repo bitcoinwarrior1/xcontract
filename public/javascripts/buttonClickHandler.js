@@ -1,10 +1,10 @@
 /**
  * Created by sangalli on 19/4/17.
  */
-
 let request = require("superagent");
 let injectedProvider;
 let web3;
+let web3Handler = require("./Web3Handler.js");
 
 //TODO handle callback from server to then execute web3 transaction on the client side
 $(function()

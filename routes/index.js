@@ -24,8 +24,7 @@ router.get('/api/:abi/:address', (req,res,next) => {
         abiVal: JSON.stringify(abiJson),
         addressVal: contractAddress,
         functionNames: functionNameAndParamObj.names,
-        functionParams : functionNameAndParamObj.params//,
-        // statusLabel: "Network: " + provider
+        functionParams : functionNameAndParamObj.params
     });
 
 });
