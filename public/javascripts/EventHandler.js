@@ -53,7 +53,11 @@ $(function()
 
         setWeb3(abi, contractAddress);
 
-        if(e.target.id == "submit") return; //not a function call so should stop now
+        if(e.target.id == "submit")
+        {
+            window.location.replace("/api/" + JSON.stringify(abi) + "/" +contractAddress);
+            return; //not a function call so should stop now
+        }
 
         let functionCalled = e.target.id;
         console.log("Button " + functionCalled + " was clicked!");
