@@ -47,14 +47,14 @@ html(lang='en')
 
       .twelve.columns
         h6
-          | Run your live ethereum smart contracts here! Please have a node running or install the metamask browser plug in
-          | to interact with the smart contracts. 
+          | Run your live ethereum smart contracts here!
+        p  **Please have a node running or install the metamask browser plug in to interact with the smart contracts.**
 
       #abiDiv
         #abiForm
           p
           textarea#ABI(name='ABI', placeholder="Paste the smart contract's ABI here" ) #{abiVal}
-          textarea#contractAddress(name='contractAddress', placeholder="Paste the smart contracts address here" ) #{addressVal}
+          textarea#contractAddress(name='contractAddress', placeholder="Paste the smart contract's address here" ) #{addressVal}
           p
           button#submit Submit contract
 
