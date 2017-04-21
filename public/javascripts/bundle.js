@@ -54,9 +54,10 @@ $(function()
 
         setWeb3(abi, contractAddress);
 
+        if(e.target.id == "submit") return; //not a function call so should stop now
+
         let functionCalled = e.target.id;
         console.log("Button " + functionCalled + " was clicked!");
-
         extractTransactionInfo(functionCalled, abi, contractAddress);
 
     });
