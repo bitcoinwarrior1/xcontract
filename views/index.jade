@@ -28,6 +28,10 @@ html(lang='en')
     link(rel='stylesheet', href='/stylesheets/normalize.css')
     link(rel='stylesheet', href='/stylesheets/skeleton.css')
     link(rel='stylesheet', href='/stylesheets/main.css')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css')
+    //if lt IE 9
+      link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css')
+
     // JS files
     //
       Favicon
@@ -40,11 +44,13 @@ html(lang='en')
   body
       //Primary Page Layout
       //––––––––––––––––––––––––––––––––––––––––––––––––––
+
+      a.github-fork-ribbon(href='https://github.com/James-Sangalli/xcontract', title='Fork me on GitHub') Fork me on GitHub
+
     .container
       .header
         h1
-          | Contract Executor
-
+          | xcontract
       .twelve.columns
         h6
           | Run your live ethereum smart contracts here!
