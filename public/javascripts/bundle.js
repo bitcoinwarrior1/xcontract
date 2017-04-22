@@ -158,11 +158,6 @@ module.exports = {
         return arrayOfFunctionObjects;
     },
 
-    getContract : (abi, address) =>
-    {
-        return web3.eth.contract(abi).at(address);
-    },
-
     getContractFunctionNamesAndParams : (abiFunctions) =>
     {
         let nameAndParamObj = {};
