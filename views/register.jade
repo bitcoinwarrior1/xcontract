@@ -1,0 +1,88 @@
+//TODO link pages together
+
+doctype html
+html(lang='en')
+    head
+        //
+          Basic Page Needs
+          ––––––––––––––––––––––––––––––––––––––––––––––––––
+        meta(charset='utf-8')
+
+        title xcontract
+
+        meta(name='description', content='')
+
+        meta(name='author', content='')
+        //
+          Mobile Specific Metas
+          ––––––––––––––––––––––––––––––––––––––––––––––––––
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        //
+          FONT
+          ––––––––––––––––––––––––––––––––––––––––––––––––––
+        // <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+        //
+          CSS
+          ––––––––––––––––––––––––––––––––––––––––––––––––––
+        link(rel='stylesheet', href='/stylesheets/normalize.css')
+        link(rel='stylesheet', href='/stylesheets/skeleton.css')
+        link(rel='stylesheet', href='/stylesheets/main.css')
+        link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css')
+        //if lt IE 9
+          link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css')
+
+        // JS files
+        //
+          Favicon
+          ––––––––––––––––––––––––––––––––––––––––––––––––––
+
+        script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+        link(rel='icon', type='image/png', href='/images/favicon.png')
+    body
+        //Primary Page Layout
+        //––––––––––––––––––––––––––––––––––––––––––––––––––
+
+        a.github-fork-ribbon(href='https://github.com/James-Sangalli/xcontract', title='Fork me on GitHub') Fork me on GitHub
+
+    .container
+        .header
+            h1
+                | Register for xcontract
+        .twelve.columns
+            h6
+                | Please include your ABI, contract address and dApp name
+        #abiDiv
+            #abiForm
+                p
+                textarea#dAppName(name='dAppName', placeholder="Write your dapp name here")
+                textarea#ABI(name='ABI', placeholder="Paste the smart contract's ABI here" )
+                textarea#contractAddress(name='contractAddress', placeholder="Paste the smart contract's address here" )
+                p
+                button#submit Submit dApp
+
+            #paramAndFunctionDiv
+                h6 #{functionTitle}
+                functionNames
+                functionParams
+            #functionsDiv
+            if(typeof (functionNames) != 'undefined' && typeof (functionParams) != 'undefined')
+                -var index = 0;
+                each functionName in functionNames
+                    -index++
+                    div(id="function" + index)
+                        button(name=functionName, id=functionName + "&" + index) #{functionName}
+                #paramDiv
+                    -var index = 0;
+                    each param in functionParams
+                        -index++
+                        div(id = index)
+                            textarea(value=param, placeholder = param, id = param + index)
+
+        .twelve.columns
+
+        .twelve.columns
+html
+
+    //End Document
+    //––––––––––––––––––––––––––––––––––––––––––––––––––
+

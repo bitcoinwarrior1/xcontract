@@ -19,61 +19,31 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.jade" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.jade" pinned="false" current-in-tab="true">
         <entry file="file://$USER_HOME$/Documents/xcontract/views/index.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="19" lean-forward="true" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
+            <state relative-caret-position="-907">
+              <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Web3HandlerTests.js" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Documents/xcontract/tests/Web3HandlerTests.js">
+      <file leaf-file-name="search.jade" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Documents/xcontract/views/search.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="6" lean-forward="true" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="6" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Web3Handler.js" pinned="false" current-in-tab="true">
-        <entry file="file://$USER_HOME$/Documents/xcontract/public/javascripts/Web3Handler.js">
+      <file leaf-file-name="register.jade" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/Documents/xcontract/views/register.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="23" column="16" lean-forward="false" selection-start-line="23" selection-start-column="16" selection-end-line="23" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="bundle.js" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Documents/xcontract/public/javascripts/bundle.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="126">
-              <caret line="160" column="15" lean-forward="false" selection-start-line="160" selection-start-column="4" selection-end-line="160" selection-end-column="15" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="indexTests.js" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Documents/xcontract/tests/indexTests.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="16" column="0" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="layout.jade" pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Documents/xcontract/views/layout.jade">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="57" lean-forward="false" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="57" />
+            <state relative-caret-position="360">
+              <caret line="24" column="13" lean-forward="true" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -102,8 +72,8 @@
       <file leaf-file-name="main.css" pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/Documents/xcontract/public/stylesheets/main.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="206">
-              <caret line="113" column="0" lean-forward="true" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
+            <state relative-caret-position="109">
+              <caret line="86" column="3" lean-forward="false" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="3" />
               <folding />
             </state>
           </provider>
@@ -115,6 +85,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaScript File" />
+        <option value="Jade File" />
       </list>
     </option>
   </component>
@@ -129,6 +100,7 @@
       <find>backg</find>
       <find>functions</find>
       <find>provid</find>
+      <find>li</find>
     </findStrings>
     <replaceStrings>
       <replace>let</replace>
@@ -167,10 +139,14 @@
         <option value="$USER_HOME$/Documents/xcontract/routes/index.js" />
         <option value="$USER_HOME$/Documents/xcontract/public/stylesheets/main.css" />
         <option value="$USER_HOME$/Documents/xcontract/documentation.md" />
-        <option value="$USER_HOME$/Documents/xcontract/views/index.jade" />
         <option value="$USER_HOME$/Documents/xcontract/tests/indexTests.js" />
         <option value="$USER_HOME$/Documents/xcontract/tests/Web3HandlerTests.js" />
         <option value="$USER_HOME$/Documents/xcontract/public/javascripts/Web3Handler.js" />
+        <option value="$USER_HOME$/Documents/xcontract/views/search.jade" />
+        <option value="$USER_HOME$/Documents/xcontract/views/error.jade" />
+        <option value="$USER_HOME$/Documents/xcontract/views/index.jade" />
+        <option value="$USER_HOME$/Documents/xcontract/views/layout.jade" />
+        <option value="$USER_HOME$/Documents/xcontract/views/register.jade" />
       </list>
     </option>
   </component>
@@ -422,7 +398,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="72912000" />
+    <option name="totallyTimeSpent" value="77608000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="36" y="23" width="1260" height="677" extended-state="0" />
@@ -463,29 +439,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/Documents/xcontract/node_modules/tape/lib/test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="346" column="2" lean-forward="false" selection-start-line="346" selection-start-column="2" selection-end-line="346" selection-end-column="2" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Documents/xcontract/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="17" lean-forward="true" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Documents/xcontract/tests/Web3HandlerTests.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="5" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Documents/xcontract/tests/indexTests.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
@@ -760,14 +713,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Documents/xcontract/public/stylesheets/main.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="113" column="0" lean-forward="true" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Documents/xcontract/documentation.md">
       <provider editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -781,38 +726,6 @@
             <folding />
           </first_editor>
           <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Documents/xcontract/public/javascripts/EventHandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2010">
-          <caret line="134" column="13" lean-forward="false" selection-start-line="134" selection-start-column="13" selection-end-line="134" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Documents/xcontract/views/layout.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="57" lean-forward="false" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Documents/xcontract/views/error.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" lean-forward="false" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Documents/xcontract/views/index.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="19" lean-forward="true" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -844,14 +757,94 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
           <caret line="160" column="15" lean-forward="false" selection-start-line="160" selection-start-column="4" selection-end-line="160" selection-end-column="15" />
-          <folding />
+          <folding>
+            <marker date="1492846184000" expanded="true" signature="443:7251" ph="{...}" />
+            <marker date="1492846184000" expanded="true" signature="4766:7250" ph="[...]" />
+            <marker date="1492846184000" expanded="true" signature="4799:7246" ph="{...}" />
+            <marker date="1492846184000" expanded="true" signature="4818:7242" ph="{...}" />
+            <marker date="1492846184000" expanded="true" signature="5196:5853" ph="{...}" />
+            <marker date="1492846184000" expanded="true" signature="5354:5707" ph="{...}" />
+            <marker date="1492846184000" expanded="true" signature="5933:6380" ph="{...}" />
+            <marker date="1492846184000" expanded="true" signature="6031:6341" ph="{...}" />
+            <marker date="1492846184000" expanded="true" signature="6103:6278" ph="{...}" />
+            <marker date="1492846184000" expanded="true" signature="6453:7072" ph="{...}" />
+            <marker date="1492846184000" expanded="true" signature="6568:6801" ph="{...}" />
+            <marker date="1492846184000" expanded="true" signature="6639:6788" ph="{...}" />
+            <marker date="1492846184000" expanded="true" signature="6825:7066" ph="{...}" />
+            <marker date="1492846184000" expanded="true" signature="6904:7053" ph="{...}" />
+            <marker date="1492846184000" expanded="true" signature="7139:7239" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$USER_HOME$/Documents/xcontract/public/javascripts/Web3Handler.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="23" column="16" lean-forward="false" selection-start-line="23" selection-start-column="16" selection-end-line="23" selection-end-column="16" />
+        <state relative-caret-position="-85">
+          <caret line="9" column="13" lean-forward="true" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/xcontract/public/stylesheets/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="109">
+          <caret line="86" column="3" lean-forward="false" selection-start-line="86" selection-start-column="0" selection-end-line="86" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/xcontract/LICENSE">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/xcontract/public/javascripts/EventHandler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2010">
+          <caret line="134" column="13" lean-forward="false" selection-start-line="134" selection-start-column="13" selection-end-line="134" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/xcontract/views/layout.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/xcontract/views/error.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/xcontract/views/search.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/xcontract/views/register.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="13" lean-forward="true" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Documents/xcontract/views/index.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-907">
+          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding />
         </state>
       </provider>
