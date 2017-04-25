@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "bundle": "browserify ./public/javascripts/EventHandler > ./public/javascripts/bundle.js",
     "watch": "watchify ./public/javascripts/EventHandler -o ./public/javascripts/bundle.js",
-    "test" : "node ./tests/*.js"
+    "test": "node ./tests/*.js"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
@@ -14,8 +14,10 @@
     "debug": "~2.6.3",
     "express": "~4.15.2",
     "jade": "~1.11.0",
+    "knex": "^0.12.9",
     "morgan": "~1.8.1",
     "serve-favicon": "~2.4.2",
+    "sqlite3": "^3.1.8",
     "superagent": "^3.5.2",
     "web3": "^0.18.4"
   },
