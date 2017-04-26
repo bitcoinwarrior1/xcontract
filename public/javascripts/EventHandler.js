@@ -6,6 +6,7 @@ let injectedProvider;
 let web3;
 let web3Handler = require("./Web3Handler.js");
 let contract;
+let request = require("superagent");
 
 $(function()
 {
@@ -16,7 +17,6 @@ $(function()
             injectedProvider = window.web3.currentProvider;
             web3 = new Web3(injectedProvider);
             console.log("injected provider used: " + injectedProvider);
-            alert("using provider: " + injectedProvider);
         }
         else
         {
@@ -32,6 +32,19 @@ $(function()
         try
         {
             contract = web3.eth.contract(abi).at(contractAddress);
+
+            // let etherScanApi = "http://api.etherscan.io/api?module=contract&action=getabi&address=";
+            //
+            // request.get(etherScanApi + contractAddress, (error, data) =>
+            // {
+            //     if(error) throw error;
+            //
+            //     if(data.body.message === "NOTOK")
+            //     {
+            //         alert("Warning! Contract source code is not verified!");
+            //     }
+            //     else alert("Contract source code is verified!");
+            // });
         }
         catch(exception)
         {
