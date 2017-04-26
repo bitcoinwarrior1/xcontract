@@ -6,7 +6,6 @@ let injectedProvider;
 let web3;
 let web3Handler = require("./Web3Handler.js");
 let contract;
-let request = require("superagent");
 
 $(function()
 {
@@ -32,7 +31,6 @@ $(function()
         try
         {
             contract = web3.eth.contract(abi).at(contractAddress);
-            //checkIfVerified(contractAddress);
         }
         catch(exception)
         {
@@ -41,43 +39,34 @@ $(function()
 
     }
 
-    // function checkIfVerified(contractAddress)
-    // {
-    //     let etherScanApi = "http://api.etherscan.io/api?module=contract&action=getabi&address=";
-    //
-    //     console.log('got to api');
-    //
-    //     request.get(etherScanApi + contractAddress, (error, data) =>
-    //     {
-    //         if(error) throw error;
-    //
-    //         console.log("data" + data.body.message);
-    //
-    //         if(data.body.message === "NOTOK")
-    //         {
-    //             console.log("contract not verified");
-    //             alert("Warning! Contract source code is not verified!");
-    //         }
-    //         else alert("Contract source code is verified!");
-    //     });
-    // }
-
     $(':button').click(function(e)
     {
-        let abi = JSON.parse($("#ABI").val());
         let contractAddress = $("#contractAddress").val();
+        let abi = $("#ABI").val();
+        let jsonABI;
 
-        if(abi == "" || contractAddress == "")
+        if(contractAddress == "")
         {
-            alert("missing abi and/or contract");
+            alert("missing contract address");
             return;
         }
 
-        setWeb3(abi, contractAddress);
+        if(abi == "")
+        {
+            //let the server check if the contract abi is verified and available
+            window.location.replace("/api/" + contractAddress);
+            return;
+        }
+        else
+        {
+            jsonABI = JSON.parse(abi);
+        }
+
+        setWeb3(jsonABI, contractAddress);
 
         if(e.target.id == "submit")
         {
-            window.location.replace("/api/" + JSON.stringify(abi) + "/" +contractAddress);
+            window.location.replace("/api/" + JSON.stringify(jsonABI) + "/" +contractAddress);
             return; //not a function call so should stop now
         }
 
