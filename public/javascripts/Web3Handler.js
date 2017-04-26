@@ -1,4 +1,18 @@
+let request = require("superagent");
+// let etherScanApi = "http://api.etherscan.io/api?module=contract&action=getabi&address=";
+
 module.exports = {
+
+    // getAbiFromContractAddress : (contractAddress) =>
+    // {
+    //     let abi = "";
+    //     request.get(etherScanApi + contractAddress, (error, data) =>
+    //     {
+    //         if(error) throw error;
+    //         abi = data.body.result;
+    //     });
+    //     return JSON.parse(abi);
+    // },
 
      extractAbiFunctions : (abi) =>
      {
