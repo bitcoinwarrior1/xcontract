@@ -15,7 +15,7 @@ $(function()
             injectedProvider = window.web3.currentProvider;
             web3 = new Web3(injectedProvider);
             console.log("injected provider used: " + injectedProvider);
-            alert("using provider: " + injectedProvider);
+            alert("using provider: " + JSON.parse(injectedProvider));
         }
         else
         {
