@@ -2,8 +2,8 @@
 
 ##API
 
-###HTTP GET '/api/:abi/:address'
-This function routes to the index page and allows an abi and contract address to be parsed into a web3.js contract instance.
+###HTTP GET '/api/:address'
+This function routes to the index page and retrieves the contract abi from the contract address provided in the URL param.
 
 ### function extractAbiFunctions
 Returns an array of functions extracted from the ABI JSON 

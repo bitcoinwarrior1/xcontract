@@ -1,7 +1,6 @@
 /**
  * Created by sangalli on 19/4/17.
  */
-
 let injectedProvider;
 let web3;
 let web3Handler = require("./Web3Handler.js");
@@ -16,7 +15,7 @@ $(function()
             injectedProvider = window.web3.currentProvider;
             web3 = new Web3(injectedProvider);
             console.log("injected provider used: " + injectedProvider);
-            alert("using provider: " + injectedProvider);
+            alert("using provider: " + JSON.parse(injectedProvider));
         }
         else
         {
@@ -42,22 +41,22 @@ $(function()
 
     $(':button').click(function(e)
     {
-        let abi = JSON.parse($("#ABI").val());
+        let abi = $("#ABI").val();
         let contractAddress = $("#contractAddress").val();
 
-        if(abi == "" || contractAddress == "")
+        if(contractAddress == "")
         {
-            alert("missing abi and/or contract");
+            alert("missing contract address");
             return;
         }
 
-        setWeb3(abi, contractAddress);
-
         if(e.target.id == "submit")
         {
-            window.location.replace("/api/" + JSON.stringify(abi) + "/" +contractAddress);
+            window.location.replace("/api/" + contractAddress);
             return; //not a function call so should stop now
         }
+
+        setWeb3(JSON.parse(abi), contractAddress);
 
         let functionCalled = e.target.id;
         console.log("Button " + functionCalled + " was clicked!");
