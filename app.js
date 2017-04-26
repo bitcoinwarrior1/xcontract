@@ -5,7 +5,8 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let index = require('./routes/index');
-let users = require('./routes/users');
+let search = require('./routes/search');
+let register = require('./routes/register');
 let app = express();
 
 // view engine setup
@@ -21,7 +22,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/search/', search);
+app.use('/register/', register);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) =>

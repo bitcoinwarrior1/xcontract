@@ -6,8 +6,9 @@ let knex = require('knex');
 router.get("/search/:dappname", (req,res,next) =>
 {
     let arrayOfResultObjects = [];
+    let dappName = req.params.dappname;
 
-    knex.select().table("dAppTable").then(function(err,data) {
+    knex.select().table("dAppTable").whereRaw("dAppName = " + dappName).then(function(err,data) {
         if(err) throw err;
 
         for(result of data)
