@@ -32,19 +32,7 @@ $(function()
         try
         {
             contract = web3.eth.contract(abi).at(contractAddress);
-
-            // let etherScanApi = "http://api.etherscan.io/api?module=contract&action=getabi&address=";
-            //
-            // request.get(etherScanApi + contractAddress, (error, data) =>
-            // {
-            //     if(error) throw error;
-            //
-            //     if(data.body.message === "NOTOK")
-            //     {
-            //         alert("Warning! Contract source code is not verified!");
-            //     }
-            //     else alert("Contract source code is verified!");
-            // });
+            //checkIfVerified(contractAddress);
         }
         catch(exception)
         {
@@ -52,6 +40,27 @@ $(function()
         }
 
     }
+
+    // function checkIfVerified(contractAddress)
+    // {
+    //     let etherScanApi = "http://api.etherscan.io/api?module=contract&action=getabi&address=";
+    //
+    //     console.log('got to api');
+    //
+    //     request.get(etherScanApi + contractAddress, (error, data) =>
+    //     {
+    //         if(error) throw error;
+    //
+    //         console.log("data" + data.body.message);
+    //
+    //         if(data.body.message === "NOTOK")
+    //         {
+    //             console.log("contract not verified");
+    //             alert("Warning! Contract source code is not verified!");
+    //         }
+    //         else alert("Contract source code is verified!");
+    //     });
+    // }
 
     $(':button').click(function(e)
     {
