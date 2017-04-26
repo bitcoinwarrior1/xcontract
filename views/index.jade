@@ -57,7 +57,7 @@ s
       #abiDiv
         #abiForm
           p Here is the abi:
-          textarea#ABI(name='ABI', placeholder="Paste the smart contract's ABI here" ) #{abiVal}
+          textarea#ABI(name='ABI', placeholder= abiError || "Paste the smart contract's ABI here" ) #{abiVal}
           p Here is the contract address:
           textarea#contractAddress(name='contractAddress', placeholder="Paste the smart contract's address here" ) #{addressVal}
           p
