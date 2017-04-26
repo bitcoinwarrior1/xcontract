@@ -52,11 +52,13 @@ s
         h6
           | Run your live smart contracts here!
         p  **Please have a node running or install the metamask browser plug in to interact with the smart contracts.**
+        h6 #{warning}
 
       #abiDiv
         #abiForm
-          p
+          p Here is the abi:
           textarea#ABI(name='ABI', placeholder="Paste the smart contract's ABI here" ) #{abiVal}
+          p Here is the contract address:
           textarea#contractAddress(name='contractAddress', placeholder="Paste the smart contract's address here" ) #{addressVal}
           p
           button#submit Submit contract

@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ContractExecutor.iml" filepath="$PROJECT_DIR$/.idea/ContractExecutor.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/eRunner.iml" filepath="$PROJECT_DIR$/.idea/eRunner.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/xcontract.iml" filepath="$PROJECT_DIR$/.idea/xcontract.iml" />
     </modules>
   </component>
 </project>
