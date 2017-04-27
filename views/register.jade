@@ -1,5 +1,5 @@
-//TODO link pages together
 
+//TODO replace p with margins on inputs, applies for all jade files
 doctype html
 html(lang='en')
     head
@@ -57,9 +57,11 @@ html(lang='en')
                 | Please include your ABI, contract address and dApp name
             p
                 | #{status}
-            input#dappName(placeholder="enter the dApp name here")
-            input#abi(placeholder="please enter the abi here")
-            input#contractAddress(placeholder="please enter the contract address here")
+            textarea#dappName(placeholder="enter the dApp name here")
+            p
+            textarea#abi(placeholder="please enter the abi here")
+            p
+            textarea#contractAddress(placeholder="please enter the contract address here")
 
 html
 
