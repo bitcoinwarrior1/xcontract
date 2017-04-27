@@ -6,7 +6,7 @@ let knex = require("knex");
 router.get("/register", (req, res, next) =>
 {
     res.render('register', {
-
+        status:"Register your dApp by filling out the form below"
     });
 });
 
@@ -21,7 +21,7 @@ router.get('register/:dAppName/:abi/:contractAddress', (req,res,next) =>
         .then((err, data) => {
             console.log(data);
             res.render('register', {
-
+                status:"dApp registration successful"
             });
         });
 });

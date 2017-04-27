@@ -5,9 +5,9 @@ exports.up = function(knex, Promise)
     return knex.schema.createTableIfNotExists('dAppTable', function(table)
     {
         table.increments('id');
-        table.string('dAppName');
+        table.string('dAppName').unique();
         table.string('abi');
-        table.string('contractAddress');
+        table.string('contractAddress').unique();
     })
 };
 

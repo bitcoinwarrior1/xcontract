@@ -59,36 +59,12 @@ html(lang='en')
         .twelve.columns
             h6
                 | Please include your ABI, contract address and dApp name
-        #abiDiv
-            #abiForm
-                p
-                textarea#dAppName(name='dAppName', placeholder="Write your dapp name here")
-                textarea#ABI(name='ABI', placeholder="Paste the smart contract's ABI here" )
-                textarea#contractAddress(name='contractAddress', placeholder="Paste the smart contract's address here" )
-                p
-                button#submit Submit dApp
+            p
+                | #{status}
+            input#dappName(placeholder="enter the dApp name here")
+            input#abi(placeholder="please enter the abi here")
+            input#contractAddress(placeholder="please enter the contract address here")
 
-            #paramAndFunctionDiv
-                h6 #{functionTitle}
-                functionNames
-                functionParams
-            #functionsDiv
-            if(typeof (functionNames) != 'undefined' && typeof (functionParams) != 'undefined')
-                -var index = 0;
-                each functionName in functionNames
-                    -index++
-                    div(id="function" + index)
-                        button(name=functionName, id=functionName + "&" + index) #{functionName}
-                #paramDiv
-                    -var index = 0;
-                    each param in functionParams
-                        -index++
-                        div(id = index)
-                            textarea(value=param, placeholder = param, id = param + index)
-
-        .twelve.columns
-
-        .twelve.columns
 html
 
     //End Document
