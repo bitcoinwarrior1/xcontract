@@ -1,1 +1,67 @@
+doctype html
+html(lang='en')
+    head
+        //
+          Basic Page Needs
+          ––––––––––––––––––––––––––––––––––––––––––––––––––
+        meta(charset='utf-8')
+
+    title xcontract
+    //
+      Mobile Specific Metas
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    //
+      FONT
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+    // <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+    //
+      CSS
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+    link(rel='stylesheet', href='/stylesheets/normalize.css')
+    link(rel='stylesheet', href='/stylesheets/skeleton.css')
+    link(rel='stylesheet', href='/stylesheets/main.css')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css')
+    //if lt IE 9
+      link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css')
+
+    // JS files
+    //
+      Favicon
+      ––––––––––––––––––––––––––––––––––––––––––––––––––
+
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+    script(src="/javascripts/bundle.js")
+
+    link(rel='icon', type='image/png', href='/images/favicon.png')
+body
+    //Primary Page Layout
+    //––––––––––––––––––––––––––––––––––––––––––––––––––
+
+    a.github-fork-ribbon(href='https://github.com/James-Sangalli/xcontract', title='Fork me on GitHub') Fork me on GitHub
+    div
+        ul
+            li
+                a(href="/")  Home
+            li
+                a(href="/search") Search for dApps
+            li
+                a(href="/register") Register your dApp
+
+.container
+    .header
+        h1
+            | xcontract search
+    .twelve.columns
+        h6
+            | Search for smart contracts here
+        input#searchBox
+        button#searchButton
+
+
+html
+
+    //End Document
+    //––––––––––––––––––––––––––––––––––––––––––––––––––
+
 

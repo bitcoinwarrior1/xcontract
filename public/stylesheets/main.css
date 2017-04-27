@@ -55,7 +55,7 @@ html{
   display:flex ;
   flex-flow:row wrap;
   align-content: space-between;
-
+  margin-top: 3%;
 }
 
 #footer {

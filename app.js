@@ -22,8 +22,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/search/', search);
-app.use('/register/', register);
+app.use('/search', search);
+//app.use('/register/', register);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) =>

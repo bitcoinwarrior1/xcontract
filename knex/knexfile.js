@@ -6,5 +6,12 @@ module.exports = {
         connection: {
             filename: './dev.sqlite3'
         }
-    },
+    }//,
+    //
+    // production: {
+    //     client:'',
+    //     connection:{
+    //        
+    //     }
+    // }
 };
