@@ -41,13 +41,13 @@ $(function()
 
     $(':button').click(function(e)
     {
-        let contractAddress = $("#contractAddress").val();
-        let abi = $("#ABI").val();
+        let contractAddress = $("#contractAddress").val().trim();
+        let abi = $("#ABI").val().trim();
         let jsonABI;
 
-        if(contractAddress == "")
+        if(contractAddress == "" || contractAddress.length != 42)
         {
-            alert("missing contract address");
+            alert("missing or invalid contract address");
             return;
         }
 
