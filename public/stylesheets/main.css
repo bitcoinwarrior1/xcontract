@@ -137,9 +137,12 @@ p{
     max-width: 90%;
     min-width:90%;
   }
-
-    #functionsDiv, #paramDiv
-    {
-
-    }
+  .container{
+      width:90%;
+      max-width: 1500px;
+      display:flex ;
+      flex-flow:row wrap;
+      align-content: space-between;
+      margin-top: 7.5%;
+  }
 }
