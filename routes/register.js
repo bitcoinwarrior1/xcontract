@@ -3,7 +3,7 @@ let express = require('express');
 let router = express.Router();
 let knex = require("knex");
 
-router.get("/register", (req, res, next) =>
+router.get("/register/", (req, res, next) =>
 {
     res.render('register', {
         status:"Register your dApp by filling out the form below"
@@ -11,7 +11,7 @@ router.get("/register", (req, res, next) =>
 });
 
 //on submit
-router.get('register/:dAppName/:abi/:contractAddress', (req,res,next) =>
+router.get('/register/:dAppName/:abi/:contractAddress', (req,res,next) =>
 {
     let dappName = req.param.dAppName;
     let abi = req.param.abi;

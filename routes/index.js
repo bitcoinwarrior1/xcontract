@@ -3,6 +3,8 @@ let express = require('express');
 let router = express.Router();
 let web3Handler = require("../public/javascripts/Web3Handler.js");
 let request = require("superagent");
+let knex = require("knex")("../knex/knexfile");
+
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
@@ -87,6 +89,61 @@ function checkIfContractIsVerified(contractAddress, cb)
         }
     });
 }
+
+router.get("/search/", (req,res,next) =>
+{
+    res.render('search', {
+        // searchResult: "Welcome to search"
+    });
+});
+
+router.get("/search/:dappname", (req,res,next) =>
+{
+    let arrayOfResultObjects = [];
+    let dappName = req.params.dappname;
+
+    knex.select().from("dAppTable").whereRaw("LIKE dAppName = %" + dappName + "%").then(function(err,data) {
+        if(err) throw err;
+
+        for(result of data)
+        {
+            let resultObj = {};
+            resultObj.dAppName = data.dAppName;
+            resultObj.abi = data.abi;
+            resultObj.contractAddress = data.contractAddress;
+
+            arrayOfResultObjects.push(resultObj);
+        }
+    });
+
+    //render all the items in a seperate div for each
+    res.render('search', {
+        searchResult : arrayOfResultObjects
+    });
+});
+
+router.get("/register/", (req, res, next) =>
+{
+    res.render('register', {
+        status:"Register your dApp by filling out the form below"
+    });
+});
+
+//on submit
+router.get('/register/:dAppName/:abi/:contractAddress', (req,res,next) =>
+{
+    let dappName = req.param.dAppName;
+    let abi = req.param.abi;
+    let contractAddress = req.param.contractAddress;
+
+    knex.table("dAppTable").insert({dappName: dappName, abi:abi, contractAddress:contractAddress})
+        .then((err, data) => {
+            console.log(data);
+            res.render('register', {
+                status:"dApp registration successful"
+            });
+        });
+});
 
 
 module.exports = router;

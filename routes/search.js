@@ -3,11 +3,11 @@ let express = require('express');
 let router = express.Router();
 let knex = require('knex');
 
-router.get("/search", (req,res,next) =>
+router.get("/search/", (req,res,next) =>
 {
     res.render('search', {
         // searchResult: "Welcome to search"
-    })
+    });
 });
 
 router.get("/search/:dappname", (req,res,next) =>

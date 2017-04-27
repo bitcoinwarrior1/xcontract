@@ -31,7 +31,7 @@ html(lang='en')
       ––––––––––––––––––––––––––––––––––––––––––––––––––
 
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
-    script(src="/javascripts/bundle.js")
+    script(src="/javascripts/SearchHandler.js")
 
     link(rel='icon', type='image/png', href='/images/favicon.png')
 body
@@ -55,8 +55,9 @@ body
     .twelve.columns
         h6
             | Search for smart contracts here
-        input#searchBox
-        button#searchButton
+        input#searchBox(placeholder="enter dApp name here")
+        p
+        button#searchButton Search
 
 
 html
