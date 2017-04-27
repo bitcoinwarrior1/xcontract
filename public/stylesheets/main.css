@@ -93,16 +93,12 @@ li a {
     text-decoration: none;
     max-width: 100%;
     float:left;
+    margin-bottom: 10%;
 }
 
 #navBar {
   margin-bottom: 25px;
 }
-
-
-/*body input {*/
-  /*width:600px;*/
-/*}*/
 
 li a:hover {
     background-color: yellow;
@@ -112,20 +108,13 @@ li a:hover {
   color: yellow;
 }
 
-
-
 p{
     color: red;
 }
 
-#functionsDiv
+input
 {
-
-}
-
-#paramDiv
-{
-
+    min-width: 500px;
 }
 
 /*media queries*/
@@ -145,4 +134,14 @@ p{
       align-content: space-between;
       margin-top: 7.5%;
   }
+  textarea
+  {
+      min-width: 90%;
+  }
+
+input
+{
+    min-width: 90%;
+}
+
 }

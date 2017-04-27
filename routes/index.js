@@ -4,6 +4,8 @@ let router = express.Router();
 let web3Handler = require("../public/javascripts/Web3Handler.js");
 let request = require("superagent");
 let knex = require("knex")("../knex/knexfile");
+// let search = require("./search");
+// let register = require("./register");
 
 
 /* GET home page. */
