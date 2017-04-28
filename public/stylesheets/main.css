@@ -37,12 +37,14 @@ html, body, #container {
 
 
 body {
-    background: url("http://proofofwork.media/wp-content/uploads/2015/01/5209ea67688e898c34ed50b75aded2ce.jpg") no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    background-size: 100% 100%;
+    /*background: url("http://proofofwork.media/wp-content/uploads/2015/01/5209ea67688e898c34ed50b75aded2ce.jpg") no-repeat center center fixed;*/
+    /*-webkit-background-size: cover;*/
+    /*-moz-background-size: cover;*/
+    /*-o-background-size: cover;*/
+    /*background-size: cover;*/
+    /*background-size: 100% 100%;*/
+    /*background: url("https://www.lykke.com/media/blog/20170313015619earth_11497331920.jpg") no-repeat center fixed;*/
+    background-color: #222222;
 }
 
 html{
@@ -125,7 +127,7 @@ input
 /*media queries*/
 @media (max-width: 750px) {
   html,body, .mainContainer{
-    background: black;
+    /*background: black;*/
   }
   #abi{
     max-width: 90%;

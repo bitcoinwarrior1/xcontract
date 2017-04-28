@@ -131,12 +131,26 @@ router.get("/register/", (req, res, next) =>
     });
 });
 
+router.get("/register/:error", (req,res,next) => {
+    let error = req.param.error;
+
+    res.render('register', {
+        status: "Error registering dApp: " + error
+    });
+});
+
 //on submit
 router.get('/register/:dAppName/:abi/:contractAddress', (req,res,next) =>
 {
     let dappName = req.param.dAppName;
     let abi = req.param.abi;
     let contractAddress = req.param.contractAddress;
+
+    if(contractAddress.length != 42)
+        res.redirect("/register/invalid contract address");
+    else if(abi == "")
+        res.redirect("/register/invalid/no abi provided");
+
 
     knex.table("dAppTable").insert({dAppName: dappName, abi:abi, contractAddress:contractAddress})
         .then((err, data) => {
