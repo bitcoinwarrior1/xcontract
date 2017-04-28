@@ -8,5 +8,21 @@ module.exports = {
             filename: "./knex/dev.sqlite3"
         }
     },
-    useNullAsDefault: true
+    useNullAsDefault: true,
+
+    production: {
+        client: 'postgresql',
+        connection: process.env.DATABASE_URL,
+        pool: {
+            min: 2,
+            max: 10
+        },
+        migrations: {
+            tableName: 'dAppTable',
+            directory: __dirname + '/migrations'
+        },
+        seeds: {
+            directory: __dirname + '/seeds'
+        }
+    }
 };
