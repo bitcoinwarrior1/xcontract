@@ -55,13 +55,13 @@ html(lang='en')
             h1
                 | Register for xcontract
         .twelve.columns
-            h6
-                | Please include your ABI, contract address and dApp name
             p
+                | Please include your contract address and dApp name
+            h6
+                | Only contracts that are verified on etherscan will be accepted
+            h6
                 | #{status}
             textarea#dappName(placeholder="enter the dApp name here")
-            p
-            textarea#abi(placeholder="please enter the abi here")
             p
             textarea#contractAddress(placeholder="please enter the contract address here")
             p

@@ -1,16 +1,23 @@
+let request = require("superagent");
+
 module.exports = {
 
-    checkContractValidity : (res, contractAddress, abi) =>
+    checkIfContractIsVerified : (contractAddress, cb) =>
     {
-        //TODO refine for a proper check
-        if(contractAddress.length !== 42 && contractAddress.length !== 40)
+        let etherScanApi = "http://api.etherscan.io/api?module=contract&action=getabi&address=";
+
+        request.get(etherScanApi + contractAddress, (error, data) =>
         {
-            res.redirect("/register/invalid contract address");
-        }
-        else if(abi === "")
-        {
-            res.redirect("/register/invalid/no abi provided");
-        }
+            if(error)
+            {
+                cb(error, null);
+                throw error;
+            }
+            else
+            {
+                cb(null, data);
+            }
+        });
     },
 
      extractAbiFunctions : (abi) =>

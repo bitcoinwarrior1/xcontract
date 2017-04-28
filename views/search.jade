@@ -53,12 +53,18 @@ body
         h1
             | Search for dApps
     .twelve.columns
-        h6
+        p
             | Search for smart contracts here
         input#searchBox(placeholder="enter dApp name here")
         p
         button#searchButton Search
 
+        if(searchResults != "No dApps found" || (typeof searchResults) != 'undefined' || searchResults == "")
+            each result in searchResults
+                p
+                a(href="/api/" + result.contractAddress) #{result.dAppName }
+        else
+            h6 #{searchResults}
 
 html
 
