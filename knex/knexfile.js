@@ -4,7 +4,8 @@ module.exports = {
     development: {
         client: 'sqlite3',
         connection: {
-            filename: "./dev.sqlite3"
+            //relative to index route
+            filename: "./knex/dev.sqlite3"
         }
     },
     useNullAsDefault: true

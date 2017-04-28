@@ -1,4 +1,6 @@
 //TODO fix exporting issue with search and register routes
+//TODO only allow verified contracts to register (No ABI needed) allows for someone else to do vetting
+//TODO give frontend a makeover by using bootstrap
 
 //Globals:
 let express = require('express');
