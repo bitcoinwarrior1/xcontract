@@ -132,7 +132,7 @@ router.get("/register/", (req, res, next) =>
 });
 
 router.get("/register/:error", (req,res,next) => {
-    let error = req.param.error;
+    let error = req.params.error;
 
     res.render('register', {
         status: "Error registering dApp: " + error
@@ -142,15 +142,11 @@ router.get("/register/:error", (req,res,next) => {
 //on submit
 router.get('/register/:dAppName/:abi/:contractAddress', (req,res,next) =>
 {
-    let dappName = req.param.dAppName;
-    let abi = req.param.abi;
-    let contractAddress = req.param.contractAddress;
+    let dappName = req.params.dAppName;
+    let abi = req.params.abi;
+    let contractAddress = req.params.contractAddress;
 
-    if(contractAddress.length != 42)
-        res.redirect("/register/invalid contract address");
-    else if(abi == "")
-        res.redirect("/register/invalid/no abi provided");
-
+    web3Handler.checkContractValidity(res,contractAddress, abi);
 
     knex.table("dAppTable").insert({dAppName: dappName, abi:abi, contractAddress:contractAddress})
         .then((err, data) => {

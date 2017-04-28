@@ -1,5 +1,18 @@
 module.exports = {
 
+    checkContractValidity : (res, contractAddress, abi) =>
+    {
+        //TODO refine for a proper check
+        if(contractAddress.length !== 42 && contractAddress.length !== 40)
+        {
+            res.redirect("/register/invalid contract address");
+        }
+        else if(abi === "")
+        {
+            res.redirect("/register/invalid/no abi provided");
+        }
+    },
+
      extractAbiFunctions : (abi) =>
      {
         let arrayOfFunctionObjects = [];
