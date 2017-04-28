@@ -6,7 +6,7 @@ let knex = require("knex");
 router.get("/register/", (req, res, next) =>
 {
     res.render('register', {
-        status:"Register your dApp by filling out the form below"
+
     });
 });
 

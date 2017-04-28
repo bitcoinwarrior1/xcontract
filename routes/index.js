@@ -127,7 +127,7 @@ router.get("/search/:dappname", (req,res,next) =>
 router.get("/register/", (req, res, next) =>
 {
     res.render('register', {
-        status:"Register your dApp by filling out the form below"
+        // status:"Register your dApp by filling out the form below"
     });
 });
 

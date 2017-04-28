@@ -9,6 +9,7 @@ let contract;
 
 $(function()
 {
+
     function setWeb3(abi, contractAddress)
     {
         if (typeof window.web3 !== 'undefined')
@@ -19,9 +20,9 @@ $(function()
         }
         else
         {
-            console.log("no injected provider found, using localhost:8545");
             web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-            alert("no injected provider found, using localhost:8545");
+            alert("no injected provider found, using localhost:8545, please ensure your local node is running " +
+                "and rpc is enabled");
         }
 
         //let's assume that coinbase is our account
