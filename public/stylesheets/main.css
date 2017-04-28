@@ -37,7 +37,12 @@ html, body, #container {
 
 
 body {
-    background: black center;
+    background: url("http://proofofwork.media/wp-content/uploads/2015/01/5209ea67688e898c34ed50b75aded2ce.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-size: 100% 100%;
 }
 
 html{

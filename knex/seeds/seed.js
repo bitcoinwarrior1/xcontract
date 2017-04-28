@@ -4,7 +4,7 @@ exports.seed = function(knex, Promise)
         // Deletes ALL existing entries
         knex('dAppTable').del(),
         // Inserts seed entries
-        knex('dAppTable').insert({id: 1, dAppName: 'OpenRep',
+        knex('dAppTable').insert({dAppName: 'OpenRep',
         abi: '[{"constant":false,"inputs":[{"name":"vendor","type":"address"}],' +
         '"name":"trade","outputs":[],"payable":false,"type":"function"},{"constant":false,' +
         '"inputs":[{"name":"username","type":"string"},{"name":"location","type":"string"}],' +

@@ -1,12 +1,12 @@
+//TODO fix exporting issue with search and register routes
+
 //Globals:
 let express = require('express');
 let router = express.Router();
 let web3Handler = require("../public/javascripts/Web3Handler.js");
 let request = require("superagent");
-let knex = require("knex")("../knex/knexfile");
-// let search = require("./search");
-// let register = require("./register");
-
+let knexConfig = require('../knex/knexfile');
+let knex = require('knex')(knexConfig[process.env.NODE_ENV || "development"]);
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
@@ -104,7 +104,7 @@ router.get("/search/:dappname", (req,res,next) =>
     let arrayOfResultObjects = [];
     let dappName = req.params.dappname;
 
-    knex.select().from("dAppTable").whereRaw("LIKE dAppName = %" + dappName + "%").then(function(err,data) {
+    knex("dAppTable").select().where("dAppName" , "%" + dappName + "%").then( (err,data) => {
         if(err) throw err;
 
         for(result of data)
@@ -138,7 +138,7 @@ router.get('/register/:dAppName/:abi/:contractAddress', (req,res,next) =>
     let abi = req.param.abi;
     let contractAddress = req.param.contractAddress;
 
-    knex.table("dAppTable").insert({dappName: dappName, abi:abi, contractAddress:contractAddress})
+    knex.table("dAppTable").insert({dAppName: dappName, abi:abi, contractAddress:contractAddress})
         .then((err, data) => {
             console.log(data);
             res.render('register', {
