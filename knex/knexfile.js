@@ -19,10 +19,10 @@ module.exports = {
         },
         migrations: {
             tableName: 'dAppTable',
-            directory: __dirname + '/migrations'
+            directory: __dirname + '/migrations/'
         },
         seeds: {
-            directory: __dirname + '/seeds'
+            directory: __dirname + '/seeds/'
         }
     }
 };
