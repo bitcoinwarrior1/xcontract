@@ -30,7 +30,7 @@ router.get('/register/:dappname/:contractaddress', (req,res,next) =>
         {
             //verified
             let abi = data.body.result;
-            knex.table("dapptable").insert({dappname: dappName, abi:abi, contractaddress:contractAddress})
+            knex.table("dapptable").insert({dappname: dappName, contractaddress:contractAddress})
             .then((data) => {
                 console.log(data);
                 res.render('register', {
