@@ -18,7 +18,8 @@ module.exports = {
             max: 10
         },
         migrations: {
-            tableName: 'dAppTable',
+            tableName: 'knex_migrations',
+            //tableName: 'dAppTable',
             directory: __dirname + '/migrations'
         },
         seeds: {
