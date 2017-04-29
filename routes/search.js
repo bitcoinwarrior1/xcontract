@@ -15,7 +15,7 @@ router.get("/search/:dappname", (req,res,next) =>
     let arrayOfResultObjects = [];
     let dappName = req.params.dappname;
 
-    knex("dAppTable").select().where("dappname" , "LIKE", "%" + dappName + "%").then( (data) =>
+    knex("dapptable").select().where("dappname" , "LIKE", "%" + dappName + "%").then( (data) =>
     {
         console.log(data);
 
