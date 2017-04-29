@@ -52,9 +52,9 @@ body
     .header
         h1
             | Search for dApps
-    .twelve.columns
         p
-            | Search for smart contracts here
+    .twelve.columns
+
         input#searchBox(placeholder="enter dApp name here")
         p
         button#searchButton Search
@@ -63,6 +63,7 @@ body
             each result in searchResults
                 p
                 a(href="/api/" + result.contractAddress) #{result.dAppName }
+                p
         else
             h6 #{searchResults}
 
