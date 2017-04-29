@@ -6,7 +6,6 @@ exports.up = function(knex, Promise)
     {
         table.increments('id');
         table.string('dAppName').unique();
-        table.string('abi');
         table.string('contractAddress').unique();
     })
 };
