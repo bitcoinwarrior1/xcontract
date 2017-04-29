@@ -18,10 +18,10 @@ router.get("/register/:error", (req,res,next) => {
 });
 
 //on submit
-router.get('/register/:dAppName/:contractAddress', (req,res,next) =>
+router.get('/register/:dappname/:contractaddress', (req,res,next) =>
 {
-    let dappName = req.params.dAppName;
-    let contractAddress = req.params.contractAddress;
+    let dappName = req.params.dappname;
+    let contractAddress = req.params.contractaddress;
 
     //web3Handler.checkContractValidity(res,contractAddress, abi);
 
@@ -30,7 +30,7 @@ router.get('/register/:dAppName/:contractAddress', (req,res,next) =>
         {
             //verified
             let abi = data.body.result;
-            knex.table("dAppTable").insert({dAppName: dappName, abi:abi, contractAddress:contractAddress})
+            knex.table("dAppTable").insert({dappname: dappName, abi:abi, contractaddress:contractAddress})
             .then((data) => {
                 console.log(data);
                 res.render('register', {
