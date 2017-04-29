@@ -39,7 +39,14 @@ router.get('/register/:dappname/:contractaddress', (req,res,next) =>
             })
             .catch((err) =>
             {
-                if(err) throw err;
+                console.log(err.message);
+                if(err.message.includes("SQLITE_CONSTRAINT: UNIQUE"))
+                {
+                    res.render('register', {
+                        status:"dApp already registered"
+                    });
+                }
+                else throw err;
             });
         }
         else

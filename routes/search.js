@@ -33,9 +33,8 @@ router.get("/search/:dappname", (req,res,next) =>
         {
             console.log("dApps found");
             let resultObj = {};
-            resultObj.dAppName = result.dAppName;
-            resultObj.abi = result.abi;
-            resultObj.contractAddress = result.contractAddress;
+            resultObj.dAppName = result.dappname;
+            resultObj.contractAddress = result.contractaddress;
 
             arrayOfResultObjects.push(resultObj);
         }
