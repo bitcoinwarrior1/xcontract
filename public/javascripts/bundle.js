@@ -2144,7 +2144,6 @@ module.exports = {
     getContractFunctionNamesAndParams : (abiFunctions) =>
     {
         let nameAndParamObj = {};
-
         let functionNameFields = [];
         let functionParamFields = [];
         let readOnlyParamInputs = [];
@@ -2162,7 +2161,10 @@ module.exports = {
             {
                 readOnlyParamInputs.push(true);
             }
-            else readOnlyParamInputs.push(false);
+            else
+            {
+                readOnlyParamInputs.push(false);
+            }
         }
 
         nameAndParamObj.names = functionNameFields;

@@ -79,7 +79,14 @@ html(lang='en')
               -var index = 0;
               each param in functionParams
                 div(id = index)
-                  textarea(value=param, placeholder = param, id = param + index, readonly = readOnlyAttribute[index])
+                  if(param != undefined)
+                    textarea(value=param, placeholder = functionNames[index].toUpperCase() +
+                    " parameters: " + param, id = param + index,
+                    readonly = readOnlyAttribute[index])
+                  else
+                    textarea(value=param, placeholder = functionNames[index].toUpperCase() +
+                    " has no parameters", id = param + index,
+                    readonly = readOnlyAttribute[index])
                   -index++
 
 
