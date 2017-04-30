@@ -22,7 +22,7 @@ $(function()
         {
             web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
             alert("no injected provider found, using localhost:8545, please ensure your local node is running " +
-                "and rpc is enabled");
+                "and rpc and rpccorsdomain is enabled");
         }
 
         //let's assume that coinbase is our account
@@ -37,7 +37,6 @@ $(function()
         {
             console.log("contract failed to load, error: " + exception);
         }
-
     }
 
     $(':button').click(function(e)
