@@ -1,7 +1,3 @@
-/**
- * Created by sangalli on 19/4/17.
- */
-
 let injectedProvider;
 let web3;
 let web3Handler = require("./Web3Handler.js");
@@ -9,9 +5,9 @@ let contract;
 
 $(function()
 {
-
     function setWeb3(abi, contractAddress)
     {
+        //check if plugin node is available if not use localhost
         if (typeof window.web3 !== 'undefined')
         {
             injectedProvider = window.web3.currentProvider;
@@ -50,7 +46,7 @@ $(function()
             alert("missing or invalid contract address");
             return;
         }
-
+        //if no abi is provided redirect to verified contract url, if verified then no ABI is needed
         if(abi == "")
         {
             //let the server check if the contract abi is verified and available
@@ -76,6 +72,7 @@ $(function()
 
     });
 
+    //gets the transaction info for one function call at a time
     function extractTransactionInfo(functionCalled, abi, contractAddress)
     {
         //remove strings and get index number
@@ -119,6 +116,7 @@ $(function()
         }
     }
 
+    //gets each param for each function, returns them one by one
     function getParamsFromFunctionName(paramNumber)
     {
         console.log("here is the param number " + paramNumber);

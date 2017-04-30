@@ -53,7 +53,8 @@ router.get('/api/:abi/:address', (req,res,next) => {
                 functionNames: functionNameAndParamObj.names,
                 functionParams : functionNameAndParamObj.params,
                 functionTitle:"Smart Contract Functions",
-                warning:"Warning! Contract source code is not verified on etherscan!"
+                warning:"Warning! Contract source code is not verified on etherscan!",
+                readOnlyAttribute: functionNameAndParamObj.readOnly
             });
         }
         else
@@ -64,7 +65,8 @@ router.get('/api/:abi/:address', (req,res,next) => {
                 functionNames: functionNameAndParamObj.names,
                 functionParams : functionNameAndParamObj.params,
                 functionTitle:"Smart Contract Functions",
-                warning:"Contract source code is verified on etherscan!"
+                warning:"Contract source code is verified on etherscan!",
+                readOnlyAttribute: functionNameAndParamObj.readOnly
             });
         }
     });

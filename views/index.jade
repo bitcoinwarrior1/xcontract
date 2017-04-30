@@ -68,21 +68,20 @@ html(lang='en')
 
         #paramAndFunctionDiv
             h6 #{functionTitle}
-            functionNames
-            functionParams
           #functionsDiv
           if(typeof (functionNames) != 'undefined' && typeof (functionParams) != 'undefined')
             -var index = 0;
             each functionName in functionNames
-              -index++
               div(id="function" + index)
                 button(name=functionName, id=functionName + "&" + index) #{functionName}
+                -index++
             #paramDiv
               -var index = 0;
               each param in functionParams
-                -index++
                 div(id = index)
-                  textarea(value=param, placeholder = param, id = param + index)
+                  textarea(value=param, placeholder = param, id = param + index, readonly = readOnlyAttribute[index])
+                  -index++
+
 
       .twelve.columns
 

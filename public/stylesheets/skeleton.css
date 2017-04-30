@@ -202,7 +202,7 @@ button:focus,
 input[type="submit"]:focus,
 input[type="reset"]:focus,
 input[type="button"]:focus {
-  color: yellow;
+  color: #1EAEDB;
   border-color: white;
   outline: 0; }
 .button.button-primary,

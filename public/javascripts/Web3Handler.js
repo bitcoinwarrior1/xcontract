@@ -40,19 +40,27 @@ module.exports = {
 
         let functionNameFields = [];
         let functionParamFields = [];
+        let readOnlyParamInputs = [];
 
         for(abiFunc of abiFunctions)
         {
             let functionName = abiFunc.name;
             let functionParams = JSON.stringify(abiFunc.inputs[0]);
-            console.log("Index: " + functionName);
             //create jade elements for each function with name and param
             functionNameFields.push(functionName);
             functionParamFields.push(functionParams);
+            //if there are no params then set the input to readonly
+            console.log("here is each function param" + functionParams);
+            if(functionParams == undefined)
+            {
+                readOnlyParamInputs.push(true);
+            }
+            else readOnlyParamInputs.push(false);
         }
 
         nameAndParamObj.names = functionNameFields;
         nameAndParamObj.params = functionParamFields;
+        nameAndParamObj.readOnly = readOnlyParamInputs;
 
         return nameAndParamObj;
     },
