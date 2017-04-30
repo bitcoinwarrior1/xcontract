@@ -2200,6 +2200,8 @@ module.exports = {
              contract[functionName](function(err, data)
              {
                  if(err) throw err;
+                 console.log("here is the response from web3: " + data);
+                 alert("here is the response from web3: " + data);
              });
          }
          else
@@ -2207,11 +2209,10 @@ module.exports = {
              contract[functionName](params, function(err, data)
              {
                  if(err) throw err;
+                 console.log("here is the response from web3: " + data);
+                 alert("here is the response from web3: " + data);
              });
          }
-
-         console.log("here is the response from web3: " + data);
-         alert("here is the response from web3: " + data);
     },
 
     sendEtherToContract : (value, contractAddress, web3) =>
