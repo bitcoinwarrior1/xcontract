@@ -121,6 +121,14 @@ li a:hover {
     background-color: black;
 }
 
+#functionsDiv{
+    float: right;
+}
+
+#paramDiv{
+    float: left;
+}
+
 /*.active{*/
   /*color: white;*/
 /*}*/
