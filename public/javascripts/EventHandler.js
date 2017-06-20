@@ -1,9 +1,10 @@
 let injectedProvider;
-let web3;
+let Web3 = require("web3");
+let web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 let web3Handler = require("./Web3Handler.js");
 let contract;
 
-$(function()
+$(() =>
 {
     function setWeb3(abi, contractAddress)
     {
@@ -16,7 +17,6 @@ $(function()
         }
         else
         {
-            web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
             alert("no injected provider found, using localhost:8545, please ensure your local node is running " +
                 "and rpc and rpccorsdomain is enabled");
         }
@@ -41,9 +41,9 @@ $(function()
         let abi = $("#ABI").val().trim();
         let jsonABI;
 
-        if(contractAddress == "" || contractAddress.length != 42)
+        if(!web3Handler.checkAddressValidity(contractAddress))
         {
-            alert("missing or invalid contract address");
+            alert("missing or invalid contract address: " + contractAddress);
             return;
         }
         //if no abi is provided redirect to verified contract url, if verified then no ABI is needed

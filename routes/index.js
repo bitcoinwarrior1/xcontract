@@ -1,5 +1,3 @@
-//TODO give frontend a makeover by using bootstrap
-
 let express = require('express');
 let router = express.Router();
 let web3Handler = require("../public/javascripts/Web3Handler.js");

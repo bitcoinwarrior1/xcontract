@@ -1,4 +1,6 @@
 let request = require("superagent");
+let Web3 = require("web3");
+let web3 = new Web3();
 
 module.exports = {
 
@@ -20,8 +22,8 @@ module.exports = {
         });
     },
 
-     extractAbiFunctions : (abi) =>
-     {
+    extractAbiFunctions : (abi) =>
+    {
         let arrayOfFunctionObjects = [];
 
         for(i=0; i < abi.length; i++)
@@ -67,30 +69,12 @@ module.exports = {
         return nameAndParamObj;
     },
 
-    createFunctionsFromAbi : (functionNames, functionParams, address) =>
-    {
-         let functionsInAbi = [];
-
-         for(i = 0; i < functionNames.length; i ++)
-         {
-             let contractFunction = new Function(params)
-             {
-                 web3.eth[functionNames[i].toString()].sendTransaction(
-                     params, {to: address, from:eth.coinbase }
-                     );
-             }
-             functionsInAbi.push(contractFunction);
-         }
-
-         return functionsInAbi;
-    },
-
     executeContractFunction : (contract, functionName, params) =>
     {
          //must use bracket notation as function name is passed as a string
          if(params == null)
          {
-             contract[functionName](function(err, data)
+             contract[functionName]( (err, data) =>
              {
                  if(err) throw err;
                  console.log("here is the response from web3: " + data);
@@ -99,7 +83,7 @@ module.exports = {
          }
          else
          {
-             contract[functionName](params, function(err, data)
+             contract[functionName](params, (err, data) =>
              {
                  if(err) throw err;
                  console.log("here is the response from web3: " + data);
@@ -108,9 +92,8 @@ module.exports = {
          }
     },
 
-    sendEtherToContract : (value, contractAddress, web3) =>
+    checkAddressValidity : (address) =>
     {
-         web3.eth.sendTransaction({to: contractAddress, from: eth.coinbase, value: value });
+        return web3.isAddress(address);
     }
-
 };

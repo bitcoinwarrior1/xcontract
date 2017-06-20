@@ -137,29 +137,18 @@ input
 
 /*media queries*/
 @media (max-width: 750px) {
-  html,body, .mainContainer{
-    /*background: black;*/
-  }
-  #abi{
-    max-width: 90%;
-    min-width:90%;
-  }
+
   .container{
-      width:90%;
-      max-width: 1500px;
+      /*width:90%;*/
       display:flex ;
       flex-flow:row wrap;
       align-content: space-between;
       margin-top: 7.5%;
   }
-  textarea
+  textarea, input
   {
       min-width: 90%;
+      max-width: 90%;
   }
-
-input
-{
-    min-width: 90%;
-}
 
 }
