@@ -77,8 +77,6 @@ module.exports = {
              contract[functionName]( (err, data) =>
              {
                  if(err) throw err;
-                 console.log("here is the response from web3: " + data);
-                 alert("here is the response from web3: " + data);
              });
          }
          else
@@ -86,10 +84,40 @@ module.exports = {
              contract[functionName](params, (err, data) =>
              {
                  if(err) throw err;
-                 console.log("here is the response from web3: " + data);
-                 alert("here is the response from web3: " + data);
              });
          }
+    },
+
+    callContractFunction : (contract, functionName, params, callback) =>
+    {
+        //must use bracket notation as function name is passed as a string
+        if(params == null)
+        {
+            contract.call()[functionName]( (err, data) =>
+            {
+                //TODO make sure error is thrown when using a call incorrectly (when should use a transaction)
+                if(err)
+                {
+                    callback(false);
+                    throw err;
+                }
+                alert("here is the response from web3: " + data);
+                callback(true);
+            });
+        }
+        else
+        {
+            contract.call()[functionName](params, (err, data) =>
+            {
+                if(err)
+                {
+                    callback(false);
+                    throw err;
+                }
+                alert("here is the response from web3: " + data);
+                callback(true);
+            });
+        }
     },
 
     checkAddressValidity : (address) =>
