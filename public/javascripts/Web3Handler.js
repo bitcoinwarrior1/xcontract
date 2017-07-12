@@ -30,6 +30,7 @@ module.exports = {
         {
             if(abi[i].type == "function")
             {
+                // console.log("here is each function from abi: " + JSON.stringify(abi[i]));
                 arrayOfFunctionObjects.push(abi[i]);
             }
         }
@@ -46,13 +47,16 @@ module.exports = {
         for(abiFunc of abiFunctions)
         {
             let functionName = abiFunc.name;
-            let functionParams = JSON.stringify(abiFunc.inputs[0]);
+            let functionParams = [];
+
+            for(input of abiFunc.inputs) functionParams.push(JSON.stringify(input));
+
             //create jade elements for each function with name and param
             functionNameFields.push(functionName);
             functionParamFields.push(functionParams);
+
             //if there are no params then set the input to readonly
-            console.log("here is each function param" + functionParams);
-            if(functionParams == undefined)
+            if(functionParams.length == 0)
             {
                 readOnlyParamInputs.push(true);
             }
