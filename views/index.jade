@@ -81,7 +81,7 @@ html(lang='en')
               div(id="function" + index)
                 button(name=functionName, id=functionName + "&" + index) #{functionName}
 
-              if(functionParams[index] != undefined)
+              if(functionParams[index] != "")
                 textarea(value=functionParams[index], placeholder = functionNames[index].toUpperCase() +
                 " parameters: " + functionParams[index], id = functionParams[index] + index,
                 readonly = readOnlyAttribute[index])

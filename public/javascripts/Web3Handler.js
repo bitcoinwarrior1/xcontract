@@ -99,7 +99,6 @@ module.exports = {
         {
             contract.call()[functionName]( (err, data) =>
             {
-                //TODO make sure error is thrown when using a call incorrectly (when should use a transaction)
                 if(err)
                 {
                     callback(false);
