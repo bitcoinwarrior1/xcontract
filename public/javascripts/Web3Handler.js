@@ -73,54 +73,13 @@ module.exports = {
         return nameAndParamObj;
     },
 
-    executeContractFunction : (contract, functionName, params) =>
+    executeContractFunction : (contract, functionName, params, cb) =>
     {
-         //must use bracket notation as function name is passed as a string
-         if(params == null)
+         contract[functionName](params, (err, data) =>
          {
-             contract[functionName]( (err, data) =>
-             {
-                 if(err) throw err;
-             });
-         }
-         else
-         {
-             contract[functionName](params, (err, data) =>
-             {
-                 if(err) throw err;
-             });
-         }
-    },
-
-    callContractFunction : (contract, functionName, params, callback) =>
-    {
-        //must use bracket notation as function name is passed as a string
-        if(params == null)
-        {
-            contract.call()[functionName]( (err, data) =>
-            {
-                if(err)
-                {
-                    callback(false);
-                    throw err;
-                }
-                alert("here is the response from web3: " + data);
-                callback(true);
-            });
-        }
-        else
-        {
-            contract.call()[functionName](params, (err, data) =>
-            {
-                if(err)
-                {
-                    callback(false);
-                    throw err;
-                }
-                alert("here is the response from web3: " + data);
-                callback(true);
-            });
-        }
+             if(err) throw err;
+             cb(data)
+         });
     },
 
     checkAddressValidity : (address) =>
