@@ -69,7 +69,6 @@ $(() =>
         let functionCalled = e.target.id;
         console.log("Button " + functionCalled + " was clicked!");
         extractTransactionInfo(functionCalled, abi, contractAddress);
-
     });
 
     //gets the transaction info for one function call at a time
@@ -78,73 +77,39 @@ $(() =>
         //remove strings and get index number
         let functionParamPos = functionCalled.substring(functionCalled.indexOf("&"));
         let paramNumber = functionParamPos.replace( /^\D+/g, '');
-        let params = getParamsFromFunctionName(paramNumber);
-
         let txObj = {};
         //remove html index number from method call name
         txObj.functionCalled = functionCalled.replace("&" + paramNumber, '');
         txObj.abi = abi;
         txObj.contractAddress = contractAddress;
 
-        try
-        {
-            //handles NPE on parameter-less contract functions
-            txObj.filledOutParams = document.getElementById(params).value; //gets the user input from textbox
-        }
-        catch(exception)
-        {
-            console.log("param is null: " + exception);
-            txObj.filledOutParams = null;
-        }
-
-        console.log("filled out params from user input: " + txObj.filledOutParams);
+        let param = $("#" + paramNumber).val();
+        if(param != "") txObj.filledOutParams = param.split(",");
+        else txObj.filledOutParams = null;
 
         initTransaction(txObj);
     }
 
     function initTransaction(txObj)
     {
+        console.log(txObj.filledOutParams);
         try
         {
-            web3Handler.executeContractFunction(contract, txObj.functionCalled, txObj.filledOutParams, function(data){
-                console.log("tx data: " + data)
+            web3Handler.executeContractFunction(contract, txObj.functionCalled,
+                txObj.filledOutParams, (data) => {
+                console.log("tx data: " + data);
+                alert("web3 response: " + data);
             });
         }
         catch(exception)
         {
-            console.log("transaction failed. Error: " + exception);
+            if(exception == "Error: Cannot send value to non-payable function")
+            {
+                alert("You cannot send ether to a non payable function, retrying transaction without ether added");
+                txObj.filledOutParams.push(0); //value is popped in executeContractFunction so it is re-added as 0
+                initTransaction(txObj);
+            }
+            console.log("transaction failed." + exception);
         }
     }
-
-    //gets each param for each function, returns them one by one
-    function getParamsFromFunctionName(paramNumber)
-    {
-        console.log("here is the param number " + paramNumber);
-
-        let element = null;
-
-        $(':input').not("#ABI, #contractAddress, button").each(function()
-            {
-                let inputId = $(this).attr("id");
-
-                //removes false positives with var types such as uint256
-                let filteredInput = inputId.substring(inputId.indexOf("}"));
-
-                for(id of filteredInput)
-                {
-                    let index = 0;
-                    if(id.includes(paramNumber) && !id.includes("function")) //separates from function names
-                    {
-                        element = $(this).attr("id");
-                        console.log("these are the params for the function: " + element);
-                        break;
-                    }
-                }
-
-            }
-        );
-        //will return null if it is a parameter-less function
-        return element;
-    }
-
 });

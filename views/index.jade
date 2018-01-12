@@ -83,11 +83,11 @@ html(lang='en')
 
               if(functionParams[index] != "")
                 textarea(value=functionParams[index], placeholder = functionNames[index].toUpperCase() +
-                " parameters: " + functionParams[index], id = functionParams[index] + index,
+                " parameters: " + functionParams[index] , id = index,
                 readonly = readOnlyAttribute[index])
               else
                 textarea(value=functionParams[index], placeholder = functionNames[index].toUpperCase() +
-                " has no parameters", id = functionParams[index] + index,
+                " has no parameters", id = index,
                 readonly = readOnlyAttribute[index])
               -index++
 
