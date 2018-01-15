@@ -37,6 +37,11 @@ module.exports = {
         return arrayOfFunctionObjects;
     },
 
+    sendEther : (address, value) =>
+    {
+        return web3.eth.sendTransaction({ to: address, value: value });
+    },
+
     getContractFunctionNamesAndParams : (abiFunctions) =>
     {
         let nameAndParamObj = {};
@@ -64,7 +69,10 @@ module.exports = {
             {
                 readOnlyParamInputs.push(false);
                 //add ability to attach ether to transaction
-                functionParams.push('{"name" : Optional_Ether_Amount, "type": uint256}');
+                if(JSON.stringify(abiFunc).includes('"payable":true'))
+                {
+                    functionParams.push('{"name" : Optional_Ether_Amount, "type": uint256}');
+                }
             }
         }
         nameAndParamObj.names = functionNameFields;
@@ -76,15 +84,20 @@ module.exports = {
         return nameAndParamObj;
     },
 
-    executeContractFunction : (contract, functionName, params, cb) =>
+    executeContractFunction : (contract, txObj, cb) =>
     {
-        if(params != null)
+        let etherValue = 0;
+        if(txObj.filledOutParams != null)
         {
-            //last element is ether value
-            const etherValue = parseInt(params[params.length - 1]);
-            console.log("here is the ether value: " + etherValue);
-            params.pop();
-            contract[functionName](params, {value: etherValue}, (err, data) =>
+            if(txObj.isPayable)
+            {
+                //last element is ether value
+                etherValue = parseInt(txObj.filledOutParams[txObj.filledOutParams.length - 1]);
+                console.log("here is the ether value: " + etherValue);
+                txObj.filledOutParams.pop();
+            }
+
+            contract[txObj.functionCalled](txObj.filledOutParams, {value: etherValue}, (err, data) =>
             {
                 if(err) throw err;
                 cb(data)
@@ -92,7 +105,7 @@ module.exports = {
         }
         else
         {
-            contract[functionName]( (err, data) =>
+            contract[txObj.functionCalled]( (err, data) =>
             {
                 if(err) throw err;
                 cb(data)

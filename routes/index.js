@@ -7,7 +7,7 @@ router.get('/', (req, res, next) => {
     res.render('index', { title: 'xcontract' });
 });
 
-router.get("/api/:contractAddress", (req,res,next) => {
+router.get("/api/:contractAddress", (req, res, next) => {
 
     //TODO should not display if not mainnet
     let contractAddress = req.params.contractAddress;
@@ -33,7 +33,7 @@ router.get("/api/:contractAddress", (req,res,next) => {
 });
 
 //handle user giving abi in url param
-router.get('/api/:abi/:address', (req,res,next) => {
+router.get('/api/:abi/:address', (req, res, next) => {
 
     //parameters
     let abi = req.params.abi;

@@ -37,6 +37,7 @@ $(() =>
 
     $(':button').click(function(e)
     {
+
         let contractAddress = $("#contractAddress").val().trim();
         let abi = $("#ABI").val().trim();
         let jsonABI;
@@ -76,7 +77,7 @@ $(() =>
     {
         //remove strings and get index number
         let functionParamPos = functionCalled.substring(functionCalled.indexOf("&"));
-        let paramNumber = functionParamPos.replace( /^\D+/g, '');
+        let paramNumber = functionParamPos.replace(/^\D+/g, '');
         let txObj = {};
         //remove html index number from method call name
         txObj.functionCalled = functionCalled.replace("&" + paramNumber, '');
@@ -84,32 +85,34 @@ $(() =>
         txObj.contractAddress = contractAddress;
 
         let param = $("#" + paramNumber).val();
-        if(param != "") txObj.filledOutParams = param.split(",");
+        let payable = false;
+        if(param != "")
+        {
+            if(param.includes("payable")) payable = true;
+            txObj.filledOutParams = param.split(",");
+        }
         else txObj.filledOutParams = null;
 
-        initTransaction(txObj);
+        txObj.isPayable = payable;
+
+        initTransaction(contract, txObj);
     }
 
-    function initTransaction(txObj)
+    function initTransaction(contract, txObj)
     {
         console.log(txObj.filledOutParams);
         try
         {
-            web3Handler.executeContractFunction(contract, txObj.functionCalled,
-                txObj.filledOutParams, (data) => {
-                console.log("tx data: " + data);
-                alert("web3 response: " + data);
+            console.log("Function called: " + txObj.functionCalled);
+            web3Handler.executeContractFunction(contract, txObj, (data) => {
+                    console.log("tx data: " + data);
+                    alert("web3 response: " + data);
             });
         }
         catch(exception)
         {
-            if(exception == "Error: Cannot send value to non-payable function")
-            {
-                alert("You cannot send ether to a non payable function, retrying transaction without ether added");
-                txObj.filledOutParams.push(0); //value is popped in executeContractFunction so it is re-added as 0
-                initTransaction(txObj);
-            }
             console.log("transaction failed." + exception);
         }
     }
+
 });
