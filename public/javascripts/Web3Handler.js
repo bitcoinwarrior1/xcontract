@@ -117,5 +117,10 @@ module.exports = {
     checkAddressValidity : (address) =>
     {
         return web3.isAddress(address);
+    },
+
+    sign : (message) =>
+    {
+        return web3.eth.sign(message);
     }
 };

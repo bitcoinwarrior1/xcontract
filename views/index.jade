@@ -67,10 +67,17 @@ html(lang='en')
           textarea#contractAddress(name='contractAddress', placeholder="Paste the smart contract's address here" ) #{addressVal}
           p
           button#submit Run Contract
+          p
+
           #{etherscanURL}
             if(typeof (etherscanURL) != 'undefined')
               a(href=etherscanURL)
                 button(name="etherScanURLButton") View on Etherscan
+
+          p Sign a message
+          textarea#signMessage(name='signMessage', placeholder= "Place your text here")
+          p
+          button#sign Sign Message
 
         #paramAndFunctionDiv
             h6 #{functionTitle}

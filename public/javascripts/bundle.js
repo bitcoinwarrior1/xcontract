@@ -39480,7 +39480,7 @@ let contract;
 
 $(() =>
 {
-    function setWeb3(abi, contractAddress)
+    function init()
     {
         //check if plugin node is available if not use localhost
         if (typeof window.web3 !== 'undefined')
@@ -39497,7 +39497,12 @@ $(() =>
 
         //let's assume that coinbase is our account
         web3.eth.defaultAccount = web3.eth.coinbase;
+    }
 
+    init();
+
+    function setWeb3(abi, contractAddress)
+    {
         //sets the contract
         try
         {
@@ -39511,6 +39516,13 @@ $(() =>
 
     $(':button').click(function(e)
     {
+        console.log("button clicked: " + e.target.id);
+
+        if(e.target.id == "sign")
+        {
+            web3Handler.sign(web3.eth.defaultAccount, $("#signMessage").val());
+            return;
+        }
 
         let contractAddress = $("#contractAddress").val().trim();
         let abi = $("#ABI").val().trim();
@@ -39711,6 +39723,11 @@ module.exports = {
     checkAddressValidity : (address) =>
     {
         return web3.isAddress(address);
+    },
+
+    sign : (message) =>
+    {
+        return web3.eth.sign(message);
     }
 };
 },{"superagent":174,"web3":184}]},{},[235]);
