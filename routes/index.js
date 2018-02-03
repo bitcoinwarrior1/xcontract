@@ -48,31 +48,30 @@ router.get('/api/:abi/:address', (req, res, next) => {
 
     web3Handler.checkIfContractIsVerified(contractAddress, (error, data) =>
     {
+        let url = req.protocol + "://" + req.get('host') + req.originalUrl;
+
+        let renderObj = {
+            abiVal: JSON.stringify(abiJson),
+            addressVal: contractAddress,
+            functionNames: functionNameAndParamObj.names,
+            functionParams : functionNameAndParamObj.params,
+            functionTitle:"Smart Contract Functions",
+            readOnlyAttribute: functionNameAndParamObj.readOnly,
+            etherscanURL : etherscanURL,
+            url: url
+        };
+
         if(data.body.message === "NOTOK")
         {
-            res.render('index', {
-                abiVal: JSON.stringify(abiJson),
-                addressVal: contractAddress,
-                functionNames: functionNameAndParamObj.names,
-                functionParams : functionNameAndParamObj.params,
-                functionTitle:"Smart Contract Functions",
-                warning:"Warning! Contract source code is not verified on etherscan!",
-                readOnlyAttribute: functionNameAndParamObj.readOnly,
-                etherscanURL : etherscanURL
-            });
+            renderObj.warning = "Warning! Contract source code is not verified on etherscan!";
+            res.render('index', renderObj);
         }
         else
         {
-            res.render('index', {
-                abiVal: JSON.stringify(abiJson),
-                addressVal: contractAddress,
-                functionNames: functionNameAndParamObj.names,
-                functionParams : functionNameAndParamObj.params,
-                functionTitle:"Smart Contract Functions",
-                warning:"Contract source code is verified on etherscan!",
-                readOnlyAttribute: functionNameAndParamObj.readOnly,
-                etherscanURL : etherscanURL
-            });
+            renderObj.warning = "Contract source code is verified on etherscan!";
+            //if verified can give shortened url without abi
+            renderObj.url = req.protocol + "://" + req.get('host') + "/api/" + contractAddress;
+            res.render('index', renderObj);
         }
     });
 

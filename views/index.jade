@@ -75,6 +75,11 @@ html(lang='en')
               a(href=etherscanURL)
                 button(name="etherScanURLButton") View on Etherscan
 
+          #{url}
+            if(typeof (url) != 'undefined')
+              a(href="mailto:?subject=Check out this awesome dApp!&body=" + url)
+                button(name="shareContractButton") Email this contract
+
         #paramAndFunctionDiv
             h6 #{functionTitle}
           #functionsDiv
