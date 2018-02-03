@@ -3,6 +3,7 @@ let Web3 = require("web3");
 let web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 let web3Handler = require("./Web3Handler.js");
 let contract;
+let defaultAccount;
 
 $(() =>
 {
@@ -23,6 +24,7 @@ $(() =>
 
         //let's assume that coinbase is our account
         web3.eth.defaultAccount = web3.eth.coinbase;
+        defaultAccount = web3.eth.coinbase;
     }
 
     init();
@@ -44,9 +46,16 @@ $(() =>
     {
         console.log("button clicked: " + e.target.id);
 
-        if(e.target.id == "sign")
+        if(e.target.id == "signButton")
         {
-            web3Handler.sign(web3.eth.defaultAccount, $("#signMessage").val());
+            console.log("Here is the account: " + defaultAccount);
+            let message = $("#messageBox").val();
+            console.log("message to sign: " + message);
+            web3Handler.sign(web3, defaultAccount, message,
+                (err, data) =>
+                {
+                    $("#output").val(data);
+                });
             return;
         }
 
@@ -54,7 +63,7 @@ $(() =>
         let abi = $("#ABI").val().trim();
         let jsonABI;
 
-        if(!web3Handler.checkAddressValidity(contractAddress))
+        if(!web3Handler.checkAddressValidity(web3, contractAddress))
         {
             alert("missing or invalid contract address: " + contractAddress);
             return;

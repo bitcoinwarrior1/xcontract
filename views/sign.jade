@@ -1,5 +1,3 @@
-
-//TODO replace p with margins on inputs, applies for all jade files
 doctype html
 html(lang='en')
     head
@@ -33,7 +31,7 @@ html(lang='en')
           ––––––––––––––––––––––––––––––––––––––––––––––––––
 
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
-        script(src='/javascripts/RegisterHandler.js')
+        script(src="/javascripts/bundle.js")
 
         link(rel='icon', type='image/png', href='/images/favicon.png')
     body
@@ -48,26 +46,21 @@ html(lang='en')
                 li
                     a(href="/search") Search
                 li
-                    a(href="/register") Register
+                    a(href="/sign") Sign
                 li
                     a(href="http://www.bitfwd.xyz/") About us
 
     .container
         .header
             h1
-                | Register your dApp
+                | Sign a message
         .twelve.columns
-            p
-                | Please include your contract address and dApp name
             h6
-                | Only contracts that are verified on etherscan will be accepted
-            h6
-                | #{status}
-            textarea#dappName(placeholder="enter the dApp name here")
+            textarea#messageBox(placeholder="Place your message here")
             p
-            textarea#contractAddress(placeholder="please enter the contract address here")
+            textarea#output(readonly=true)
             p
-            button#register Register
+            button#signButton sign
 
 html
 

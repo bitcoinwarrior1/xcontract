@@ -39477,6 +39477,7 @@ let Web3 = require("web3");
 let web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 let web3Handler = require("./Web3Handler.js");
 let contract;
+let defaultAccount;
 
 $(() =>
 {
@@ -39497,6 +39498,7 @@ $(() =>
 
         //let's assume that coinbase is our account
         web3.eth.defaultAccount = web3.eth.coinbase;
+        defaultAccount = web3.eth.coinbase;
     }
 
     init();
@@ -39518,9 +39520,16 @@ $(() =>
     {
         console.log("button clicked: " + e.target.id);
 
-        if(e.target.id == "sign")
+        if(e.target.id == "signButton")
         {
-            web3Handler.sign(web3.eth.defaultAccount, $("#signMessage").val());
+            console.log("Here is the account: " + defaultAccount);
+            let message = $("#messageBox").val();
+            console.log("message to sign: " + message);
+            web3Handler.sign(web3, defaultAccount, message,
+                (err, data) =>
+                {
+                    $("#output").val(data);
+                });
             return;
         }
 
@@ -39528,7 +39537,7 @@ $(() =>
         let abi = $("#ABI").val().trim();
         let jsonABI;
 
-        if(!web3Handler.checkAddressValidity(contractAddress))
+        if(!web3Handler.checkAddressValidity(web3, contractAddress))
         {
             alert("missing or invalid contract address: " + contractAddress);
             return;
@@ -39605,8 +39614,6 @@ $(() =>
 
 },{"./Web3Handler.js":236,"web3":184}],236:[function(require,module,exports){
 let request = require("superagent");
-let Web3 = require("web3");
-let web3 = new Web3();
 
 module.exports = {
 
@@ -39643,7 +39650,7 @@ module.exports = {
         return arrayOfFunctionObjects;
     },
 
-    sendEther : (address, value) =>
+    sendEther : (web3, address, value) =>
     {
         return web3.eth.sendTransaction({ to: address, value: value });
     },
@@ -39720,14 +39727,23 @@ module.exports = {
 
     },
 
-    checkAddressValidity : (address) =>
+    checkAddressValidity : (web3, address) =>
     {
         return web3.isAddress(address);
     },
 
-    sign : (message) =>
+    sign : (web3, account, message, cb) =>
     {
-        return web3.eth.sign(message);
+        try
+        {
+            web3.eth.sign(account, message, (err, data) => {
+                cb(err, data);
+            });
+        }
+        catch(e)
+        {
+            console.log("signing error: " + e);
+        }
     }
 };
-},{"superagent":174,"web3":184}]},{},[235]);
+},{"superagent":174}]},{},[235]);

@@ -1,6 +1,4 @@
 let request = require("superagent");
-let Web3 = require("web3");
-let web3 = new Web3();
 
 module.exports = {
 
@@ -37,7 +35,7 @@ module.exports = {
         return arrayOfFunctionObjects;
     },
 
-    sendEther : (address, value) =>
+    sendEther : (web3, address, value) =>
     {
         return web3.eth.sendTransaction({ to: address, value: value });
     },
@@ -114,13 +112,22 @@ module.exports = {
 
     },
 
-    checkAddressValidity : (address) =>
+    checkAddressValidity : (web3, address) =>
     {
         return web3.isAddress(address);
     },
 
-    sign : (message) =>
+    sign : (web3, account, message, cb) =>
     {
-        return web3.eth.sign(message);
+        try
+        {
+            web3.eth.sign(account, message, (err, data) => {
+                cb(err, data);
+            });
+        }
+        catch(e)
+        {
+            console.log("signing error: " + e);
+        }
     }
 };

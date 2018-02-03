@@ -39,16 +39,17 @@ html(lang='en')
       //––––––––––––––––––––––––––––––––––––––––––––––––––
 
       a.github-fork-ribbon(href='https://github.com/James-Sangalli/xcontract', title='Fork me on GitHub') Fork me on GitHub
-    div
+      div
         ul
-            li
-                a(href="/")  Home
-            li
-                a(href="/search") Search
-            li
-                a(href="/register") Register
-            li
-                a(href="http://www.bitfwd.xyz/") About us
+          li
+            a(href="/")  Home
+          li
+            a(href="/search") Search
+          li
+            a(href="/sign") Sign
+          li
+            a(href="http://www.bitfwd.xyz/") About us
+
 
     .container
       .header
@@ -73,11 +74,6 @@ html(lang='en')
             if(typeof (etherscanURL) != 'undefined')
               a(href=etherscanURL)
                 button(name="etherScanURLButton") View on Etherscan
-
-          p Sign a message
-          textarea#signMessage(name='signMessage', placeholder= "Place your text here")
-          p
-          button#sign Sign Message
 
         #paramAndFunctionDiv
             h6 #{functionTitle}
