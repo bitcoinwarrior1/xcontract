@@ -8,11 +8,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.get("/api/:contractAddress", (req, res, next) => {
-    //TODO should not display if not mainnet
     let contractAddress = req.params.contractAddress;
-    let networkId = web3Handler.getNetworkId();
-    let etherscanURL = web3Handler.getEtherscanURL(networkId) + contractAddress;
-
     web3Handler.checkIfContractIsVerified(contractAddress, (err, data) =>
     {
         if(data.body.message === "NOTOK")
@@ -22,7 +18,6 @@ router.get("/api/:contractAddress", (req, res, next) => {
                 addressVal: contractAddress,
                 functionTitle:"Smart Contract Functions",
                 warning:"NO ABI FOUND AS CONTRACT IS NOT VERIFIED ON ETHERSCAN",
-                etherscanURL : etherscanURL
             });
         }
         else
@@ -43,9 +38,6 @@ router.get('/api/:abi/:address', (req, res, next) => {
     //function and param names
     let functionNameAndParamObj = web3Handler.getContractFunctionNamesAndParams(abiFunctions);
     //sets up function calls to contract from UI
-    let networkId = web3Handler.getNetworkId();
-    let etherscanURL = web3Handler.getEtherscanURL(networkId) + contractAddress;
-
     web3Handler.checkIfContractIsVerified(contractAddress, (error, data) =>
     {
         let url = req.protocol + "://" + req.get('host') + req.originalUrl;
@@ -57,7 +49,6 @@ router.get('/api/:abi/:address', (req, res, next) => {
             functionParams : functionNameAndParamObj.params,
             functionTitle:"Smart Contract Functions",
             readOnlyAttribute: functionNameAndParamObj.readOnly,
-            etherscanURL : etherscanURL,
             url: url
         };
 

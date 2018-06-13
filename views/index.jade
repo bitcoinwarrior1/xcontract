@@ -70,10 +70,7 @@ html(lang='en')
           button#submit Run Contract
           p
 
-          #{etherscanURL}
-            if(typeof (etherscanURL) != 'undefined')
-              a(href=etherscanURL)
-                button(name="etherScanURLButton") View on Etherscan
+          button#etherScanURLButton View on Etherscan
 
           #{url}
             if(typeof (url) != 'undefined')

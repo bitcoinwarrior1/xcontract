@@ -7,27 +7,22 @@ let defaultAccount;
 
 $(() =>
 {
-    function init()
+    //check if plugin node is available if not use localhost
+    if (typeof window.web3 !== 'undefined')
     {
-        //check if plugin node is available if not use localhost
-        if (typeof window.web3 !== 'undefined')
-        {
-            injectedProvider = window.web3.currentProvider;
-            web3 = new Web3(injectedProvider);
-            console.log("injected provider used: " + injectedProvider);
-        }
-        else
-        {
-            alert("no injected provider found, using localhost:8545, please ensure your local node is running " +
-                "and rpc and rpccorsdomain is enabled");
-        }
-
-        //let's assume that coinbase is our account
-        web3.eth.defaultAccount = web3.eth.coinbase;
-        defaultAccount = web3.eth.coinbase;
+        injectedProvider = window.web3.currentProvider;
+        web3 = new Web3(injectedProvider);
+        console.log("injected provider used: " + injectedProvider);
+    }
+    else
+    {
+        alert("no injected provider found, using localhost:8545, please ensure your local node is running " +
+            "and rpc and rpccorsdomain is enabled");
     }
 
-    init();
+    //let's assume that coinbase is our account
+    web3.eth.defaultAccount = web3.eth.coinbase;
+    defaultAccount = web3.eth.coinbase;
 
     function setWeb3(abi, contractAddress)
     {
@@ -42,26 +37,37 @@ $(() =>
         }
     }
 
+    function redirectToEtherscan(address)
+    {
+        web3.version.getNetwork((err, networkId) => {
+            if (networkId == 3) window.location.replace("https://ropsten.etherscan.io/address/" + address, '_blank');
+            else if (networkId == 4) window.location.replace("https://rinkeby.etherscan.io/address/" + address, '_blank');
+            else if (networkId == 42) window.location.replace("https://kovan.etherscan.io/address/" + address, '_blank');
+            else window.location.replace("https://etherscan.io/address/" + address, '_blank');
+        });
+    }
+
+    function functionSignAction()
+    {
+        console.log("Here is the account: " + defaultAccount);
+        let message = $("#messageBox").val();
+        console.log("message to sign: " + message);
+        web3Handler.sign(web3, defaultAccount, message,
+            (err, data) =>
+            {
+                $("#output").val(data);
+            });
+    }
+
     $(':button').click(function(e)
     {
-        console.log("button clicked: " + e.target.id);
-
-        if(e.target.id == "signButton")
-        {
-            console.log("Here is the account: " + defaultAccount);
-            let message = $("#messageBox").val();
-            console.log("message to sign: " + message);
-            web3Handler.sign(web3, defaultAccount, message,
-                (err, data) =>
-                {
-                    $("#output").val(data);
-                });
-            return;
-        }
-
         let contractAddress = $("#contractAddress").val().trim();
         let abi = $("#ABI").val().trim();
         let jsonABI;
+
+        console.log("button clicked: " + e.target.id);
+        if(e.target.id == "signButton") functionSignAction();
+        if(e.target.id == "etherScanURLButton") redirectToEtherscan(contractAddress);
 
         if(!web3Handler.checkAddressValidity(web3, contractAddress))
         {
