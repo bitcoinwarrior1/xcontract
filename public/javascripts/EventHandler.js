@@ -40,10 +40,10 @@ $(() =>
     function redirectToEtherscan(address)
     {
         web3.version.getNetwork((err, networkId) => {
-            if (networkId == 3) window.location.replace("https://ropsten.etherscan.io/address/" + address, '_blank');
-            else if (networkId == 4) window.location.replace("https://rinkeby.etherscan.io/address/" + address, '_blank');
-            else if (networkId == 42) window.location.replace("https://kovan.etherscan.io/address/" + address, '_blank');
-            else window.location.replace("https://etherscan.io/address/" + address, '_blank');
+            if (networkId == 3) window.location.href("https://ropsten.etherscan.io/address/" + address, '_blank');
+            else if (networkId == 4) window.location.href("https://rinkeby.etherscan.io/address/" + address, '_blank');
+            else if (networkId == 42) window.location.href("https://kovan.etherscan.io/address/" + address, '_blank');
+            else window.location.href("https://etherscan.io/address/" + address, '_blank');
         });
     }
 
@@ -78,7 +78,7 @@ $(() =>
         if(abi == "")
         {
             //let the server check if the contract abi is verified and available
-            window.location.replace("/api/" + contractAddress);
+            window.location.href("/api/" + contractAddress);
             return;
         }
         else
@@ -90,7 +90,7 @@ $(() =>
 
         if(e.target.id == "submit")
         {
-            window.location.replace("/api/" + JSON.stringify(jsonABI) + "/" +contractAddress);
+            window.location.href("/api/" + JSON.stringify(jsonABI) + "/" +contractAddress);
             return; //not a function call so should stop now
         }
 
