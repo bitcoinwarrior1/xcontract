@@ -129,5 +129,18 @@ module.exports = {
         {
             console.log("signing error: " + e);
         }
+    },
+
+    getEtherscanURL : (networkId) =>
+    {
+        if(networkId = 1) return "https://etherscan.io/address/";
+        else if(networkId = 3) return "https://ropsten.etherscan.io/address/";
+        else if(networkId = 4) return "https://rinkeby.etherscan.io/address/";
+        else if(networkId = 42) return "https://kovan.etherscan.io/address/";
+        return "https://etherscan.io/address/";
+    },
+
+    getNetworkId : () => {
+        return web3.eth.net.getId();
     }
 };

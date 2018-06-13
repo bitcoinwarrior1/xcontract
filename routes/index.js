@@ -8,10 +8,10 @@ router.get('/', (req, res, next) => {
 });
 
 router.get("/api/:contractAddress", (req, res, next) => {
-
     //TODO should not display if not mainnet
     let contractAddress = req.params.contractAddress;
-    let etherscanURL = "https://etherscan.io/address/" + contractAddress;
+    let networkId = web3Handler.getNetworkId();
+    let etherscanURL = web3Handler.getEtherscanURL(networkId) + contractAddress;
 
     web3Handler.checkIfContractIsVerified(contractAddress, (err, data) =>
     {
@@ -43,8 +43,8 @@ router.get('/api/:abi/:address', (req, res, next) => {
     //function and param names
     let functionNameAndParamObj = web3Handler.getContractFunctionNamesAndParams(abiFunctions);
     //sets up function calls to contract from UI
-    //TODO should not display if not mainnet
-    let etherscanURL = "https://etherscan.io/address/" + contractAddress;
+    let networkId = web3Handler.getNetworkId();
+    let etherscanURL = web3Handler.getEtherscanURL(networkId) + contractAddress;
 
     web3Handler.checkIfContractIsVerified(contractAddress, (error, data) =>
     {
