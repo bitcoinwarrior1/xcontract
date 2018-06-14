@@ -29,7 +29,7 @@ router.get("/search/:dappname", (req,res,next) =>
 
         }
 
-        for(result of data)
+        for(let result of data)
         {
             console.log("dApps found");
             let resultObj = {};
