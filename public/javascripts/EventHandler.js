@@ -1,28 +1,25 @@
-let injectedProvider;
 let Web3 = require("web3");
 let web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 let web3Handler = require("./Web3Handler.js");
 let contract;
-let defaultAccount;
 
 $(() =>
 {
     //check if plugin node is available if not use localhost
     if (typeof window.web3 !== 'undefined')
     {
-        injectedProvider = window.web3.currentProvider;
+        const injectedProvider = window.web3.currentProvider;
         web3 = new Web3(injectedProvider);
         console.log("injected provider used: " + injectedProvider);
     }
     else
     {
-        alert("no injected provider found, using localhost:8545, please ensure your local node is running " +
-            "and rpc and rpccorsdomain is enabled");
+        alert(
+            "no injected provider found, using localhost:8545," +
+            " please ensure your local node is running " +
+            "with rpc and rpccorsdomain enabled"
+        );
     }
-
-    //let's assume that coinbase is our account
-    web3.eth.defaultAccount = web3.eth.coinbase;
-    defaultAccount = web3.eth.coinbase;
 
     function setWeb3(abi, contractAddress)
     {
@@ -33,49 +30,44 @@ $(() =>
         }
         catch(exception)
         {
-            console.log("contract failed to load, error: " + exception);
+            alert("contract failed to load, error: " + exception);
         }
-    }
-
-    function redirectToEtherscan(address)
-    {
-        web3.version.getNetwork((err, networkId) => {
-            if (networkId == 3) window.location.href = "https://ropsten.etherscan.io/address/" + address;
-            else if (networkId == 4) window.location.href = "https://rinkeby.etherscan.io/address/" + address;
-            else if (networkId == 42) window.location.href = "https://kovan.etherscan.io/address/" + address;
-            else window.location.href = "https://etherscan.io/address/" + address;
-        });
     }
 
     function functionSignAction()
     {
-        console.log("Here is the account: " + defaultAccount);
+        let account = web3.eth.coinbase;
+        console.log("Here is the account: " + account);
         let message = $("#messageBox").val();
         console.log("message to sign: " + message);
-        web3Handler.sign(web3, defaultAccount, message,
-            (err, data) =>
-            {
-                $("#output").val(data);
-            });
+        web3Handler.sign(web3, account, message, (err, data) =>
+        {
+            $("#output").val(data);
+        });
     }
 
-    //TODO refactor and handle in a modular way
-    $(':button').click(function(e)
+    $("#signButton").click(() =>
     {
-        let jsonABI;
+        functionSignAction();
+    });
+
+    $("#etherScanURLButton").click(() =>
+    {
+        let contractAddress = $("#contractAddress").val().trim();
+        web3Handler.redirectToEtherscan(contractAddress);
+    });
+
+    $("#submit").click(() =>
+    {
+        window.location.href = "/api/" + JSON.stringify(jsonABI) + "/" +contractAddress;
+    });
+
+    //this is needed because function buttons are created on the fly so we cannot know in advance their elements
+    $(':button').not("#signButton" , "#etherScanURLButton", "#submit").click((e) =>
+    {
         console.log("button clicked: " + e.target.id);
-        if(e.target.id == "signButton")
-        {
-            functionSignAction();
-            return;
-        }
         let contractAddress = $("#contractAddress").val().trim();
         let abi = $("#ABI").val().trim();
-        if(e.target.id == "etherScanURLButton") {
-            redirectToEtherscan(contractAddress);
-            return;
-        }
-
         if(!web3Handler.checkAddressValidity(web3, contractAddress))
         {
             alert("missing or invalid contract address: " + contractAddress);
@@ -88,19 +80,8 @@ $(() =>
             window.location.href = "/api/" + contractAddress;
             return;
         }
-        else
-        {
-            jsonABI = JSON.parse(abi);
-        }
-
+        let jsonABI = JSON.parse(abi);
         setWeb3(jsonABI, contractAddress);
-
-        if(e.target.id == "submit")
-        {
-            window.location.href = "/api/" + JSON.stringify(jsonABI) + "/" +contractAddress;
-            return; //not a function call so should stop now
-        }
-
         let functionCalled = e.target.id;
         console.log("Button " + functionCalled + " was clicked!");
         extractTransactionInfo(functionCalled, abi, contractAddress);
