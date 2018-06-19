@@ -7,11 +7,4 @@ router.get("/sign", (req, res, next) => {
     });
 });
 
-router.get("/register/:error", (req,res,next) => {
-    let error = req.params.error;
-    res.render('register', {
-        status: "Error registering dApp: " + error
-    });
-});
-
 module.exports = router;

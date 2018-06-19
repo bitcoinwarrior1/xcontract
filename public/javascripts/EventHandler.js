@@ -34,7 +34,7 @@ $(() =>
         }
     }
 
-    function functionSignAction()
+    function signAction()
     {
         let account = web3.eth.coinbase;
         console.log("Here is the account: " + account);
@@ -46,9 +46,19 @@ $(() =>
         });
     }
 
+    function verifyAction()
+    {
+        let message = $("#verifyMessageBox").val();
+        let signature = $("#signatureBox").val();
+        web3Handler.verify(web3, message, signature, (address) =>
+        {
+            $("#verificationAddressBox").val(address);
+        });
+    }
+
     $("#signButton").click(() =>
     {
-        functionSignAction();
+        signAction();
     });
 
     $("#etherScanURLButton").click(() =>
@@ -66,6 +76,12 @@ $(() =>
     $(':button').not("#signButton" , "#etherScanURLButton", "#submit").click((e) =>
     {
         console.log("button clicked: " + e.target.id);
+        //TODO find out why js doesn't ignore verifyButton in not jquery
+        if(e.target.id == "verifyButton")
+        {
+            verifyAction();
+            return;
+        }
         let contractAddress = $("#contractAddress").val().trim();
         let abi = $("#ABI").val().trim();
         if(!web3Handler.checkAddressValidity(web3, contractAddress))

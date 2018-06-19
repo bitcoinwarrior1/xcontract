@@ -45,7 +45,7 @@ html(lang='en')
                 li
                     a(href="/search") Search
                 li
-                    a(href="/sign") Sign a message
+                    a(href="/sign") Sign/Verify
                 li
                     a(href="https://awallet.io/") About us
                 h3(align="right")
@@ -53,13 +53,19 @@ html(lang='en')
 
     .container
         .header
+        h3 Sign/Verify a message
         .twelve.columns
-            h6
             textarea#messageBox(placeholder="Place your message here")
-            p
-            textarea#output(readonly=true)
-            p
-            button#signButton sign
+            textarea#output(readonly=true, placeholder="Signature will go here after signing")
+            br
+            button#signButton Sign
+
+        .twelve.columns
+            textarea#verifyMessageBox(placeholder="message to verify")
+            textarea#signatureBox(placeholder="signature to verify")
+            textarea#verificationAddressBox(readonly=true, placeholder="Verification address will go here")
+            br
+            button#verifyButton Verify
 
 html
 

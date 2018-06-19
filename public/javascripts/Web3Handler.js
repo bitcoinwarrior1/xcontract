@@ -1,4 +1,5 @@
 let request = require("superagent");
+let utils = require("ethereumjs-util");
 
 module.exports = {
 
@@ -125,6 +126,23 @@ module.exports = {
         catch(e)
         {
             console.log("signing error: " + e);
+        }
+    },
+
+    verify: (web3, message, signature, cb) =>
+    {
+        try
+        {
+            message = web3.sha3(message);
+            const {v, r, s} = utils.fromRpcSig(signature);
+            let m = utils.toBuffer(message);
+            let pub = utils.ecrecover(m, v, r, s);
+            let adr = '0x' + utils.pubToAddress(pub).toString('hex');
+            cb(adr);
+        }
+        catch(e)
+        {
+            console.log("verify error: " + e);
         }
     },
 
