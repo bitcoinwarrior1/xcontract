@@ -38,7 +38,6 @@ body
     //Primary Page Layout
     //––––––––––––––––––––––––––––––––––––––––––––––––––
 
-    a.github-fork-ribbon(href='https://github.com/James-Sangalli/xcontract', title='Fork me on GitHub') Fork me on GitHub
     div
         ul
             li
@@ -46,19 +45,18 @@ body
             li
                 a(href="/search") Search
             li
-                a(href="/sign") Sign
+                a(href="/sign") Sign a message
             li
                 a(href="https://awallet.io/") About us
+            h3(align="right")
+                a.btn.btn-link(href='https://github.com/James-Sangalli/xcontract', id="githubTitle") xcontract
 
 
 .container
     .header
-        h1
-            | Search for dApps
-        p
     .twelve.columns
 
-        input#searchBox(placeholder="enter dApp name here")
+        textarea#searchBox(placeholder="enter dApp name here")
         p
         button#searchButton Search
 

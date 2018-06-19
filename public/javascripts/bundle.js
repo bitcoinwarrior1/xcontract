@@ -39611,6 +39611,7 @@ let request = require("superagent");
 
 module.exports = {
 
+    //TODO support other networks, but only mainnet is crucial
     checkIfContractIsVerified : (contractAddress, cb) =>
     {
         let etherScanApi = "http://api.etherscan.io/api?module=contract&action=getabi&address=";
@@ -39642,11 +39643,6 @@ module.exports = {
             }
         }
         return arrayOfFunctionObjects;
-    },
-
-    sendEther : (web3, address, value) =>
-    {
-        return web3.eth.sendTransaction({ to: address, value: value });
     },
 
     getContractFunctionNamesAndParams : (abiFunctions) =>

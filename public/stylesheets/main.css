@@ -9,20 +9,10 @@ article
   text-align: center;
 }
 
-h6{
-    color: red;
+h3 {
+    color: white;
+    margin-right: 2.5%;
 }
-
-h4{
-  color: yellow;
-}
-
-h5{
-  text-align: center;
-  font-style: italic;
-  color: yellow;
-}
-
 
 html, body, #container {
   /*height: 90%;*/
@@ -30,15 +20,11 @@ html, body, #container {
 
 }
 
+#notice {
+    color: orangered;
+}
 
 body {
-    /*background: url("http://proofofwork.media/wp-content/uploads/2015/01/5209ea67688e898c34ed50b75aded2ce.jpg") no-repeat center center fixed;*/
-    /*-webkit-background-size: cover;*/
-    /*-moz-background-size: cover;*/
-    /*-o-background-size: cover;*/
-    /*background-size: cover;*/
-    /*background-size: 100% 100%;*/
-    /*background: url("https://www.lykke.com/media/blog/20170313015619earth_11497331920.jpg") no-repeat center fixed;*/
     background-color: #222222;
 }
 
@@ -47,13 +33,9 @@ html{
   background-size: 100%;
 }
 
-/*p{*/
-    /*color: white;*/
-/*}*/
-
 h6, p{
     font-family: "Lucida Sans Typewriter", "Lucida Console", Monaco, "Bitstream Vera Sans Mono", monospace;
-    color: white;
+    color: ghostwhite;
 }
 
 h1{
@@ -67,7 +49,7 @@ h1{
 }
 
 .container{
-  width:90%;
+  width:95%;
   max-width: 1500px;
   display:flex ;
   flex-flow:row wrap;
@@ -90,35 +72,32 @@ ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    overflow: hidden;
-    background-color: transparent;
-    position: fixed;
-    top: 0;
-    width: 100%;
+    background-color: #333;
 }
 
 li {
     float: left;
-    max-height: 80%;
-  }
+}
 
 li a {
     display: block;
     color: white;
-    text-align: left;
+    text-align: center;
     padding: 14px 16px;
     text-decoration: none;
-    max-width: 100%;
-    float:left;
-    margin-bottom: 10%;
 }
 
-#navBar {
-  margin-bottom: 25px;
+#githubTitle {
+    color: white;
+    text-decoration: none;
 }
 
-li a:hover {
-    background-color: black;
+li a:hover:not(.active) {
+    background-color: #111;
+}
+
+.active {
+    background-color: #4CAF50;
 }
 
 #functionsDiv{
@@ -129,14 +108,13 @@ li a:hover {
     float: left;
 }
 
-
 input
 {
     min-width: 500px;
 }
 
 /*media queries*/
-@media (max-width: 750px) {
+@media (max-width: 500px) {
 
   .container{
       /*width:90%;*/
@@ -149,6 +127,9 @@ input
   {
       min-width: 90%;
       max-width: 90%;
+  }
+  #githubTitle {
+      display: none;
   }
 
 }

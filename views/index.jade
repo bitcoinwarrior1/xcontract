@@ -37,27 +37,25 @@ html(lang='en')
   body
       //Primary Page Layout
       //––––––––––––––––––––––––––––––––––––––––––––––––––
-
-      a.github-fork-ribbon(href='https://github.com/James-Sangalli/xcontract', title='Fork me on GitHub') Fork me on GitHub
-      div
+     div
         ul
           li
             a(href="/")  Home
           li
             a(href="/search") Search
           li
-            a(href="/sign") Sign
+            a(href="/sign") Sign a message
           li
             a(href="https://awallet.io/") About us
-
+          h3(align="right")
+            a.btn.btn-link(href='https://github.com/James-Sangalli/xcontract', id="githubTitle") xcontract
 
     .container
-      .header
-        h1
-          | xcontract
       .twelve.columns
-        h6
-          | Run your live smart contracts here!
+        h6#notice
+          | This is a simple website which allows you to interact with smart contracts.
+          | Your keys are kept on your computer and you can easily
+          | Share these contracts with anyone by copying the url above or via email.
         h6 #{warning}
 
       #abiDiv
@@ -69,13 +67,12 @@ html(lang='en')
           p
           button#submit Run Contract
           p
-
-          button#etherScanURLButton View on Etherscan
-
+            if(typeof (addressVal) != 'undefined')
+              button#etherScanURLButton View on Etherscan
           #{url}
             if(typeof (url) != 'undefined')
               a(href="mailto:?subject=Check out this awesome dApp!&body=" + url)
-                button(name="shareContractButton") Email this contract
+                button#shareContractButton Email this contract
 
         #paramAndFunctionDiv
             h6 #{functionTitle}
