@@ -1,16 +1,24 @@
 let express = require('express');
 let router = express.Router();
 let web3Handler = require("../public/javascripts/Web3Handler.js");
+let knexConfig = require('../knex/knexfile');
+let knex = require('knex')(knexConfig[process.env.NODE_ENV || "development"]);
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
     res.render('index', { title: 'xcontract' });
 });
 
-router.get("/api/:contractAddress", (req, res, next) => {
+router.get("/api/:contractAddress", (req, res, next) =>
+{
     let contractAddress = req.params.contractAddress;
     web3Handler.checkIfContractIsVerified(contractAddress, (err, data) =>
     {
+        if(err)
+        {
+            //TODO handle properly
+            res.redirect("/");
+        }
         if(data.body.message === "NOTOK")
         {
             res.render('index', {
@@ -26,6 +34,18 @@ router.get("/api/:contractAddress", (req, res, next) => {
         }
     });
 });
+//knex.insert([{title: 'Great Gatsby'}, {title: 'Fahrenheit 451'}], 'id').into('books')
+
+function logContactInteraction(timestamp, contractAddress)
+{
+    knex("log-table").insert(
+        {timestamp: timestamp},
+        {contractAddress: contractAddress}
+        ).then( (data) => {
+        console.log("logged at " + timestamp + "with contract: " + contractAddress);
+        console.log("Record number: " + data);
+    })
+}
 
 //handle user giving abi in url param
 router.get('/api/:abi/:address', (req, res, next) => {
@@ -38,8 +58,16 @@ router.get('/api/:abi/:address', (req, res, next) => {
     //function and param names
     let functionNameAndParamObj = web3Handler.getContractFunctionNamesAndParams(abiFunctions);
     //sets up function calls to contract from UI
-    web3Handler.checkIfContractIsVerified(contractAddress, (error, data) =>
+    web3Handler.checkIfContractIsVerified(contractAddress, (err, data) =>
     {
+        if(err)
+        {
+            //TODO handle properly
+            res.redirect("/");
+        }
+        //keep track of all the contracts being used here
+        logContactInteraction(new Date().getTime(), contractAddress);
+
         let url = req.protocol + "://" + req.get('host') + req.originalUrl;
 
         let renderObj = {
