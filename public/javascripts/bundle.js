@@ -43278,13 +43278,16 @@ $(() =>
 
     $("#submit").click(() =>
     {
-        window.location.href = "/api/" + JSON.stringify(jsonABI) + "/" +contractAddress;
+        let abi = $("#ABI").val().trim();
+        let contractAddress = $("#contractAddress").val().trim();
+        window.location.href = "/api/" + JSON.stringify(abi) + "/" + contractAddress;
     });
 
     //this is needed because function buttons are created on the fly so we cannot know in advance their elements
     $(':button').not("#signButton" , "#etherScanURLButton", "#submit").click((e) =>
     {
         console.log("button clicked: " + e.target.id);
+        //TODO find out why js doesn't ignore verifyButton in not jquery
         if(e.target.id == "verifyButton")
         {
             verifyAction();
