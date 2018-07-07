@@ -69,7 +69,9 @@ $(() =>
 
     $("#submit").click(() =>
     {
-        window.location.href = "/api/" + JSON.stringify(jsonABI) + "/" +contractAddress;
+        let abi = $("#ABI").val().trim();
+        let contractAddress = $("#contractAddress").val().trim();
+        window.location.href = "/api/" + JSON.stringify(abi) + "/" + contractAddress;
     });
 
     //this is needed because function buttons are created on the fly so we cannot know in advance their elements
