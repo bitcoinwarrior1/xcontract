@@ -71,7 +71,7 @@ $(() =>
     {
         let abi = $("#ABI").val().trim();
         let contractAddress = $("#contractAddress").val().trim();
-        window.location.href = "/api/" + JSON.stringify(abi) + "/" + contractAddress;
+        window.location.href = "/api/" + abi + "/" + contractAddress;
     });
 
     //this is needed because function buttons are created on the fly so we cannot know in advance their elements
