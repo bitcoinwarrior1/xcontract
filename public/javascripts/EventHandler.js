@@ -74,8 +74,15 @@ $(() =>
         window.location.href = "/api/" + abi + "/" + contractAddress;
     });
 
+    $("#balanceBox").click(() => {
+        let abi = $("#ABI").val().trim();
+        let contractAddress = $("#contractAddress").val().trim();
+        let contract = web3.eth.contract(abi).at(contractAddress);
+        
+    });
+
     //this is needed because function buttons are created on the fly so we cannot know in advance their elements
-    $(':button').not("#signButton" , "#etherScanURLButton", "#submit").click((e) =>
+    $(':button').not("#signButton" , "#etherScanURLButton", "#submit", "#balanceBox").click((e) =>
     {
         console.log("button clicked: " + e.target.id);
         //TODO find out why js doesn't ignore verifyButton in not jquery
