@@ -118,7 +118,8 @@ module.exports = {
     {
         try
         {
-            web3.eth.sign(account, message, (err, data) => {
+            let msg = web3.sha3(message);
+            web3.eth.sign(account, msg, (err, data) => {
                 cb(err, data);
             });
         }
