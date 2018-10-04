@@ -14,10 +14,16 @@ h3 {
     margin-right: 2.5%;
 }
 
-html, body, #container {
-  /*height: 90%;*/
-  max-width: 100%;
-
+.container{
+    display:flex ;
+    flex-flow:row wrap;
+    align-content: space-between;
+    margin-top: 7.5%;
+}
+textarea, input
+{
+    min-width: 90%;
+    max-width: 90%;
 }
 
 #notice {
@@ -104,7 +110,7 @@ li a:hover:not(.active) {
     float: right;
 }
 
-#paramDiv{
+#paramDiv {
     float: left;
 }
 
@@ -115,23 +121,6 @@ input
 
 /*media queries*/
 @media (max-width: 500px) {
-
-  .container{
-      display:flex ;
-      flex-flow:row wrap;
-      align-content: space-between;
-      margin-top: 7.5%;
-  }
-  textarea, input
-  {
-      min-width: 90%;
-      max-width: 90%;
-  }
-
-  #functionsDiv {
-      float:left ;
-  }
-
   #githubTitle {
       display: none;
   }

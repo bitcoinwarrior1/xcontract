@@ -57,7 +57,7 @@ html(lang='en')
           | Your keys are kept on your computer and you can easily
           | Share these contracts with anyone by copying the url above or via email.
         h6 #{warning}
-
+      .twelve.columns
       #abiDiv
         #abiForm
           p Here is the abi:
@@ -73,7 +73,7 @@ html(lang='en')
             if(typeof (url) != 'undefined')
               a(href="mailto:?subject=Check out this awesome dApp!&body=" + url)
                 button#shareContractButton Email this contract
-
+        .twelve.columns
         #paramAndFunctionDiv
             h6 #{functionTitle}
           #functionsDiv
