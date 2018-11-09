@@ -18,8 +18,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.listen(process.env.PORT || 3000);
-
+if(process.env.PORT == null) app.listen(8080);
 app.use('/', index);
 app.use('/', search);
 app.use('/', register);
