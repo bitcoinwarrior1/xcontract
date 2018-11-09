@@ -20,11 +20,6 @@ h3 {
     align-content: space-between;
     margin-top: 7.5%;
 }
-textarea, input
-{
-    min-width: 90%;
-    max-width: 90%;
-}
 
 #notice {
     color: orangered;

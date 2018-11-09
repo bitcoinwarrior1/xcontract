@@ -3,7 +3,7 @@ let utils = require("ethereumjs-util");
 
 module.exports = {
 
-    //TODO support other networks, but only mainnet is crucial
+    //TODO support other networks
     checkIfContractIsVerified : (contractAddress, cb) =>
     {
         let etherScanApi = "http://api.etherscan.io/api?module=contract&action=getabi&address=";
@@ -26,7 +26,7 @@ module.exports = {
     {
         let arrayOfFunctionObjects = [];
 
-        for(i=0; i < abi.length; i++)
+        for(let i = 0; i < abi.length; i++)
         {
             if(abi[i].type == "function")
             {
@@ -44,12 +44,12 @@ module.exports = {
         let functionParamFields = [];
         let readOnlyParamInputs = [];
         //for each function
-        for(abiFunc of abiFunctions)
+        for(let abiFunc of abiFunctions)
         {
             let functionName = abiFunc.name;
             let functionParams = [];
             //for each specific function parameters
-            for(input of abiFunc.inputs) functionParams.push(JSON.stringify(input));
+            for(let input of abiFunc.inputs) functionParams.push(JSON.stringify(input));
 
             //create jade elements for each function with name and param
             functionNameFields.push(functionName);
@@ -88,11 +88,11 @@ module.exports = {
             {
                 //last element is ether value
                 etherValue = parseInt(txObj.filledOutParams[txObj.filledOutParams.length - 1]);
-                console.log("here is the ether value: " + etherValue);
                 txObj.filledOutParams.pop();
+                //TODO clean up logic
+                txObj.push({ value: etherValue });
             }
-
-            contract[txObj.functionCalled](txObj.filledOutParams, {value: etherValue}, (err, data) =>
+            contract[txObj.functionCalled](txObj.filledOutParams, (err, data) =>
             {
                 if(err) throw err;
                 cb(data)
@@ -145,7 +145,7 @@ module.exports = {
         }
     },
 
-    redirectToEtherscan : (address) =>
+    redirectToEtherscan : (web3, address) =>
     {
         web3.version.getNetwork((err, networkId) => {
             if (networkId == 3) window.location.href = "https://ropsten.etherscan.io/address/" + address;

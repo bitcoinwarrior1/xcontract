@@ -26,6 +26,8 @@ $(() =>
         //sets the contract
         try
         {
+            //must set the default account otherwise you can get unexpected errors
+            web3.eth.defaultAccount = web3.eth.coinbase;
             contract = web3.eth.contract(abi).at(contractAddress);
         }
         catch(exception)
@@ -128,22 +130,24 @@ $(() =>
         let payable = false;
         if(param != "")
         {
-            if(param.includes("payable")) payable = true;
+            if(param.includes("payable"))
+            {
+                payable = true;
+            }
             txObj.filledOutParams = param.split(",");
         }
-        else txObj.filledOutParams = null;
-
+        else
+        {
+            txObj.filledOutParams = null;
+        }
         txObj.isPayable = payable;
-
         initTransaction(contract, txObj);
     }
 
     function initTransaction(contract, txObj)
     {
-        console.log(txObj.filledOutParams);
         try
         {
-            console.log("Function called: " + txObj.functionCalled);
             web3Handler.executeContractFunction(contract, txObj, (data) => {
                     console.log("tx data: " + data);
                     alert("web3 response: " + data);

@@ -19,7 +19,7 @@ router.get("/api/:contractAddress", (req, res, next) =>
             //TODO handle properly
             res.redirect("/");
         }
-        if(data.body.message === "NOTOK")
+        else if(data.body.message === "NOTOK")
         {
             res.render('index', {
                 abiError: "PLEASE PASTE ABI HERE",
@@ -34,7 +34,6 @@ router.get("/api/:contractAddress", (req, res, next) =>
         }
     });
 });
-//knex.insert([{title: 'Great Gatsby'}, {title: 'Fahrenheit 451'}], 'id').into('books')
 
 function logContactInteraction(timestamp, contractAddress)
 {
