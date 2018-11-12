@@ -66,7 +66,7 @@ $(() =>
     $("#etherScanURLButton").click(() =>
     {
         let contractAddress = $("#contractAddress").val().trim();
-        web3Handler.redirectToEtherscan(contractAddress);
+        web3Handler.redirectToEtherscan(web3, contractAddress);
     });
 
     $("#submit").click(() =>
@@ -74,13 +74,6 @@ $(() =>
         let abi = $("#ABI").val().trim();
         let contractAddress = $("#contractAddress").val().trim();
         window.location.href = "/api/" + abi + "/" + contractAddress;
-    });
-
-    $("#balanceBox").click(() => {
-        let abi = $("#ABI").val().trim();
-        let contractAddress = $("#contractAddress").val().trim();
-        let contract = web3.eth.contract(abi).at(contractAddress);
-        
     });
 
     //this is needed because function buttons are created on the fly so we cannot know in advance their elements
