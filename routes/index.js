@@ -3,6 +3,10 @@ let router = express.Router();
 let web3Handler = require("../public/javascripts/Web3Handler.js");
 let knexConfig = require('../knex/knexfile');
 let knex = require('knex')(knexConfig[process.env.NODE_ENV || "development"]);
+let Web3 = require("web3");
+let web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/llyrtzQ3YhkdESt2Fzrk'));
+const DB_DAPP_TABLE = 'dapptable';
+const etherscanErrorMsg = "NOTOK";
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
@@ -12,6 +16,13 @@ router.get('/', (req, res, next) => {
 router.get("/api/:contractAddress", (req, res, next) =>
 {
     let contractAddress = req.params.contractAddress;
+    getDappDataFromDB(contractAddress, (result) => {
+        if(result[0] != undefined)
+        {
+            res.redirect('/api/' + result[0].abi + "/" + result[0].contractAddress);
+        }
+    });
+
     web3Handler.checkIfContractIsVerified(contractAddress, (err, data) =>
     {
         if(err)
@@ -19,7 +30,7 @@ router.get("/api/:contractAddress", (req, res, next) =>
             //TODO handle properly
             res.redirect("/");
         }
-        else if(data.body.message === "NOTOK")
+        else if(data.body.message === etherscanErrorMsg)
         {
             res.render('index', {
                 abiError: "PLEASE PASTE ABI HERE",
@@ -35,15 +46,45 @@ router.get("/api/:contractAddress", (req, res, next) =>
     });
 });
 
+//only for mainnet for now
+function addDappToDatabase(abi, contractAddress)
+{
+    let contract = web3.eth.contract(JSON.parse(abi)).at(contractAddress);
+    let dappObj = {
+        dappName: contractAddress,
+        contractaddress: contractAddress,
+        abi: abi
+    };
+    web3Handler.getName(contract, (err, name) => {
+        if(!err) {
+            dappObj.dappName = name;
+        }
+        knex(DB_DAPP_TABLE).insert(dappObj).then((data) => {
+
+        }).catch((err) => {
+
+        });
+    });
+}
+
+function getDappDataFromDB(contractAddress, cb)
+{
+    knex(DB_DAPP_TABLE).select().where({contractAddress: contractAddress}).then((data) => {
+        cb(data);
+    }).catch((err) => {
+        cb(err);
+    });
+}
+
 function logContactInteraction(timestamp, contractAddress)
 {
-    knex("log-table").insert(
-        {timestamp: timestamp},
-        {contractAddress: contractAddress}
-        ).then( (data) => {
+    knex("log-table").insert({
+        timestamp: timestamp,
+        contractAddress: contractAddress
+    }).then( (data) => {
         console.log("logged at " + timestamp + "with contract: " + contractAddress);
         console.log("Record number: " + data);
-    })
+    });
 }
 
 //handle user giving abi in url param
@@ -65,6 +106,7 @@ router.get('/api/:abi/:address', (req, res, next) => {
             res.redirect("/");
         }
         //keep track of all the contracts being used here
+        //TODO timestamp probably not needed as DB logs this
         logContactInteraction(new Date().getTime(), contractAddress);
 
         let url = req.protocol + "://" + req.get('host') + req.originalUrl;
@@ -79,7 +121,10 @@ router.get('/api/:abi/:address', (req, res, next) => {
             url: url
         };
 
-        if(data.body.message === "NOTOK")
+        //add dapp into db so that user doesn't need to type the abi string anymore
+        addDappToDatabase(abi, contractAddress);
+
+        if(data.body.message === etherscanErrorMsg)
         {
             renderObj.warning = "Warning! Contract source code is not verified on etherscan!";
             res.render('index', renderObj);

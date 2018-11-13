@@ -63,7 +63,7 @@ body
         if(searchResults != "No dApps found" || (typeof searchResults) != 'undefined' || searchResults == "")
             each result in searchResults
                 p
-                a(href="/api/" + result.contractAddress) #{result.dAppName }
+                a(href="/api/" + result.abi + "/" + result.contractAddress) #{result.dAppName }
                 p
         else
             h6 #{searchResults}

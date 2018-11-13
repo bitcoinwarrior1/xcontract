@@ -153,5 +153,20 @@ module.exports = {
             else if (networkId == 42) window.location.href = "https://kovan.etherscan.io/address/" + address;
             else window.location.href = "https://etherscan.io/address/" + address;
         });
+    },
+
+    getName : (contract, cb) => {
+        try
+        {
+            contract.name.call((err, name) => {
+                if(err) cb(err, null);
+                else cb(null, name);
+            })
+        }
+        catch(e)
+        {
+            console.log("no name defined: " + e);
+        }
+
     }
 };

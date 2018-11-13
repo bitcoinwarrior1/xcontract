@@ -10,12 +10,12 @@ router.get("/search", (req,res,next) =>
     });
 });
 
-router.get("/search/:dappname", (req,res,next) =>
+router.get("/search/:dappName", (req,res,next) =>
 {
     let arrayOfResultObjects = [];
-    let dappName = req.params.dappname;
+    let dappName = req.params.dappName;
 
-    knex("dapptable").select().where("dappname" , "LIKE", "%" + dappName + "%").then( (data) =>
+    knex("dapptable").select().where("dappName" , "LIKE", "%" + dappName + "%").then( (data) =>
     {
         console.log(data);
 
@@ -33,9 +33,9 @@ router.get("/search/:dappname", (req,res,next) =>
         {
             console.log("dApps found");
             let resultObj = {};
-            resultObj.dAppName = result.dappname;
-            resultObj.contractAddress = result.contractaddress;
-
+            resultObj.dAppName = result.dappName;
+            resultObj.contractAddress = result.contractAddress;
+            resultObj.abi = result.abi;
             arrayOfResultObjects.push(resultObj);
         }
 
