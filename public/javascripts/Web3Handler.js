@@ -114,7 +114,7 @@ module.exports = {
         return web3.isAddress(address);
     },
 
-    sign : (web3, account, message, cb) =>
+    signMessage : (web3, account, message, cb) =>
     {
         try
         {

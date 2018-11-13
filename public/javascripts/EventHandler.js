@@ -11,6 +11,7 @@ $(() =>
         const injectedProvider = window.web3.currentProvider;
         web3 = new Web3(injectedProvider);
         console.log("injected provider used: " + injectedProvider);
+        web3.eth.defaultAccount = web3.eth.coinbase;
     }
     else
     {
@@ -38,11 +39,11 @@ $(() =>
 
     function signAction()
     {
-        let account = web3.eth.coinbase;
+        let account = web3.eth.defaultAccount;
         console.log("Here is the account: " + account);
         let message = $("#messageBox").val();
         console.log("message to sign: " + message);
-        web3Handler.sign(web3, account, message, (err, data) =>
+        web3Handler.signMessage(web3, account, message, (err, data) =>
         {
             $("#output").val(data);
         });
@@ -63,6 +64,11 @@ $(() =>
         signAction();
     });
 
+    $("#verifyButton").click(() =>
+    {
+        verifyAction();
+    });
+
     $("#etherScanURLButton").click(() =>
     {
         let contractAddress = $("#contractAddress").val().trim();
@@ -77,15 +83,9 @@ $(() =>
     });
 
     //this is needed because function buttons are created on the fly so we cannot know in advance their elements
-    $(':button').not("#signButton" , "#etherScanURLButton", "#submit", "#balanceBox").click((e) =>
+    $(':button').not("#signButton" , "#etherScanURLButton", "#submit", "#balanceBox", "#verifyButton").click((e) =>
     {
         console.log("button clicked: " + e.target.id);
-        //TODO find out why js doesn't ignore verifyButton in not jquery
-        if(e.target.id == "verifyButton")
-        {
-            verifyAction();
-            return;
-        }
         let contractAddress = $("#contractAddress").val().trim();
         let abi = $("#ABI").val().trim();
         if(!web3Handler.checkAddressValidity(web3, contractAddress))
