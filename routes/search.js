@@ -14,21 +14,15 @@ router.get("/search/:dappName", (req,res,next) =>
 {
     let arrayOfResultObjects = [];
     let dappName = req.params.dappName;
-
     knex("dapptable").select().where("dappName" , "LIKE", "%" + dappName + "%").then( (data) =>
     {
-        console.log(data);
-
+        console.log("HADSUajshdfajsud" + data[0].abi);
         if(data == [])
         {
-            console.log("no dApps found");
-
             res.render('search', {
                 searchResults : "No dApps found"
             });
-
         }
-
         for(let result of data)
         {
             console.log("dApps found");

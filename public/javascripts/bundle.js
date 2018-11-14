@@ -44263,6 +44263,7 @@ let Web3 = require("web3");
 let web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 let web3Handler = require("./Web3Handler.js");
 let contract;
+const domainDNS = "https://xcontract.herokuapp.com";
 
 $(() =>
 {
@@ -44271,7 +44272,7 @@ $(() =>
     {
         const injectedProvider = window.web3.currentProvider;
         web3 = new Web3(injectedProvider);
-        console.log("injected provider used: " + injectedProvider);
+        console.log("injected provider used");
         web3.eth.defaultAccount = web3.eth.coinbase;
     }
     else
@@ -44344,7 +44345,12 @@ $(() =>
     });
 
     //this is needed because function buttons are created on the fly so we cannot know in advance their elements
-    $(':button').not("#signButton" , "#etherScanURLButton", "#submit", "#balanceBox", "#verifyButton").click((e) =>
+    $(':button').not(
+        "#signButton",
+        "#etherScanURLButton",
+        "#submit",
+        "#balanceBox",
+        "#verifyButton").click((e) =>
     {
         console.log("button clicked: " + e.target.id);
         let contractAddress = $("#contractAddress").val().trim();
@@ -44571,6 +44577,22 @@ module.exports = {
             else if (networkId == 42) window.location.href = "https://kovan.etherscan.io/address/" + address;
             else window.location.href = "https://etherscan.io/address/" + address;
         });
+    },
+
+    getName : (contract, cb) => {
+        try
+        {
+            contract.name.call((err, name) => {
+                if(err) cb(err, null);
+                else cb(null, name);
+            })
+        }
+        catch(e)
+        {
+            cb(e, null);
+            console.log("no name defined: " + e);
+        }
+
     }
 };
 

@@ -17,7 +17,6 @@ router.get("/api/:contractAddress", (req, res, next) =>
 {
     let contractAddress = req.params.contractAddress;
     getDappDataFromDB(contractAddress, (result) => {
-        console.log("result type: " + typeof  result[0] + " address: " + result[0].contractAddress);
         if(result[0] != undefined)
         {
             res.redirect('/api/' + JSON.stringify(result[0].abi) + "/" + result[0].contractAddress);
@@ -50,7 +49,7 @@ router.get("/api/:contractAddress", (req, res, next) =>
 //only for mainnet for now
 function addDappToDatabase(abi, contractAddress)
 {
-    let contract = web3.eth.contract(JSON.parse(abi)).at(contractAddress);
+    let contract = web3.eth.contract(abi).at(contractAddress);
     let dappObj = {
         dappName: contractAddress,
         contractAddress: contractAddress,
@@ -108,34 +107,30 @@ router.get('/api/:abi/:address', (req, res, next) => {
         }
         //keep track of all the contracts being used here
         logContactInteraction(new Date().getTime(), contractAddress);
-
-        let url = req.protocol + "://" + req.get('host') + req.originalUrl;
-
+        //since the contract has been logged to the db, it can be shared without abi
+        let url = req.protocol + "://" + req.get('host') + "/api/" + contractAddress;
         let renderObj = {
-            abiVal: JSON.stringify(abiJson),
+            abiVal: abi,
             addressVal: contractAddress,
             functionNames: functionNameAndParamObj.names,
-            functionParams : functionNameAndParamObj.params,
-            functionTitle:"Smart Contract Functions",
+            functionParams: functionNameAndParamObj.params,
+            functionTitle: "Smart Contract Functions",
             readOnlyAttribute: functionNameAndParamObj.readOnly,
             url: url
         };
 
         //add dapp into db so that user doesn't need to type the abi string anymore
-        addDappToDatabase(abi, contractAddress);
+        addDappToDatabase(abiJson, contractAddress);
 
         if(data.body.message === etherscanErrorMsg)
         {
             renderObj.warning = "Warning! Contract source code is not verified on etherscan!";
-            res.render('index', renderObj);
         }
         else
         {
             renderObj.warning = "Contract source code is verified on etherscan!";
-            //if verified can give shortened url without abi
-            renderObj.url = req.protocol + "://" + req.get('host') + "/api/" + contractAddress;
-            res.render('index', renderObj);
         }
+        res.render('index', renderObj);
     });
 
 });
