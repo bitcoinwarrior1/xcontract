@@ -106,7 +106,6 @@ router.get('/api/:abi/:address', (req, res, next) => {
             res.redirect("/");
         }
         //keep track of all the contracts being used here
-        //TODO timestamp probably not needed as DB logs this
         logContactInteraction(new Date().getTime(), contractAddress);
 
         let url = req.protocol + "://" + req.get('host') + req.originalUrl;

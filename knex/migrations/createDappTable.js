@@ -7,7 +7,7 @@ exports.up = function(knex, Promise)
         table.increments('id');
         table.string('dappName').unique();
         table.string('contractAddress').unique();
-        table.string('abi');
+        table.json('abi');
     })
 };
 
