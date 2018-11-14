@@ -3,7 +3,7 @@ A smart contract user interface which allows you to run live smart contracts on 
 
 #### Website url: https://xcontract.herokuapp.com/
 
-#### Example url call for a contract that is verified on etherscan:
+#### Example url call for a contract that is verified on etherscan or has been entered before:
 https://xcontract.herokuapp.com/api/0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359
 
 #### Example url call for OpenRep contract: 

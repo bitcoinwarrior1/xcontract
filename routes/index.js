@@ -20,7 +20,7 @@ router.get("/api/:contractAddress", (req, res, next) =>
         console.log("result type: " + typeof  result[0] + " address: " + result[0].contractAddress);
         if(result[0] != undefined)
         {
-            res.redirect('/api/' + result[0].abi + "/" + result[0].contractAddress);
+            res.redirect('/api/' + JSON.stringify(result[0].abi) + "/" + result[0].contractAddress);
         }
     });
 
