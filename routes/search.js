@@ -35,7 +35,7 @@ router.get("/search/:dappName", (req,res,next) =>
             let resultObj = {};
             resultObj.dAppName = result.dappName;
             resultObj.contractAddress = result.contractAddress;
-            resultObj.abi = result.abi;
+            resultObj.abi = JSON.stringify(result.abi);
             arrayOfResultObjects.push(resultObj);
         }
 
