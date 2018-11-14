@@ -17,6 +17,7 @@ router.get("/api/:contractAddress", (req, res, next) =>
 {
     let contractAddress = req.params.contractAddress;
     getDappDataFromDB(contractAddress, (result) => {
+        console.log("result type: " + typeof  result[0] + " address: " + result[0].contractAddress);
         if(result[0] != undefined)
         {
             res.redirect('/api/' + result[0].abi + "/" + result[0].contractAddress);
@@ -52,7 +53,7 @@ function addDappToDatabase(abi, contractAddress)
     let contract = web3.eth.contract(JSON.parse(abi)).at(contractAddress);
     let dappObj = {
         dappName: contractAddress,
-        contractaddress: contractAddress,
+        contractAddress: contractAddress,
         abi: abi
     };
     web3Handler.getName(contract, (err, name) => {
@@ -69,7 +70,7 @@ function addDappToDatabase(abi, contractAddress)
 
 function getDappDataFromDB(contractAddress, cb)
 {
-    knex(DB_DAPP_TABLE).select().where({contractAddress: contractAddress}).then((data) => {
+    knex(DB_DAPP_TABLE).select().where({ contractAddress: contractAddress }).then((data) => {
         cb(data);
     }).catch((err) => {
         cb(err);
@@ -82,7 +83,7 @@ function logContactInteraction(timestamp, contractAddress)
         timestamp: timestamp,
         contractAddress: contractAddress
     }).then( (data) => {
-        console.log("logged at " + timestamp + "with contract: " + contractAddress);
+        console.log("logged at " + timestamp + " with contract: " + contractAddress);
         console.log("Record number: " + data);
     });
 }

@@ -165,6 +165,7 @@ module.exports = {
         }
         catch(e)
         {
+            cb(e, null);
             console.log("no name defined: " + e);
         }
 
