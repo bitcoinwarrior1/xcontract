@@ -57,23 +57,25 @@ html(lang='en')
           | Your keys are kept on your computer and you can easily
           | Share these contracts with anyone by copying the url above or via email.
         h6 #{warning}
-      #abiDiv
-        #abiForm
-          p Here is the abi:
-          textarea#ABI(name='ABI', placeholder= abiError || "Paste the smart contract's ABI here" ) #{abiVal}
-          p Here is the contract address:
-          textarea#contractAddress(name='contractAddress', placeholder="Paste the smart contract's address here" ) #{addressVal}
-          p
-          button#submit Run Contract
-          p
+        #abiDiv
+          #abiForm
+            p Here is the abi:
+            textarea#ABI(name='ABI', placeholder= abiError || "Paste the smart contract's ABI here" ) #{abiVal}
+            p Here is the contract address:
+            textarea#contractAddress(name='contractAddress', placeholder="Paste the smart contract's address here" ) #{addressVal}
+            p
+            button#submit Run Contract
+            if(typeof (url) != 'undefined')
+              button#copyToClipboard Copy to Clipboard
             if(typeof (addressVal) != 'undefined')
-              button#etherScanURLButton View on Etherscan
-          #{url}
+              button#etherScanURLButton Etherscan
+            #{url}
             if(typeof (url) != 'undefined')
               a(href="mailto:?subject=Check out this awesome dApp!&body=" + url)
-                button#shareContractButton Email this contract
+                button#shareContractButton Email Contract
+
         #paramAndFunctionDiv
-            h6 #{functionTitle}
+          h6 #{functionTitle}
           #functionsDiv
           if(typeof (functionNames) != 'undefined' && typeof (functionParams) != 'undefined')
             -var index = 0;

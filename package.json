@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "body-parser": "~1.17.1",
+    "clipboard-polyfill": "^2.7.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "ethereumjs-util": "^5.2.0",

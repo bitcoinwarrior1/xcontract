@@ -3,6 +3,7 @@ let web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 let web3Handler = require("./Web3Handler.js");
 let contract;
 const domainDNS = "https://xcontract.herokuapp.com";
+let clipboard = require("clipboard-polyfill");
 
 $(() =>
 {
@@ -78,9 +79,18 @@ $(() =>
 
     $("#submit").click(() =>
     {
+        $("#copyToClipboard").show();
         let abi = $("#ABI").val().trim();
         let contractAddress = $("#contractAddress").val().trim();
         window.location.href = "/api/" + abi + "/" + contractAddress;
+    });
+
+    $("#copyToClipboard").click(() =>
+    {
+       let url = domainDNS + "/api/" +  $("#contractAddress").val().trim();
+        clipboard.writeText(url).then((err, data) => {
+            alert("copied to clipboard!");
+        });
     });
 
     //this is needed because function buttons are created on the fly so we cannot know in advance their elements
@@ -89,7 +99,8 @@ $(() =>
         "#etherScanURLButton",
         "#submit",
         "#balanceBox",
-        "#verifyButton").click((e) =>
+        "#verifyButton",
+        "#copyToClipboard").click((e) =>
     {
         console.log("button clicked: " + e.target.id);
         let contractAddress = $("#contractAddress").val().trim();
@@ -97,6 +108,7 @@ $(() =>
         if(!web3Handler.checkAddressValidity(web3, contractAddress))
         {
             alert("missing or invalid contract address: " + contractAddress);
+            location.reload();
             return;
         }
         //if no abi is provided redirect to verified contract url, if verified then no ABI is needed
