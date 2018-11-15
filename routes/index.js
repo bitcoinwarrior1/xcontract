@@ -7,42 +7,66 @@ let Web3 = require("web3");
 let web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/llyrtzQ3YhkdESt2Fzrk'));
 const DB_DAPP_TABLE = 'dapptable';
 const etherscanErrorMsg = "NOTOK";
+const verifiedOnEtherscanMsg = "Contract verified on Etherscan";
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
     res.render('index', { title: 'xcontract' });
 });
 
+function getRenderObjectDetails(contractAddress, abi, url)
+{
+    let abiFunctions = web3Handler.extractAbiFunctions(abi);
+    let functionNameAndParamObj = web3Handler.getContractFunctionNamesAndParams(abiFunctions);
+    //keep track of all the contracts being used here
+    logContactInteraction(new Date().getTime(), contractAddress);
+    //add dapp into db so that user doesn't need to type the abi string anymore
+    addDappToDatabase(abi, contractAddress);
+    return {
+        abiVal: JSON.stringify(abi), //this is a bit dangerous, but without strong types hard to do better
+        addressVal: contractAddress,
+        functionNames: functionNameAndParamObj.names,
+        functionParams: functionNameAndParamObj.params,
+        functionTitle: "Smart Contract Functions",
+        readOnlyAttribute: functionNameAndParamObj.readOnly,
+        url: url,
+        warning: "Contract is not verified on Etherscan"
+    };
+}
+
 router.get("/api/:contractAddress", (req, res, next) =>
 {
     let contractAddress = req.params.contractAddress;
+    let url = req.protocol + "://" + req.get('host') + "/api/" + contractAddress;
+    let isInDB = false;
+    let renderObj = {
+        abiError: "PLEASE PASTE ABI HERE",
+        addressVal: contractAddress,
+        functionTitle: "Smart Contract Functions",
+        warning: "NO ABI FOUND",
+    };
     getDappDataFromDB(contractAddress, (result) => {
         if(result[0] != undefined)
         {
-            res.redirect('/api/' + JSON.stringify(result[0].abi) + "/" + result[0].contractAddress);
+            let abi = result[0].abi;
+            let contractAddress = result[0].contractAddress;
+            renderObj = getRenderObjectDetails(contractAddress, abi, url);
+            isInDB = true;
         }
-    });
+        // can still get details if verified on etherscan
+        web3Handler.checkIfContractIsVerified(contractAddress, (err, data) => {
+            if(data.body.message === etherscanErrorMsg)
+            {
+                res.render('index', renderObj);
+            }
+            else
+            {
+                renderObj = getRenderObjectDetails(contractAddress, JSON.parse(data.body.result), url);
+                renderObj.warning = verifiedOnEtherscanMsg;
+            }
+            res.render('index', renderObj);
+        });
 
-    web3Handler.checkIfContractIsVerified(contractAddress, (err, data) =>
-    {
-        if(err)
-        {
-            //TODO handle properly
-            res.redirect("/");
-        }
-        else if(data.body.message === etherscanErrorMsg)
-        {
-            res.render('index', {
-                abiError: "PLEASE PASTE ABI HERE",
-                addressVal: contractAddress,
-                functionTitle:"Smart Contract Functions",
-                warning:"NO ABI FOUND AS CONTRACT IS NOT VERIFIED ON ETHERSCAN",
-            });
-        }
-        else
-        {
-            res.redirect('/api/' + data.body.result + "/" + contractAddress);
-        }
     });
 });
 
@@ -88,15 +112,11 @@ function logContactInteraction(timestamp, contractAddress)
 }
 
 //handle user giving abi in url param
-router.get('/api/:abi/:address', (req, res, next) => {
-
+router.get('/api/:abi/:address', (req, res, next) =>
+{
     //parameters
-    let abi = req.params.abi;
+    let abi = JSON.parse(req.params.abi);
     let contractAddress = req.params.address;
-    let abiJson = JSON.parse(abi);
-    let abiFunctions = web3Handler.extractAbiFunctions(abiJson);
-    //function and param names
-    let functionNameAndParamObj = web3Handler.getContractFunctionNamesAndParams(abiFunctions);
     //sets up function calls to contract from UI
     web3Handler.checkIfContractIsVerified(contractAddress, (err, data) =>
     {
@@ -105,34 +125,15 @@ router.get('/api/:abi/:address', (req, res, next) => {
             //TODO handle properly
             res.redirect("/");
         }
-        //keep track of all the contracts being used here
-        logContactInteraction(new Date().getTime(), contractAddress);
         //since the contract has been logged to the db, it can be shared without abi
         let url = req.protocol + "://" + req.get('host') + "/api/" + contractAddress;
-        let renderObj = {
-            abiVal: abi,
-            addressVal: contractAddress,
-            functionNames: functionNameAndParamObj.names,
-            functionParams: functionNameAndParamObj.params,
-            functionTitle: "Smart Contract Functions",
-            readOnlyAttribute: functionNameAndParamObj.readOnly,
-            url: url
-        };
-
-        //add dapp into db so that user doesn't need to type the abi string anymore
-        addDappToDatabase(abiJson, contractAddress);
-
-        if(data.body.message === etherscanErrorMsg)
+        let renderObj = getRenderObjectDetails(contractAddress, abi, url);
+        if(data.body.message !== etherscanErrorMsg)
         {
-            renderObj.warning = "Warning! Contract source code is not verified on etherscan!";
-        }
-        else
-        {
-            renderObj.warning = "Contract source code is verified on etherscan!";
+            renderObj.warning = verifiedOnEtherscanMsg;
         }
         res.render('index', renderObj);
     });
-
 });
 
 
