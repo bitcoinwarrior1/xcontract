@@ -55,7 +55,7 @@ html(lang='en')
         h6#notice
           | This is a simple website which allows you to interact with smart contracts.
           | Your keys are kept on your computer and you can easily
-          | Share these contracts with anyone by copying the url above or via email.
+          | share these contracts with anyone by copying the link above.
         h6 #{warning}
         #abiDiv
           #abiForm
@@ -69,10 +69,6 @@ html(lang='en')
               button#copyToClipboard Copy to Clipboard
             if(typeof (addressVal) != 'undefined')
               button#etherScanURLButton Etherscan
-            #{url}
-            if(typeof (url) != 'undefined')
-              a(href="mailto:?subject=Check out this awesome dApp!&body=" + url)
-                button#shareContractButton Email Contract
 
         #paramAndFunctionDiv
           h6 #{functionTitle}
