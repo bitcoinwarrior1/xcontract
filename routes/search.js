@@ -16,12 +16,12 @@ router.get("/search/:dappName", (req,res,next) =>
     let dappName = req.params.dappName;
     knex("dapptable").select().where("dappName" , "LIKE", "%" + dappName + "%").then( (data) =>
     {
-        console.log("HADSUajshdfajsud" + data[0].abi);
         if(data == [])
         {
             res.render('search', {
                 searchResults : "No dApps found"
             });
+            return;
         }
         for(let result of data)
         {
@@ -29,7 +29,6 @@ router.get("/search/:dappName", (req,res,next) =>
             let resultObj = {};
             resultObj.dAppName = result.dappName;
             resultObj.contractAddress = result.contractAddress;
-            resultObj.abi = JSON.stringify(result.abi);
             arrayOfResultObjects.push(resultObj);
         }
 
