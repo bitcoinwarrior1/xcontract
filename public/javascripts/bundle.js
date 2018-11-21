@@ -44274,10 +44274,11 @@ $(() =>
     //check if plugin node is available if not use localhost
     if (typeof window.web3 !== 'undefined')
     {
-        const injectedProvider = window.web3.currentProvider;
+        let injectedProvider = window.web3.currentProvider;
         web3 = new Web3(injectedProvider);
         console.log("injected provider used");
         web3.eth.defaultAccount = web3.eth.coinbase;
+        injectedProvider.enable();
     }
     else
     {
