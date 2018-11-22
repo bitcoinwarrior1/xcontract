@@ -1,5 +1,5 @@
 doctype html
-html(lang='en')
+html(lang='zh')
   head
     //
       Basic Page Needs
@@ -40,33 +40,31 @@ html(lang='en')
      div
         ul
           li
-            a(href="/")  Home
+            a(href="/")  首页
           li
-            a(href="/search") Search
+            a(href="/search") 搜索
           li
-            a(href="/sign") Sign/Verify
+            a(href="/sign") 签署/验证
           li
-            a(href="https://alphawallet.com/") About us
-          li
-            a(href="/index_Zh-Hans") 中文
+            a(href="https://alphawallet.com/") 关于我们
           h3(align="right")
             a.btn.btn-link(href='https://github.com/James-Sangalli/xcontract', id="githubTitle") xcontract
 
     .container
       .twelve.columns
         h6#notice
-          | This is a simple website which allows you to interact with smart contracts.
+                         | 这个帮站与智能合约交互.
           | Your keys are kept on your computer and you can easily
           | share these contracts with anyone by copying the link above.
         h6 #{warning}
         #abiDiv
           #abiForm
-            p Here is the abi:
-            textarea#ABI(name='ABI', placeholder= abiError || "Paste the smart contract's ABI here" ) #{abiVal}
-            p Here is the contract address:
-            textarea#contractAddress(name='contractAddress', placeholder="Paste the smart contract's address here" ) #{addressVal}
+            p 这是 ABI:
+            textarea#ABI(name='ABI', placeholder= abiError || "将智能合约的 ABI 放在这里" ) #{abiVal}
+            p 这是智能合约地址:
+            textarea#contractAddress(name='contractAddress', placeholder="将智能合约的地址放在这里" ) #{addressVal}
             p
-            button#submit Run Contract
+            button#submit 执行合约
             if(typeof (url) != 'undefined')
               button#copyToClipboard Copy to Clipboard
             if(typeof (addressVal) != 'undefined')
