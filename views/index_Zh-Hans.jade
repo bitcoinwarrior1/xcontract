@@ -1,5 +1,5 @@
 doctype html
-html(lang='en')
+html(lang='zh')
   head
     //
       Basic Page Needs
@@ -21,6 +21,9 @@ html(lang='en')
     link(rel='stylesheet', href='/stylesheets/normalize.css')
     link(rel='stylesheet', href='/stylesheets/skeleton.css')
     link(rel='stylesheet', href='/stylesheets/main.css')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css')
+    //if lt IE 9
+      link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css')
 
     // JS files
     //
@@ -37,58 +40,53 @@ html(lang='en')
      div
         ul
           li
-            a(href="/")  Home
+            a(href="/")  首页
           li
-            a(href="/search") Search
+            a(href="/search") 搜索
           li
-            a(href="/sign") Sign/Verify
+            a(href="/sign") 签署/验证
           li
-            a(href="https://alphawallet.com/") About us
-          li
-            a(href="/index_Zh-Hans") 中文
+            a(href="https://alphawallet.com/") 关于我们
           h3(align="right")
             a.btn.btn-link(href='https://github.com/James-Sangalli/xcontract', id="githubTitle") xcontract
 
     .container
       .twelve.columns
         h6#notice
-          | This is a simple website which allows you to interact with smart contracts.
+                         | 这个帮站与智能合约交互.
           | Your keys are kept on your computer and you can easily
           | share these contracts with anyone by copying the link above.
         h6 #{warning}
-        p#network
-        p#userAddress
         #abiDiv
           #abiForm
-            p Here is the abi:
-            textarea#ABI(name='ABI', placeholder= abiError || "Paste the smart contract's ABI here" ) #{abiVal}
-            p Here is the contract address:
-            textarea#contractAddress(name='contractAddress', placeholder="Paste the smart contract's address here" ) #{addressVal}
+            p 这是 ABI:
+            textarea#ABI(name='ABI', placeholder= abiError || "将智能合约的 ABI 放在这里" ) #{abiVal}
+            p 这是智能合约地址:
+            textarea#contractAddress(name='contractAddress', placeholder="将智能合约的地址放在这里" ) #{addressVal}
             p
-            button#submit Run Contract
+            button#submit 执行合约
             if(typeof (url) != 'undefined')
               button#copyToClipboard Copy to Clipboard
             if(typeof (addressVal) != 'undefined')
               button#etherScanURLButton Etherscan
+
         #paramAndFunctionDiv
           h6 #{functionTitle}
           #functionsDiv
           if(typeof (functionNames) != 'undefined' && typeof (functionParams) != 'undefined')
             -var index = 0;
             each functionName in functionNames
-              - var idNumber = index * 1000
-              div(id="function" + idNumber)
-                - var count = functionParams[index].length
-                - var argPos = 1
-                button(name=functionName, id=functionName + "&" + idNumber, value=count) #{functionName}
+              div(id="function" + index)
+                button(name=functionName, id=functionName + "&" + index) #{functionName}
+
               if(functionParams[index] != "")
-                each functionParam in functionParams[index]
-                  -var paramText = functionParam.name + " (" + functionParam.type + ")"
-                  h6 #{paramText}
-                  input(id = idNumber + argPos)
-                  -argPos++
+                textarea(value=functionParams[index], placeholder = functionNames[index].toUpperCase() +
+                " parameters: " + functionParams[index] , id = index,
+                readonly = readOnlyAttribute[index])
               else
-                h6 #{functionNames[index].toUpperCase() + " has no parameters"}
+                textarea(value=functionParams[index], placeholder = functionNames[index].toUpperCase() +
+                " has no parameters", id = index,
+                readonly = readOnlyAttribute[index])
               -index++
 
       .twelve.columns
