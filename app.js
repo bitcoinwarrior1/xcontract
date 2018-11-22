@@ -6,6 +6,7 @@ let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let index = require('./routes/index');
 let search = require('./routes/search');
+let chineseIndex = require("./routes/chineseIndex");
 let register = require('./routes/sign');
 let app = express();
 // view engine setup
@@ -22,6 +23,7 @@ if(process.env.PORT == null) app.listen(8080);
 app.use('/', index);
 app.use('/', search);
 app.use('/', register);
+app.use('/', chineseIndex);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) =>
