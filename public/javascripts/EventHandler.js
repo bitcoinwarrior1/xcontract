@@ -14,7 +14,8 @@ $(() =>
         web3 = new Web3(injectedProvider);
         console.log("injected provider used");
         web3.eth.defaultAccount = web3.eth.coinbase;
-        injectedProvider.enable();
+        let version = web3.version.api;
+        if(version > 1) injectedProvider.enable();
     }
     else
     {
