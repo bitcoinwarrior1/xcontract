@@ -16,6 +16,11 @@ $(() =>
         web3.eth.defaultAccount = web3.eth.coinbase;
         let version = web3.version.api;
         if(version > 1) injectedProvider.enable();
+        web3Handler.getNetworkName(web3, (network) =>
+        {
+            $("#network").text("Current network: " + network);
+            $("#userAddress").text("Your address: " + web3.eth.coinbase);
+        });
     }
     else
     {

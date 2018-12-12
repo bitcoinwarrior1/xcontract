@@ -154,6 +154,17 @@ module.exports = {
         });
     },
 
+    getNetworkName : (web3, cb) =>
+    {
+        web3.version.getNetwork((err, networkId) =>
+        {
+            if(networkId == 3) cb("Ropsten");
+            else if (networkId == 4) cb("Rinkeby");
+            else if (networkId == 42) cb("Kovan");
+            else cb("Mainnet");
+        });
+    },
+
     getName : (contract, cb) => {
         try
         {
