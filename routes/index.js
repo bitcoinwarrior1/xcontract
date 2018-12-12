@@ -21,7 +21,7 @@ function getRenderObjectDetails(contractAddress, abi, url)
     //keep track of all the contracts being used here
     logContactInteraction(new Date().getTime(), contractAddress);
     //add dapp into db so that user doesn't need to type the abi string anymore
-    addDappToDatabase(abi, contractAddress);
+    addDappToDatabase(abi, contractAddress, (result) => { console.log(result) });
     return {
         abiVal: JSON.stringify(abi), //this is a bit dangerous, but without strong types hard to do better
         addressVal: contractAddress,
@@ -71,7 +71,7 @@ router.get("/api/:contractAddress", (req, res, next) =>
 });
 
 //only for mainnet for now
-function addDappToDatabase(abi, contractAddress)
+function addDappToDatabase(abi, contractAddress, cb)
 {
     let contract = web3.eth.contract(abi).at(contractAddress);
     let dappObj = {
@@ -84,9 +84,9 @@ function addDappToDatabase(abi, contractAddress)
             dappObj.dappName = name;
         }
         knex(DB_DAPP_TABLE).insert(dappObj).then((data) => {
-
+            cb(dappObj);
         }).catch((err) => {
-
+            cb(err)
         });
     });
 }
@@ -133,6 +133,58 @@ router.get('/api/:abi/:address', (req, res, next) =>
             renderObj.warning = verifiedOnEtherscanMsg;
         }
         res.render('index', renderObj);
+    });
+});
+
+//allow users to add contracts to the server
+router.post("/api/addDappDetailsToServer/:address/:abi/:contractName", (req, res, next) =>
+{
+    let contractAddress = req.params.address;
+    let abi = req.params.abi;
+    let contractName = req.params.contractName;
+    let dappObj = {
+        contractAddress: contractAddress,
+        abi: abi,
+        contractName: contractName
+    };
+    knex(DB_DAPP_TABLE).insert(dappObj).then((result) =>
+    {
+        res.send(result);
+    }).catch((err) => {
+        res.send(err);
+    });
+});
+
+//server path to get contract abi
+router.get("/api/getDappDetailsFromAddress/:contractAddress", (req, res, next) =>
+{
+    let contractAddress = req.params.contractAddress;
+    knex(DB_DAPP_TABLE).select().where({ contractAddress: contractAddress }).then((data) =>
+    {
+        if(data.length > 0)
+        {
+            res.send(data[0])
+        }
+        else
+        {
+            web3Handler.checkIfContractIsVerified(contractAddress, (err, result) =>
+            {
+                if(err)
+                {
+                    res.send(false);
+                }
+                else
+                {
+                    addDappToDatabase(result, contractAddress, (obj) =>
+                    {
+                        res.send(obj);
+                    });
+                }
+            });
+        }
+    }).catch((err) =>
+    {
+        res.send(err);
     });
 });
 

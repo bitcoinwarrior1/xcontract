@@ -13,7 +13,6 @@ module.exports = {
             if(error)
             {
                 cb(error, null);
-                throw error;
             }
             else
             {
@@ -118,7 +117,7 @@ module.exports = {
     {
         try
         {
-            web3.eth.sign(account, message, (err, data) => {
+            web3.eth.personal.sign(account, message, (err, data) => {
                 cb(err, data);
             });
         }
