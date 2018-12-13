@@ -4,6 +4,7 @@ let web3Handler = require("./Web3Handler.js");
 let contract;
 const domainDNS = "https://xcontract.herokuapp.com";
 let clipboard = require("clipboard-polyfill");
+const noInjectedProviderFound = "no injected provider found, using localhost:8545";
 
 $(() =>
 {
@@ -24,11 +25,7 @@ $(() =>
     }
     else
     {
-        alert(
-            "no injected provider found, using localhost:8545," +
-            " please ensure your local node is running " +
-            "with rpc and rpccorsdomain enabled"
-        );
+        alert(noInjectedProviderFound);
     }
 
     function setWeb3(abi, contractAddress)
@@ -178,7 +175,6 @@ $(() =>
 
     function initTransaction(contract, txObj)
     {
-        console.log("here is the txOBj " + JSON.stringify(txObj.filledOutParams))
         try
         {
             web3Handler.executeContractFunction(contract, txObj, (data) =>
