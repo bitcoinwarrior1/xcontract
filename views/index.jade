@@ -79,16 +79,16 @@ html(lang='en')
             -var index = 0;
             each functionName in functionNames
               div(id="function" + index)
-                button(name=functionName, id=functionName + "&" + index) #{functionName}
-
+                - var count = functionParams[index].length
+                - var argPos = 1
+                button(name=functionName, id=functionName + "&" + index, value=count) #{functionName}
               if(functionParams[index] != "")
-                textarea(value=functionParams[index], placeholder = functionNames[index].toUpperCase() +
-                " parameters: " + functionParams[index] , id = index,
-                readonly = readOnlyAttribute[index])
+                each functionParam in functionParams[index]
+                  -var parsedParams = JSON.parse(functionParam)
+                  input(placeholder = parsedParams.name + " (" + parsedParams.type + ")", id = index + argPos)
+                  -argPos++
               else
-                textarea(value=functionParams[index], placeholder = functionNames[index].toUpperCase() +
-                " has no parameters", id = index,
-                readonly = readOnlyAttribute[index])
+                input(placeholder = functionNames[index].toUpperCase() + " has no parameters", readonly=true, id = index)
               -index++
 
       .twelve.columns

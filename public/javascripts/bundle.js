@@ -36618,7 +36618,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
 },{"process/browser.js":167,"timers":215}],216:[function(require,module,exports){
 (function (global){
-/*! https://mths.be/utf8js v2.0.0 by @mathias */
+/*! https://mths.be/utf8js v2.1.2 by @mathias */
 ;(function(root) {
 
 	// Detect free variables `exports`
@@ -36777,7 +36777,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
 
 		// 2-byte sequence
 		if ((byte1 & 0xE0) == 0xC0) {
-			var byte2 = readContinuationByte();
+			byte2 = readContinuationByte();
 			codePoint = ((byte1 & 0x1F) << 6) | byte2;
 			if (codePoint >= 0x80) {
 				return codePoint;
@@ -36804,7 +36804,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
 			byte2 = readContinuationByte();
 			byte3 = readContinuationByte();
 			byte4 = readContinuationByte();
-			codePoint = ((byte1 & 0x0F) << 0x12) | (byte2 << 0x0C) |
+			codePoint = ((byte1 & 0x07) << 0x12) | (byte2 << 0x0C) |
 				(byte3 << 0x06) | byte4;
 			if (codePoint >= 0x010000 && codePoint <= 0x10FFFF) {
 				return codePoint;
@@ -36832,7 +36832,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
 	/*--------------------------------------------------------------------------*/
 
 	var utf8 = {
-		'version': '2.0.0',
+		'version': '2.1.2',
 		'encode': utf8encode,
 		'decode': utf8decode
 	};
@@ -44402,37 +44402,53 @@ $(() =>
         //remove strings and get index number
         let functionParamPos = functionCalled.substring(functionCalled.indexOf("&"));
         let paramNumber = functionParamPos.replace(/^\D+/g, '');
+        let functionName = functionCalled.substring(0, functionCalled.indexOf("&"));
+        let functionObject = getFunctionObjectFromAbi(functionName, JSON.parse(abi));
+        let functionArgCount = functionObject.inputs.length;
         let txObj = {};
+        let parameters = [];
         //remove html index number from method call name
-        txObj.functionCalled = functionCalled.replace("&" + paramNumber, '');
+        txObj.functionCalled = functionName;
         txObj.abi = abi;
         txObj.contractAddress = contractAddress;
-
-        let param = $("#" + paramNumber).val();
-        let payable = false;
-        if(param != "")
+        //get the length of function args and add them to the param number
+        let start = parseInt(paramNumber) + 1;
+        let end = parseInt(functionArgCount) + start;
+        for(let i = start; i < end; i++)
         {
-            if(param.includes("payable"))
-            {
-                payable = true;
-            }
-            txObj.filledOutParams = param.split(",");
+            let filledParam = $("#" + i).val();
+            parameters.push(filledParam);
         }
-        else
+        txObj.isPayable = false;
+        if(JSON.stringify(functionObject).includes('"payable":true'))
         {
-            txObj.filledOutParams = null;
+            txObj.isPayable = true;
+            parameters.push('{"name":"value","type":"uint256"}');
         }
-        txObj.isPayable = payable;
+        txObj.filledOutParams = parameters;
         initTransaction(contract, txObj);
+    }
+
+    function getFunctionObjectFromAbi(functionName, abi)
+    {
+        for(let i = 0; i < abi.length; i++)
+        {
+            if(abi[i].name.includes(functionName))
+            {
+                return abi[i];
+            }
+        }
     }
 
     function initTransaction(contract, txObj)
     {
+        console.log("here is the txOBj " + JSON.stringify(txObj.filledOutParams))
         try
         {
-            web3Handler.executeContractFunction(contract, txObj, (data) => {
-                    console.log("tx data: " + data);
-                    alert("web3 response: " + data);
+            web3Handler.executeContractFunction(contract, txObj, (data) =>
+            {
+                console.log("tx data: " + data);
+                alert("web3 response: " + data);
             });
         }
         catch(exception)
@@ -44527,6 +44543,7 @@ module.exports = {
     executeContractFunction : (contract, txObj, cb) =>
     {
         let etherValue = 0;
+        console.log("is payable: " + txObj.isPayable)
         if(txObj.filledOutParams != null)
         {
             if(txObj.isPayable)

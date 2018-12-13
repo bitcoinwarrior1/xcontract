@@ -17,3 +17,8 @@ Dynamically creates a web3 transaction which triggers a specific function.
 ### function callContractFunction : (contract, functionName, params, callback)
 Issues a call to the contract function rather than a transaction. If transaction is needed then the transaction will be executed
 
+### HTTP POST '/api/addDappDetailsToServer/:address/:abi/:contractName'
+Allows you to add a contract to the server which can then be searched for and retrieved 
+
+### HTTP GET '/api/getDappDetailsFromAddress/:contractAddress'
+Get the name, abi and contract address object by providing a contract address of your choice. 

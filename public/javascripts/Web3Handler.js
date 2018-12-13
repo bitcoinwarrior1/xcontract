@@ -81,6 +81,7 @@ module.exports = {
     executeContractFunction : (contract, txObj, cb) =>
     {
         let etherValue = 0;
+        console.log("is payable: " + txObj.isPayable)
         if(txObj.filledOutParams != null)
         {
             if(txObj.isPayable)
