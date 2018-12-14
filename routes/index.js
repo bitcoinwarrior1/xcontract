@@ -37,37 +37,50 @@ function getRenderObjectDetails(contractAddress, abi, url)
 router.get("/api/:contractAddress", (req, res, next) =>
 {
     let contractAddress = req.params.contractAddress;
-    let url = req.protocol + "://" + req.get('host') + "/api/" + contractAddress;
-    let isInDB = false;
-    let renderObj = {
-        abiError: "PLEASE PASTE ABI HERE",
-        addressVal: contractAddress,
-        functionTitle: "Smart Contract Functions",
-        warning: "NO ABI FOUND",
-    };
-    getDappDataFromDB(contractAddress, (result) => {
-        if(result[0] != undefined)
+    try
+    {
+        let url = req.protocol + "://" + req.get('host') + "/api/" + contractAddress;
+        let renderObj = {
+            abiError: "PLEASE PASTE ABI HERE",
+            addressVal: contractAddress,
+            functionTitle: "Smart Contract Functions",
+            warning: "NO ABI FOUND",
+        };
+        getDappDataFromDB(contractAddress, (result) =>
         {
-            let abi = result[0].abi;
-            let contractAddress = result[0].contractAddress;
-            renderObj = getRenderObjectDetails(contractAddress, abi, url);
-            isInDB = true;
-        }
-        // can still get details if verified on etherscan
-        web3Handler.checkIfContractIsVerified(contractAddress, (err, data) => {
-            if(data.body.message === etherscanErrorMsg)
+            if(result[0] != undefined && typeof result[0].abi == "object")
             {
+                let abi = result[0].abi;
+                let contractAddress = result[0].contractAddress;
+                renderObj = getRenderObjectDetails(contractAddress, abi, url);
+            }
+            // can still get details if verified on etherscan
+            web3Handler.checkIfContractIsVerified(contractAddress, (err, data) => {
+                if(data.body.message === etherscanErrorMsg)
+                {
+                    res.render('index', renderObj);
+                }
+                else
+                {
+                    renderObj = getRenderObjectDetails(contractAddress, JSON.parse(data.body.result), url);
+                    renderObj.warning = verifiedOnEtherscanMsg;
+                }
                 res.render('index', renderObj);
-            }
-            else
-            {
-                renderObj = getRenderObjectDetails(contractAddress, JSON.parse(data.body.result), url);
-                renderObj.warning = verifiedOnEtherscanMsg;
-            }
-            res.render('index', renderObj);
-        });
+            });
 
-    });
+        });
+    }
+    catch(exception)
+    {
+        let renderObj = {
+            abiError: exception,
+            addressVal: contractAddress,
+            functionTitle: "Smart Contract Functions",
+            warning: "NO ABI FOUND",
+        };
+        res.render(renderObj);
+    }
+
 });
 
 //only for mainnet for now
