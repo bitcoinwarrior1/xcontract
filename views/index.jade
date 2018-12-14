@@ -78,17 +78,20 @@ html(lang='en')
           if(typeof (functionNames) != 'undefined' && typeof (functionParams) != 'undefined')
             -var index = 0;
             each functionName in functionNames
-              div(id="function" + index)
-                button(name=functionName, id=functionName + "&" + index) #{functionName}
-
+              - var idNumber = index * 1000
+              div(id="function" + idNumber)
+                - var count = functionParams[index].length
+                - var argPos = 1
+                button(name=functionName, id=functionName + "&" + idNumber, value=count) #{functionName}
               if(functionParams[index] != "")
-                textarea(value=functionParams[index], placeholder = functionNames[index].toUpperCase() +
-                " parameters: " + functionParams[index] , id = index,
-                readonly = readOnlyAttribute[index])
+                each functionParam in functionParams[index]
+                  -var parsedParams = JSON.parse(functionParam)
+                  -var paramText = parsedParams.name + " (" + parsedParams.type + ")"
+                  h6 #{paramText}
+                  input(id = idNumber + argPos)
+                  -argPos++
               else
-                textarea(value=functionParams[index], placeholder = functionNames[index].toUpperCase() +
-                " has no parameters", id = index,
-                readonly = readOnlyAttribute[index])
+                h6 #{functionNames[index].toUpperCase() + " has no parameters"}
               -index++
 
       .twelve.columns

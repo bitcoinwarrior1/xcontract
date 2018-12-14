@@ -147,8 +147,7 @@ router.post("/api/addDappDetailsToServer/:address/:abi/:contractName", (req, res
         abi: abi,
         contractName: contractName
     };
-    knex(DB_DAPP_TABLE).insert(dappObj).then((result) =>
-    {
+    knex(DB_DAPP_TABLE).insert(dappObj).then((result) => {
         res.send(result);
     }).catch((err) => {
         res.send(err);

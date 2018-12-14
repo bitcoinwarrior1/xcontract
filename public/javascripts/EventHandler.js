@@ -4,6 +4,7 @@ let web3Handler = require("./Web3Handler.js");
 let contract;
 const domainDNS = "https://xcontract.herokuapp.com";
 let clipboard = require("clipboard-polyfill");
+const noInjectedProviderFound = "no injected provider found, using localhost:8545";
 
 $(() =>
 {
@@ -24,11 +25,7 @@ $(() =>
     }
     else
     {
-        alert(
-            "no injected provider found, using localhost:8545," +
-            " please ensure your local node is running " +
-            "with rpc and rpccorsdomain enabled"
-        );
+        alert(noInjectedProviderFound);
     }
 
     function setWeb3(abi, contractAddress)
@@ -138,37 +135,52 @@ $(() =>
         //remove strings and get index number
         let functionParamPos = functionCalled.substring(functionCalled.indexOf("&"));
         let paramNumber = functionParamPos.replace(/^\D+/g, '');
+        let functionName = functionCalled.substring(0, functionCalled.indexOf("&"));
+        let functionObject = getFunctionObjectFromAbi(functionName, JSON.parse(abi));
+        let functionArgCount = functionObject.inputs.length;
         let txObj = {};
+        let parameters = [];
         //remove html index number from method call name
-        txObj.functionCalled = functionCalled.replace("&" + paramNumber, '');
+        txObj.functionCalled = functionName;
         txObj.abi = abi;
         txObj.contractAddress = contractAddress;
-
-        let param = $("#" + paramNumber).val();
-        let payable = false;
-        if(param != "")
+        //get the length of function args and add them to the param number
+        let start = parseInt(paramNumber) + 1;
+        let end = parseInt(functionArgCount) + start;
+        for(let i = start; i < end; i++)
         {
-            if(param.includes("payable"))
-            {
-                payable = true;
-            }
-            txObj.filledOutParams = param.split(",");
+            let filledParam = $("#" + i).val();
+            parameters.push(filledParam);
         }
-        else
+        txObj.isPayable = false;
+        if(JSON.stringify(functionObject).includes('"payable":true'))
         {
-            txObj.filledOutParams = null;
+            txObj.isPayable = true;
+            parameters.push('{"name":"value","type":"uint256"}');
         }
-        txObj.isPayable = payable;
+        txObj.filledOutParams = parameters;
         initTransaction(contract, txObj);
+    }
+
+    function getFunctionObjectFromAbi(functionName, abi)
+    {
+        for(let i = 0; i < abi.length; i++)
+        {
+            if(abi[i].name.includes(functionName))
+            {
+                return abi[i];
+            }
+        }
     }
 
     function initTransaction(contract, txObj)
     {
         try
         {
-            web3Handler.executeContractFunction(contract, txObj, (data) => {
-                    console.log("tx data: " + data);
-                    alert("web3 response: " + data);
+            web3Handler.executeContractFunction(contract, txObj, (data) =>
+            {
+                console.log("tx data: " + data);
+                alert("web3 response: " + data);
             });
         }
         catch(exception)

@@ -7,7 +7,6 @@ module.exports = {
     checkIfContractIsVerified : (contractAddress, cb) =>
     {
         let etherScanApi = "http://api.etherscan.io/api?module=contract&action=getabi&address=";
-
         request.get(etherScanApi + contractAddress, (error, data) =>
         {
             if(error)
@@ -81,31 +80,17 @@ module.exports = {
     executeContractFunction : (contract, txObj, cb) =>
     {
         let etherValue = 0;
-        if(txObj.filledOutParams != null)
+        if(txObj.isPayable)
         {
-            if(txObj.isPayable)
-            {
-                //last element is ether value
-                etherValue = parseInt(txObj.filledOutParams[txObj.filledOutParams.length - 1]);
-                txObj.filledOutParams.pop();
-                //TODO clean up logic
-                txObj.push({ value: etherValue });
-            }
-            contract[txObj.functionCalled](txObj.filledOutParams, (err, data) =>
-            {
-                if(err) throw err;
-                cb(data)
-            });
+            //last element is ether value
+            etherValue = parseInt(txObj.filledOutParams[txObj.filledOutParams.length - 1]);
+            txObj.filledOutParams.pop();
         }
-        else
+        contract[txObj.functionCalled](txObj.filledOutParams, { value: etherValue }, (err, data) =>
         {
-            contract[txObj.functionCalled]( (err, data) =>
-            {
-                if(err) throw err;
-                cb(data)
-            });
-        }
-
+            if(err) throw err;
+            cb(data)
+        });
     },
 
     checkAddressValidity : (web3, address) =>
@@ -165,10 +150,12 @@ module.exports = {
         });
     },
 
-    getName : (contract, cb) => {
+    getName : (contract, cb) =>
+    {
         try
         {
-            contract.name.call((err, name) => {
+            contract.name.call((err, name) =>
+            {
                 if(err) cb(err, null);
                 else cb(null, name);
             })

@@ -25179,21 +25179,27 @@ utils.intFromLE = intFromLE;
 
 },{"bn.js":22,"minimalistic-assert":154,"minimalistic-crypto-utils":155}],123:[function(require,module,exports){
 module.exports={
-  "_from": "elliptic@^6.2.3",
+  "_args": [
+    [
+      "elliptic@6.4.1",
+      "/Users/sangalli/Documents/projects/xcontract"
+    ]
+  ],
+  "_from": "elliptic@6.4.1",
   "_id": "elliptic@6.4.1",
   "_inBundle": false,
   "_integrity": "sha512-BsXLz5sqX8OHcsh7CqBMztyXARmGQ3LWPtGjJi6DiJHq5C/qvi9P3OqgswKSDftbu8+IoI/QDTAm2fFnQ9SZSQ==",
   "_location": "/elliptic",
   "_phantomChildren": {},
   "_requested": {
-    "type": "range",
+    "type": "version",
     "registry": true,
-    "raw": "elliptic@^6.2.3",
+    "raw": "elliptic@6.4.1",
     "name": "elliptic",
     "escapedName": "elliptic",
-    "rawSpec": "^6.2.3",
+    "rawSpec": "6.4.1",
     "saveSpec": null,
-    "fetchSpec": "^6.2.3"
+    "fetchSpec": "6.4.1"
   },
   "_requiredBy": [
     "/browserify-sign",
@@ -25201,9 +25207,8 @@ module.exports={
     "/secp256k1"
   ],
   "_resolved": "https://registry.npmjs.org/elliptic/-/elliptic-6.4.1.tgz",
-  "_shasum": "c2d0b7776911b86722c632c3c06c60f2f819939a",
-  "_spec": "elliptic@^6.2.3",
-  "_where": "/Users/sangalli/Documents/projects/xcontract/node_modules/secp256k1",
+  "_spec": "6.4.1",
+  "_where": "/Users/sangalli/Documents/projects/xcontract",
   "author": {
     "name": "Fedor Indutny",
     "email": "fedor@indutny.com"
@@ -25211,7 +25216,6 @@ module.exports={
   "bugs": {
     "url": "https://github.com/indutny/elliptic/issues"
   },
-  "bundleDependencies": false,
   "dependencies": {
     "bn.js": "^4.4.0",
     "brorand": "^1.0.1",
@@ -25221,7 +25225,6 @@ module.exports={
     "minimalistic-assert": "^1.0.0",
     "minimalistic-crypto-utils": "^1.0.0"
   },
-  "deprecated": false,
   "description": "EC cryptography",
   "devDependencies": {
     "brfs": "^1.4.3",
@@ -36618,7 +36621,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
 },{"process/browser.js":167,"timers":215}],216:[function(require,module,exports){
 (function (global){
-/*! https://mths.be/utf8js v2.0.0 by @mathias */
+/*! https://mths.be/utf8js v2.1.2 by @mathias */
 ;(function(root) {
 
 	// Detect free variables `exports`
@@ -36777,7 +36780,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
 
 		// 2-byte sequence
 		if ((byte1 & 0xE0) == 0xC0) {
-			var byte2 = readContinuationByte();
+			byte2 = readContinuationByte();
 			codePoint = ((byte1 & 0x1F) << 6) | byte2;
 			if (codePoint >= 0x80) {
 				return codePoint;
@@ -36804,7 +36807,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
 			byte2 = readContinuationByte();
 			byte3 = readContinuationByte();
 			byte4 = readContinuationByte();
-			codePoint = ((byte1 & 0x0F) << 0x12) | (byte2 << 0x0C) |
+			codePoint = ((byte1 & 0x07) << 0x12) | (byte2 << 0x0C) |
 				(byte3 << 0x06) | byte4;
 			if (codePoint >= 0x010000 && codePoint <= 0x10FFFF) {
 				return codePoint;
@@ -36832,7 +36835,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
 	/*--------------------------------------------------------------------------*/
 
 	var utf8 = {
-		'version': '2.0.0',
+		'version': '2.1.2',
 		'encode': utf8encode,
 		'decode': utf8decode
 	};
@@ -44268,6 +44271,7 @@ let web3Handler = require("./Web3Handler.js");
 let contract;
 const domainDNS = "https://xcontract.herokuapp.com";
 let clipboard = require("clipboard-polyfill");
+const noInjectedProviderFound = "no injected provider found, using localhost:8545";
 
 $(() =>
 {
@@ -44288,11 +44292,7 @@ $(() =>
     }
     else
     {
-        alert(
-            "no injected provider found, using localhost:8545," +
-            " please ensure your local node is running " +
-            "with rpc and rpccorsdomain enabled"
-        );
+        alert(noInjectedProviderFound);
     }
 
     function setWeb3(abi, contractAddress)
@@ -44402,37 +44402,52 @@ $(() =>
         //remove strings and get index number
         let functionParamPos = functionCalled.substring(functionCalled.indexOf("&"));
         let paramNumber = functionParamPos.replace(/^\D+/g, '');
+        let functionName = functionCalled.substring(0, functionCalled.indexOf("&"));
+        let functionObject = getFunctionObjectFromAbi(functionName, JSON.parse(abi));
+        let functionArgCount = functionObject.inputs.length;
         let txObj = {};
+        let parameters = [];
         //remove html index number from method call name
-        txObj.functionCalled = functionCalled.replace("&" + paramNumber, '');
+        txObj.functionCalled = functionName;
         txObj.abi = abi;
         txObj.contractAddress = contractAddress;
-
-        let param = $("#" + paramNumber).val();
-        let payable = false;
-        if(param != "")
+        //get the length of function args and add them to the param number
+        let start = parseInt(paramNumber) + 1;
+        let end = parseInt(functionArgCount) + start;
+        for(let i = start; i < end; i++)
         {
-            if(param.includes("payable"))
-            {
-                payable = true;
-            }
-            txObj.filledOutParams = param.split(",");
+            let filledParam = $("#" + i).val();
+            parameters.push(filledParam);
         }
-        else
+        txObj.isPayable = false;
+        if(JSON.stringify(functionObject).includes('"payable":true'))
         {
-            txObj.filledOutParams = null;
+            txObj.isPayable = true;
+            parameters.push('{"name":"value","type":"uint256"}');
         }
-        txObj.isPayable = payable;
+        txObj.filledOutParams = parameters;
         initTransaction(contract, txObj);
+    }
+
+    function getFunctionObjectFromAbi(functionName, abi)
+    {
+        for(let i = 0; i < abi.length; i++)
+        {
+            if(abi[i].name.includes(functionName))
+            {
+                return abi[i];
+            }
+        }
     }
 
     function initTransaction(contract, txObj)
     {
         try
         {
-            web3Handler.executeContractFunction(contract, txObj, (data) => {
-                    console.log("tx data: " + data);
-                    alert("web3 response: " + data);
+            web3Handler.executeContractFunction(contract, txObj, (data) =>
+            {
+                console.log("tx data: " + data);
+                alert("web3 response: " + data);
             });
         }
         catch(exception)
@@ -44453,7 +44468,6 @@ module.exports = {
     checkIfContractIsVerified : (contractAddress, cb) =>
     {
         let etherScanApi = "http://api.etherscan.io/api?module=contract&action=getabi&address=";
-
         request.get(etherScanApi + contractAddress, (error, data) =>
         {
             if(error)
@@ -44527,31 +44541,17 @@ module.exports = {
     executeContractFunction : (contract, txObj, cb) =>
     {
         let etherValue = 0;
-        if(txObj.filledOutParams != null)
+        if(txObj.isPayable)
         {
-            if(txObj.isPayable)
-            {
-                //last element is ether value
-                etherValue = parseInt(txObj.filledOutParams[txObj.filledOutParams.length - 1]);
-                txObj.filledOutParams.pop();
-                //TODO clean up logic
-                txObj.push({ value: etherValue });
-            }
-            contract[txObj.functionCalled](txObj.filledOutParams, (err, data) =>
-            {
-                if(err) throw err;
-                cb(data)
-            });
+            //last element is ether value
+            etherValue = parseInt(txObj.filledOutParams[txObj.filledOutParams.length - 1]);
+            txObj.filledOutParams.pop();
         }
-        else
+        contract[txObj.functionCalled](txObj.filledOutParams, { value: etherValue }, (err, data) =>
         {
-            contract[txObj.functionCalled]( (err, data) =>
-            {
-                if(err) throw err;
-                cb(data)
-            });
-        }
-
+            if(err) throw err;
+            cb(data)
+        });
     },
 
     checkAddressValidity : (web3, address) =>
@@ -44611,10 +44611,12 @@ module.exports = {
         });
     },
 
-    getName : (contract, cb) => {
+    getName : (contract, cb) =>
+    {
         try
         {
-            contract.name.call((err, name) => {
+            contract.name.call((err, name) =>
+            {
                 if(err) cb(err, null);
                 else cb(null, name);
             })
