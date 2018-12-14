@@ -7,6 +7,9 @@
     "bundle": "watchify ./public/javascripts/EventHandler -o ./public/javascripts/bundle.js",
     "test": "node ./tests/*.js"
   },
+  "engines": {
+    "node": "10.11.0"
+  },
   "dependencies": {
     "body-parser": "~1.17.1",
     "clipboard-polyfill": "^2.7.0",
