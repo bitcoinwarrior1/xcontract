@@ -48,9 +48,9 @@ router.get("/api/:contractAddress", (req, res, next) =>
         };
         getDappDataFromDB(contractAddress, (result) =>
         {
-            if(result[0] != undefined && typeof result[0].abi == "object")
+            if(result[0] != undefined)
             {
-                let abi = result[0].abi;
+                let abi = web3Handler.parseABI(result[0].abi);
                 let contractAddress = result[0].contractAddress;
                 renderObj = getRenderObjectDetails(contractAddress, abi, url);
             }
@@ -62,7 +62,8 @@ router.get("/api/:contractAddress", (req, res, next) =>
                 }
                 else
                 {
-                    renderObj = getRenderObjectDetails(contractAddress, JSON.parse(data.body.result), url);
+                    let abi = web3Handler.parseABI(data.body.result);
+                    renderObj = getRenderObjectDetails(contractAddress, abi, url);
                     renderObj.warning = verifiedOnEtherscanMsg;
                 }
                 res.render('index', renderObj);

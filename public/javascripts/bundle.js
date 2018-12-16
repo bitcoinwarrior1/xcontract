@@ -44389,8 +44389,8 @@ $(() =>
             window.location.href = "/api/" + contractAddress;
             return;
         }
-        let jsonABI = JSON.parse(abi);
-        setWeb3(jsonABI, contractAddress);
+        abi = web3Handler.parseABI(abi);
+        setWeb3(abi, contractAddress);
         let functionCalled = e.target.id;
         console.log("Button " + functionCalled + " was clicked!");
         extractTransactionInfo(functionCalled, abi, contractAddress);
@@ -44484,7 +44484,6 @@ module.exports = {
     extractAbiFunctions : (abi) =>
     {
         let arrayOfFunctionObjects = [];
-
         for(let i = 0; i < abi.length; i++)
         {
             if(abi[i].type == "function")
@@ -44563,7 +44562,7 @@ module.exports = {
     {
         try
         {
-            web3.eth.personal.sign(account, message, (err, data) => {
+            web3.eth.sign(account, message, (err, data) => {
                 cb(err, data);
             });
         }
@@ -44627,7 +44626,28 @@ module.exports = {
             console.log("no name defined: " + e);
         }
 
+    },
+
+    parseABI: (abi) =>
+    {
+        try
+        {
+            if(typeof abi == 'object')
+            {
+                return abi;
+            }
+            else
+            {
+                return JSON.parse(abi);
+            }
+        }
+        catch(exception)
+        {
+            console.log("JSON parsing issue: " + exception);
+            return {};
+        }
     }
+
 };
 
 },{"ethereumjs-util":124,"superagent":210}]},{},[272]);

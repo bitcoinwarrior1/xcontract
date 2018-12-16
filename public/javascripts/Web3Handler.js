@@ -23,7 +23,6 @@ module.exports = {
     extractAbiFunctions : (abi) =>
     {
         let arrayOfFunctionObjects = [];
-
         for(let i = 0; i < abi.length; i++)
         {
             if(abi[i].type == "function")
@@ -166,5 +165,26 @@ module.exports = {
             console.log("no name defined: " + e);
         }
 
+    },
+
+    parseABI: (abi) =>
+    {
+        try
+        {
+            if(typeof abi == 'object')
+            {
+                return abi;
+            }
+            else
+            {
+                return JSON.parse(abi);
+            }
+        }
+        catch(exception)
+        {
+            console.log("JSON parsing issue: " + exception);
+            return {};
+        }
     }
+
 };
