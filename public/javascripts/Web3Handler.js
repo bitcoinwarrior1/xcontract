@@ -85,7 +85,7 @@ module.exports = {
             etherValue = parseInt(txObj.filledOutParams[txObj.filledOutParams.length - 1]);
             txObj.filledOutParams.pop();
         }
-        contract[txObj.functionCalled](txObj.filledOutParams, { value: etherValue }, (err, data) =>
+        contract[txObj.functionCalled](...txObj.filledOutParams, { value: etherValue }, (err, data) =>
         {
             if(err) throw err;
             cb(data)

@@ -24,7 +24,7 @@
     "serve-favicon": "~2.4.2",
     "sqlite3": "^4.0.3",
     "superagent": "^3.5.2",
-    "web3": "^0.18.4"
+    "web3": "0.20.6"
   },
   "devDependencies": {
     "browserify": "^14.3.0",

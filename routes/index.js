@@ -55,7 +55,8 @@ router.get("/api/:contractAddress", (req, res, next) =>
                 renderObj = getRenderObjectDetails(contractAddress, abi, url);
             }
             // can still get details if verified on etherscan
-            web3Handler.checkIfContractIsVerified(contractAddress, (err, data) => {
+            web3Handler.checkIfContractIsVerified(contractAddress, (err, data) =>
+            {
                 if(data.body.message === etherscanErrorMsg)
                 {
                     res.render('index', renderObj);

@@ -38363,68 +38363,52 @@ SolidityCoder.prototype.encodeMultiWithOffset = function (types, solidityTypes, 
     return result;
 };
 
-// TODO: refactor whole encoding!
 SolidityCoder.prototype.encodeWithOffset = function (type, solidityType, encoded, offset) {
+    /* jshint maxcomplexity: 17 */
+    /* jshint maxdepth: 5 */
+
     var self = this;
-    if (solidityType.isDynamicArray(type)) {
-        return (function () {
-            // offset was already set
-            var nestedName = solidityType.nestedName(type);
-            var nestedStaticPartLength = solidityType.staticPartLength(nestedName);
-            var result = encoded[0];
+    var encodingMode={dynamic:1,static:2,other:3};
 
-            (function () {
-                var previousLength = 2; // in int
-                if (solidityType.isDynamicArray(nestedName)) {
-                    for (var i = 1; i < encoded.length; i++) {
-                        previousLength += +(encoded[i - 1])[0] || 0;
-                        result += f.formatInputInt(offset + i * nestedStaticPartLength + previousLength * 32).encode();
-                    }
+    var mode=(solidityType.isDynamicArray(type)?encodingMode.dynamic:(solidityType.isStaticArray(type)?encodingMode.static:encodingMode.other));
+
+    if(mode !== encodingMode.other){
+        var nestedName = solidityType.nestedName(type);
+        var nestedStaticPartLength = solidityType.staticPartLength(nestedName);
+        var result = (mode === encodingMode.dynamic ? encoded[0] : '');
+
+        if (solidityType.isDynamicArray(nestedName)) {
+            var previousLength = (mode === encodingMode.dynamic ? 2 : 0);
+
+            for (var i = 0; i < encoded.length; i++) {
+                // calculate length of previous item
+                if(mode === encodingMode.dynamic){
+                    previousLength += +(encoded[i - 1])[0] || 0;
                 }
-            })();
-
-            // first element is length, skip it
-            (function () {
-                for (var i = 0; i < encoded.length - 1; i++) {
-                    var additionalOffset = result / 2;
-                    result += self.encodeWithOffset(nestedName, solidityType, encoded[i + 1], offset +  additionalOffset);
+                else if(mode === encodingMode.static){
+                    previousLength += +(encoded[i - 1] || [])[0] || 0;
                 }
-            })();
-
-            return result;
-        })();
-
-    } else if (solidityType.isStaticArray(type)) {
-        return (function () {
-            var nestedName = solidityType.nestedName(type);
-            var nestedStaticPartLength = solidityType.staticPartLength(nestedName);
-            var result = "";
-
-
-            if (solidityType.isDynamicArray(nestedName)) {
-                (function () {
-                    var previousLength = 0; // in int
-                    for (var i = 0; i < encoded.length; i++) {
-                        // calculate length of previous item
-                        previousLength += +(encoded[i - 1] || [])[0] || 0;
-                        result += f.formatInputInt(offset + i * nestedStaticPartLength + previousLength * 32).encode();
-                    }
-                })();
+                result += f.formatInputInt(offset + i * nestedStaticPartLength + previousLength * 32).encode();
             }
+        }
 
-            (function () {
-                for (var i = 0; i < encoded.length; i++) {
-                    var additionalOffset = result / 2;
-                    result += self.encodeWithOffset(nestedName, solidityType, encoded[i], offset + additionalOffset);
-                }
-            })();
+        var len= (mode === encodingMode.dynamic ? encoded.length-1 : encoded.length);
+        for (var c = 0; c < len; c++) {
+            var additionalOffset = result / 2;
+            if(mode === encodingMode.dynamic){
+                result += self.encodeWithOffset(nestedName, solidityType, encoded[c + 1], offset +  additionalOffset);
+            }
+            else if(mode === encodingMode.static){
+                result += self.encodeWithOffset(nestedName, solidityType, encoded[c], offset + additionalOffset);
+            }
+        }
 
-            return result;
-        })();
+        return result;
     }
 
     return encoded;
 };
+
 
 /**
  * Should be used to decode bytes to plain param
@@ -39512,7 +39496,7 @@ var sha3 = require('./sha3.js');
 var utf8 = require('utf8');
 
 var unitMap = {
-    'noether':      '0',    
+    'noether':      '0',
     'wei':          '1',
     'kwei':         '1000',
     'Kwei':         '1000',
@@ -39531,8 +39515,8 @@ var unitMap = {
     'microether':   '1000000000000',
     'micro':        '1000000000000',
     'finney':       '1000000000000000',
-    'milliether':    '1000000000000000',
-    'milli':         '1000000000000000',
+    'milliether':   '1000000000000000',
+    'milli':        '1000000000000000',
     'ether':        '1000000000000000000',
     'kether':       '1000000000000000000000',
     'grand':        '1000000000000000000000',
@@ -39618,18 +39602,24 @@ var toAscii = function(hex) {
  *
  * @method fromUtf8
  * @param {String} string
- * @param {Number} optional padding
+ * @param {Boolean} allowZero to convert code point zero to 00 instead of end of string
  * @returns {String} hex representation of input string
  */
-var fromUtf8 = function(str) {
+var fromUtf8 = function(str, allowZero) {
     str = utf8.encode(str);
     var hex = "";
     for(var i = 0; i < str.length; i++) {
         var code = str.charCodeAt(i);
-        if (code === 0)
-            break;
-        var n = code.toString(16);
-        hex += n.length < 2 ? '0' + n : n;
+        if (code === 0) {
+            if (allowZero) {
+                hex += '00';
+            } else {
+                break;
+            }
+        } else {
+            var n = code.toString(16);
+            hex += n.length < 2 ? '0' + n : n;
+        }
     }
 
     return "0x" + hex;
@@ -39678,15 +39668,22 @@ var transformToFullName = function (json) {
  * @returns {String} display name for function/event eg. multiply(uint256) -> multiply
  */
 var extractDisplayName = function (name) {
-    var length = name.indexOf('(');
-    return length !== -1 ? name.substr(0, length) : name;
+    var stBracket = name.indexOf('(');
+    var endBracket = name.indexOf(')');
+    return (stBracket !== -1 && endBracket !== -1) ? name.substr(0, stBracket) : name;
 };
 
-/// @returns overloaded part of function/event name
+/**
+ * Should be called to get type name of contract function
+ *
+ * @method extractTypeName
+ * @param {String} name of function/event
+ * @returns {String} type name for function/event eg. multiply(uint256) -> uint256
+ */
 var extractTypeName = function (name) {
-    /// TODO: make it invulnerable
-    var length = name.indexOf('(');
-    return length !== -1 ? name.substr(length + 1, name.length - 1 - (length + 1)).replace(' ', '') : "";
+    var stBracket = name.indexOf('(');
+    var endBracket = name.indexOf(')');
+    return (stBracket !== -1 && endBracket !== -1) ? name.substr(stBracket + 1, endBracket - stBracket - 1).replace(' ', '') : "";
 };
 
 /**
@@ -39732,7 +39729,7 @@ var toHex = function (val) {
     if (isBigNumber(val))
         return fromDecimal(val);
 
-    if (isObject(val))
+    if (typeof val === 'object')
         return fromUtf8(JSON.stringify(val));
 
     // if its a negative number, pass it through fromDecimal
@@ -39742,7 +39739,7 @@ var toHex = function (val) {
         else if(val.indexOf('0x') === 0)
             return val;
         else if (!isFinite(val))
-            return fromAscii(val);
+            return fromUtf8(val,1);
     }
 
     return fromDecimal(val);
@@ -39800,7 +39797,6 @@ var fromWei = function(number, unit) {
  * - kwei       femtoether     babbage
  * - mwei       picoether      lovelace
  * - gwei       nanoether      shannon      nano
- * - --         microether     szabo        micro
  * - --         microether     szabo        micro
  * - --         milliether     finney       milli
  * - ether      --             --
@@ -39893,18 +39889,18 @@ var isAddress = function (address) {
  * @param {String} address the given HEX adress
  * @return {Boolean}
 */
-var isChecksumAddress = function (address) {    
+var isChecksumAddress = function (address) {
     // Check each case
     address = address.replace('0x','');
     var addressHash = sha3(address.toLowerCase());
 
-    for (var i = 0; i < 40; i++ ) { 
+    for (var i = 0; i < 40; i++ ) {
         // the nth letter should be uppercase if the nth digit of casemap is 1
         if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
             return false;
         }
     }
-    return true;    
+    return true;
 };
 
 
@@ -39916,15 +39912,15 @@ var isChecksumAddress = function (address) {
  * @param {String} address the given HEX adress
  * @return {String}
 */
-var toChecksumAddress = function (address) { 
+var toChecksumAddress = function (address) {
     if (typeof address === 'undefined') return '';
 
     address = address.toLowerCase().replace('0x','');
     var addressHash = sha3(address);
     var checksumAddress = '0x';
 
-    for (var i = 0; i < address.length; i++ ) { 
-        // If ith character is 9 to f then make it uppercase 
+    for (var i = 0; i < address.length; i++ ) {
+        // If ith character is 9 to f then make it uppercase
         if (parseInt(addressHash[i], 16) > 7) {
           checksumAddress += address[i].toUpperCase();
         } else {
@@ -39996,7 +39992,7 @@ var isFunction = function (object) {
  * @return {Boolean}
  */
 var isObject = function (object) {
-    return typeof object === 'object';
+    return object !== null && !(Array.isArray(object)) && typeof object === 'object';
 };
 
 /**
@@ -40018,7 +40014,7 @@ var isBoolean = function (object) {
  * @return {Boolean}
  */
 var isArray = function (object) {
-    return object instanceof Array;
+    return Array.isArray(object);
 };
 
 /**
@@ -40048,7 +40044,7 @@ var isBloom = function (bloom) {
         return false;
     } else if (/^(0x)?[0-9a-f]{512}$/.test(bloom) || /^(0x)?[0-9A-F]{512}$/.test(bloom)) {
         return true;
-    } 
+    }
     return false;
 };
 
@@ -40064,7 +40060,7 @@ var isTopic = function (topic) {
         return false;
     } else if (/^(0x)?[0-9a-f]{64}$/.test(topic) || /^(0x)?[0-9A-F]{64}$/.test(topic)) {
         return true;
-    } 
+    }
     return false;
 };
 
@@ -40103,7 +40099,7 @@ module.exports = {
 
 },{"./sha3.js":240,"bignumber.js":20,"utf8":216}],242:[function(require,module,exports){
 module.exports={
-    "version": "0.18.4"
+    "version": "0.20.6"
 }
 
 },{}],243:[function(require,module,exports){
@@ -40209,6 +40205,8 @@ Web3.prototype.isAddress = utils.isAddress;
 Web3.prototype.isChecksumAddress = utils.isChecksumAddress;
 Web3.prototype.toChecksumAddress = utils.toChecksumAddress;
 Web3.prototype.isIBAN = utils.isIBAN;
+Web3.prototype.padLeft = utils.padLeft;
+Web3.prototype.padRight = utils.padRight;
 
 
 Web3.prototype.sha3 = function(string, options) {
@@ -40275,7 +40273,7 @@ module.exports = Web3;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file allevents.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2014
@@ -40311,16 +40309,15 @@ AllSolidityEvents.prototype.encode = function (options) {
 
 AllSolidityEvents.prototype.decode = function (data) {
     data.data = data.data || '';
-    data.topics = data.topics || [];
 
-    var eventTopic = data.topics[0].slice(2);
+
+    var eventTopic = (utils.isArray(data.topics) && utils.isString(data.topics[0])) ? data.topics[0].slice(2) : '';
     var match = this._json.filter(function (j) {
         return eventTopic === sha3(utils.transformToFullName(j));
     })[0];
 
     if (!match) { // cannot find matching event?
-        console.warn('cannot find event for log');
-        return data;
+        return formatters.outputLogFormatter(data);
     }
 
     var event = new SolidityEvent(this._requestManager, match, this._address);
@@ -40337,7 +40334,7 @@ AllSolidityEvents.prototype.execute = function (options, callback) {
 
     var o = this.encode(options);
     var formatter = this.decode.bind(this);
-    return new Filter(this._requestManager, o, watches.eth(), formatter, callback);
+    return new Filter(o, 'eth', this._requestManager, watches.eth(), formatter, callback);
 };
 
 AllSolidityEvents.prototype.attachToContract = function (contract) {
@@ -40536,7 +40533,7 @@ var checkForContractAddress = function(contract, callback){
             } else {
 
                 contract._eth.getTransactionReceipt(contract.transactionHash, function(e, receipt){
-                    if(receipt && !callbackFired) {
+                    if(receipt && receipt.blockHash && !callbackFired) {
 
                         contract._eth.getCode(receipt.contractAddress, function(e, code){
                             /*jshint maxcomplexity: 6 */
@@ -40597,7 +40594,7 @@ var ContractFactory = function (eth, abi) {
      */
     this.new = function () {
         /*jshint maxcomplexity: 7 */
-        
+
         var contract = new Contract(this.eth, this.abi);
 
         // parse arguments
@@ -40629,7 +40626,7 @@ var ContractFactory = function (eth, abi) {
 
         if (callback) {
 
-            // wait for the contract address adn check if the code was deployed
+            // wait for the contract address and check if the code was deployed
             this.eth.sendTransaction(options, function (err, hash) {
                 if (err) {
                     callback(err);
@@ -40752,8 +40749,11 @@ module.exports = ContractFactory;
  */
 
 module.exports = {
-    InvalidNumberOfParams: function () {
-        return new Error('Invalid number of input parameters');
+    InvalidNumberOfSolidityArgs: function () {
+        return new Error('Invalid number of arguments to Solidity function');
+    },
+    InvalidNumberOfRPCParams: function () {
+        return new Error('Invalid number of input parameters to RPC method');
     },
     InvalidConnection: function (host){
         return new Error('CONNECTION ERROR: Couldn\'t connect to node '+ host +'.');
@@ -40787,7 +40787,7 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file event.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2014
@@ -40858,7 +40858,7 @@ SolidityEvent.prototype.signature = function () {
 
 /**
  * Should be used to encode indexed params and options to one final object
- * 
+ *
  * @method encode
  * @param {Object} indexed
  * @param {Object} options
@@ -40889,7 +40889,7 @@ SolidityEvent.prototype.encode = function (indexed, options) {
         if (value === undefined || value === null) {
             return null;
         }
-        
+
         if (utils.isArray(value)) {
             return value.map(function (v) {
                 return '0x' + coder.encodeParam(i.type, v);
@@ -40911,17 +40911,18 @@ SolidityEvent.prototype.encode = function (indexed, options) {
  * @return {Object} result object with decoded indexed && not indexed params
  */
 SolidityEvent.prototype.decode = function (data) {
- 
+
     data.data = data.data || '';
     data.topics = data.topics || [];
 
+
     var argTopics = this._anonymous ? data.topics : data.topics.slice(1);
     var indexedData = argTopics.map(function (topics) { return topics.slice(2); }).join("");
-    var indexedParams = coder.decodeParams(this.types(true), indexedData); 
+    var indexedParams = coder.decodeParams(this.types(true), indexedData);
 
     var notIndexedData = data.data.slice(2);
     var notIndexedParams = coder.decodeParams(this.types(false), notIndexedData);
-    
+
     var result = formatters.outputLogFormatter(data);
     result.event = this.displayName();
     result.address = data.address;
@@ -40956,10 +40957,10 @@ SolidityEvent.prototype.execute = function (indexed, options, callback) {
             indexed = {};
         }
     }
-    
+
     var o = this.encode(indexed, options);
     var formatter = this.decode.bind(this);
-    return new Filter(this._requestManager, o, watches.eth(), formatter, callback);
+    return new Filter(o, 'eth', this._requestManager, watches.eth(), formatter, callback);
 };
 
 /**
@@ -41082,7 +41083,8 @@ var toTopic = function(value){
 /// This method should be called on options object, to verify deprecated properties && lazy load dynamic ones
 /// @param should be string or object
 /// @returns options string or object
-var getOptions = function (options) {
+var getOptions = function (options, type) {
+    /*jshint maxcomplexity: 6 */
 
     if (utils.isString(options)) {
         return options;
@@ -41090,20 +41092,27 @@ var getOptions = function (options) {
 
     options = options || {};
 
-    // make sure topics, get converted to hex
-    options.topics = options.topics || [];
-    options.topics = options.topics.map(function(topic){
-        return (utils.isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
-    });
 
-    return {
-        topics: options.topics,
-        from: options.from,
-        to: options.to,
-        address: options.address,
-        fromBlock: formatters.inputBlockNumberFormatter(options.fromBlock),
-        toBlock: formatters.inputBlockNumberFormatter(options.toBlock)
-    };
+    switch(type) {
+        case 'eth':
+
+            // make sure topics, get converted to hex
+            options.topics = options.topics || [];
+            options.topics = options.topics.map(function(topic){
+                return (utils.isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
+            });
+
+            return {
+                topics: options.topics,
+                from: options.from,
+                to: options.to,
+                address: options.address,
+                fromBlock: formatters.inputBlockNumberFormatter(options.fromBlock),
+                toBlock: formatters.inputBlockNumberFormatter(options.toBlock)
+            };
+        case 'shh':
+            return options;
+    }
 };
 
 /**
@@ -41111,7 +41120,7 @@ Adds the callback and sets up the methods, to iterate over the results.
 
 @method getLogsAtStart
 @param {Object} self
-@param {funciton}
+@param {function} callback
 */
 var getLogsAtStart = function(self, callback){
     // call getFilterLogs for the first watch callback start
@@ -41163,7 +41172,7 @@ var pollFilter = function(self) {
 
 };
 
-var Filter = function (requestManager, options, methods, formatter, callback, filterCreationErrorCallback) {
+var Filter = function (options, type, requestManager, methods, formatter, callback, filterCreationErrorCallback) {
     var self = this;
     var implementation = {};
     methods.forEach(function (method) {
@@ -41171,7 +41180,7 @@ var Filter = function (requestManager, options, methods, formatter, callback, fi
         method.attachToObject(implementation);
     });
     this.requestManager = requestManager;
-    this.options = getOptions(options);
+    this.options = getOptions(options, type);
     this.implementation = implementation;
     this.filterId = null;
     this.callbacks = [];
@@ -41183,7 +41192,9 @@ var Filter = function (requestManager, options, methods, formatter, callback, fi
             self.callbacks.forEach(function(cb){
                 cb(error);
             });
-            filterCreationErrorCallback(error);
+            if (typeof filterCreationErrorCallback === 'function') {
+              filterCreationErrorCallback(error);
+            }
         } else {
             self.filterId = id;
 
@@ -41290,6 +41301,9 @@ module.exports = Filter;
  * @author Fabian Vogelsteller <fabian@ethdev.com>
  * @date 2015
  */
+
+'use strict';
+
 
 var utils = require('../utils/utils');
 var config = require('../utils/config');
@@ -41460,11 +41474,11 @@ var outputBlockFormatter = function(block) {
  * @returns {Object} log
 */
 var outputLogFormatter = function(log) {
-    if(log.blockNumber !== null)
+    if(log.blockNumber)
         log.blockNumber = utils.toDecimal(log.blockNumber);
-    if(log.transactionIndex !== null)
+    if(log.transactionIndex)
         log.transactionIndex = utils.toDecimal(log.transactionIndex);
-    if(log.logIndex !== null)
+    if(log.logIndex)
         log.logIndex = utils.toDecimal(log.logIndex);
 
     return log;
@@ -41543,6 +41557,9 @@ var inputAddressFormatter = function (address) {
 
 
 var outputSyncingFormatter = function(result) {
+    if (!result) {
+        return result;
+    }
 
     result.startingBlock = utils.toDecimal(result.startingBlock);
     result.currentBlock = utils.toDecimal(result.currentBlock);
@@ -41597,6 +41614,7 @@ module.exports = {
 
 var coder = require('../solidity/coder');
 var utils = require('../utils/utils');
+var errors = require('./errors');
 var formatters = require('./formatters');
 var sha3 = require('../utils/sha3');
 
@@ -41630,6 +41648,26 @@ SolidityFunction.prototype.extractDefaultBlock = function (args) {
 };
 
 /**
+ * Should be called to check if the number of arguments is correct
+ *
+ * @method validateArgs
+ * @param {Array} arguments
+ * @throws {Error} if it is not
+ */
+SolidityFunction.prototype.validateArgs = function (args) {
+    var inputArgs = args.filter(function (a) {
+      // filter the options object but not arguments that are arrays
+      return !( (utils.isObject(a) === true) &&
+                (utils.isArray(a) === false) &&
+                (utils.isBigNumber(a) === false)
+              );
+    });
+    if (inputArgs.length !== this._inputTypes.length) {
+        throw errors.InvalidNumberOfSolidityArgs();
+    }
+};
+
+/**
  * Should be used to create payload from arguments
  *
  * @method toPayload
@@ -41641,6 +41679,7 @@ SolidityFunction.prototype.toPayload = function (args) {
     if (args.length > this._inputTypes.length && utils.isObject(args[args.length -1])) {
         options = args[args.length - 1];
     }
+    this.validateArgs(args);
     options.to = this._address;
     options.data = '0x' + this.signature() + coder.encodeParams(this._inputTypes, args);
     return options;
@@ -41835,8 +41874,8 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 
 module.exports = SolidityFunction;
 
-
-},{"../solidity/coder":228,"../utils/sha3":240,"../utils/utils":241,"./formatters":251}],253:[function(require,module,exports){
+},{"../solidity/coder":228,"../utils/sha3":240,"../utils/utils":241,"./errors":247,"./formatters":251}],253:[function(require,module,exports){
+(function (Buffer){
 /*
     This file is part of web3.js.
 
@@ -41861,17 +41900,16 @@ module.exports = SolidityFunction;
  * @date 2015
  */
 
-
 var errors = require('./errors');
 
 // workaround to use httpprovider in different envs
 
 // browser
 if (typeof window !== 'undefined' && window.XMLHttpRequest) {
-    XMLHttpRequest = window.XMLHttpRequest; // jshint ignore: line
+  XMLHttpRequest = window.XMLHttpRequest; // jshint ignore: line
 // node
 } else {
-    XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore: line
+  XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore: line
 }
 
 var XHR2 = require('xhr2'); // jshint ignore: line
@@ -41879,9 +41917,12 @@ var XHR2 = require('xhr2'); // jshint ignore: line
 /**
  * HttpProvider should be used to send rpc calls over http
  */
-var HttpProvider = function (host, timeout) {
-    this.host = host || 'http://localhost:8545';
-    this.timeout = timeout || 0;
+var HttpProvider = function (host, timeout, user, password, headers) {
+  this.host = host || 'http://localhost:8545';
+  this.timeout = timeout || 0;
+  this.user = user;
+  this.password = password;
+  this.headers = headers;
 };
 
 /**
@@ -41892,18 +41933,26 @@ var HttpProvider = function (host, timeout) {
  * @return {XMLHttpRequest} object
  */
 HttpProvider.prototype.prepareRequest = function (async) {
-    var request;
+  var request;
 
-    if (async) {
-      request = new XHR2();
-      request.timeout = this.timeout;
-    }else {
-      request = new XMLHttpRequest();
-    }
+  if (async) {
+    request = new XHR2();
+    request.timeout = this.timeout;
+  } else {
+    request = new XMLHttpRequest();
+  }
 
-    request.open('POST', this.host, async);
-    request.setRequestHeader('Content-Type','application/json');
-    return request;
+  request.open('POST', this.host, async);
+  if (this.user && this.password) {
+    var auth = 'Basic ' + new Buffer(this.user + ':' + this.password).toString('base64');
+    request.setRequestHeader('Authorization', auth);
+  } request.setRequestHeader('Content-Type', 'application/json');
+  if(this.headers) {
+      this.headers.forEach(function(header) {
+          request.setRequestHeader(header.name, header.value);
+      });
+  }
+  return request;
 };
 
 /**
@@ -41914,23 +41963,23 @@ HttpProvider.prototype.prepareRequest = function (async) {
  * @return {Object} result
  */
 HttpProvider.prototype.send = function (payload) {
-    var request = this.prepareRequest(false);
+  var request = this.prepareRequest(false);
 
-    try {
-        request.send(JSON.stringify(payload));
-    } catch(error) {
-        throw errors.InvalidConnection(this.host);
-    }
+  try {
+    request.send(JSON.stringify(payload));
+  } catch (error) {
+    throw errors.InvalidConnection(this.host);
+  }
 
-    var result = request.responseText;
+  var result = request.responseText;
 
-    try {
-        result = JSON.parse(result);
-    } catch(e) {
-        throw errors.InvalidResponse(request.responseText);
-    }
+  try {
+    result = JSON.parse(result);
+  } catch (e) {
+    throw errors.InvalidResponse(request.responseText);
+  }
 
-    return result;
+  return result;
 };
 
 /**
@@ -41941,32 +41990,32 @@ HttpProvider.prototype.send = function (payload) {
  * @param {Function} callback triggered on end with (err, result)
  */
 HttpProvider.prototype.sendAsync = function (payload, callback) {
-    var request = this.prepareRequest(true);
+  var request = this.prepareRequest(true);
 
-    request.onreadystatechange = function() {
-        if (request.readyState === 4 && request.timeout !== 1) {
-            var result = request.responseText;
-            var error = null;
+  request.onreadystatechange = function () {
+    if (request.readyState === 4 && request.timeout !== 1) {
+      var result = request.responseText;
+      var error = null;
 
-            try {
-                result = JSON.parse(result);
-            } catch(e) {
-                error = errors.InvalidResponse(request.responseText);
-            }
+      try {
+        result = JSON.parse(result);
+      } catch (e) {
+        error = errors.InvalidResponse(request.responseText);
+      }
 
-            callback(error, result);
-        }
-    };
-
-    request.ontimeout = function() {
-      callback(errors.ConnectionTimeout(this.timeout));
-    };
-
-    try {
-        request.send(JSON.stringify(payload));
-    } catch(error) {
-        callback(errors.InvalidConnection(this.host));
+      callback(error, result);
     }
+  };
+
+  request.ontimeout = function () {
+    callback(errors.ConnectionTimeout(this.timeout));
+  };
+
+  try {
+    request.send(JSON.stringify(payload));
+  } catch (error) {
+    callback(errors.InvalidConnection(this.host));
+  }
 };
 
 /**
@@ -41975,23 +42024,24 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
  * @method isConnected
  * @return {Boolean} returns true if request haven't failed. Otherwise false
  */
-HttpProvider.prototype.isConnected = function() {
-    try {
-        this.send({
-            id: 9999999999,
-            jsonrpc: '2.0',
-            method: 'net_listening',
-            params: []
-        });
-        return true;
-    } catch(e) {
-        return false;
-    }
+HttpProvider.prototype.isConnected = function () {
+  try {
+    this.send({
+      id: 9999999999,
+      jsonrpc: '2.0',
+      method: 'net_listening',
+      params: []
+    });
+    return true;
+  } catch (e) {
+    return false;
+  }
 };
 
 module.exports = HttpProvider;
 
-},{"./errors":247,"xhr2":271,"xmlhttprequest":238}],254:[function(require,module,exports){
+}).call(this,require("buffer").Buffer)
+},{"./errors":247,"buffer":53,"xhr2":271,"xmlhttprequest":238}],254:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -42588,7 +42638,7 @@ Method.prototype.extractCallback = function (args) {
  */
 Method.prototype.validateArgs = function (args) {
     if (args.length !== this.params) {
-        throw errors.InvalidNumberOfParams();
+        throw errors.InvalidNumberOfRPCParams();
     }
 };
 
@@ -42681,7 +42731,6 @@ Method.prototype.request = function () {
 };
 
 module.exports = Method;
-
 
 },{"../utils/utils":241,"./errors":247}],258:[function(require,module,exports){
 /*
@@ -43089,8 +43138,8 @@ Eth.prototype.contract = function (abi) {
     return factory;
 };
 
-Eth.prototype.filter = function (fil, callback) {
-    return new Filter(this._requestManager, fil, watches.eth(), formatters.outputLogFormatter, callback);
+Eth.prototype.filter = function (options, callback, filterCreationErrorCallback) {
+    return new Filter(options, 'eth', this._requestManager, watches.eth(), formatters.outputLogFormatter, callback, filterCreationErrorCallback);
 };
 
 Eth.prototype.namereg = function () {
@@ -43215,6 +43264,25 @@ var methods = function () {
         inputFormatter: [null]
     });
 
+    var importRawKey = new Method({
+        name: 'importRawKey',
+		call: 'personal_importRawKey',
+		params: 2
+    });
+
+    var sign = new Method({
+        name: 'sign',
+		call: 'personal_sign',
+		params: 3,
+		inputFormatter: [null, formatters.inputAddressFormatter, null]
+    });
+
+    var ecRecover = new Method({
+        name: 'ecRecover',
+		call: 'personal_ecRecover',
+		params: 2
+    });
+
     var unlockAccount = new Method({
         name: 'unlockAccount',
         call: 'personal_unlockAccount',
@@ -43238,7 +43306,10 @@ var methods = function () {
 
     return [
         newAccount,
+        importRawKey,
         unlockAccount,
+        ecRecover,
+        sign,
         sendTransaction,
         lockAccount
     ];
@@ -43275,12 +43346,12 @@ module.exports = Personal;
 */
 /** @file shh.js
  * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- * @date 2015
+ *   Fabian Vogelsteller <fabian@ethereum.org>
+ *   Marek Kotewicz <marek@ethcore.io>
+ * @date 2017
  */
 
 var Method = require('../method');
-var formatters = require('../formatters');
 var Filter = require('../filter');
 var watches = require('./watches');
 
@@ -43289,62 +43360,120 @@ var Shh = function (web3) {
 
     var self = this;
 
-    methods().forEach(function(method) { 
+    methods().forEach(function(method) {
         method.attachToObject(self);
         method.setRequestManager(self._requestManager);
     });
 };
 
-Shh.prototype.filter = function (fil, callback) {
-    return new Filter(this._requestManager, fil, watches.shh(), formatters.outputPostFormatter, callback);
+Shh.prototype.newMessageFilter = function (options, callback, filterCreationErrorCallback) {
+    return new Filter(options, 'shh', this._requestManager, watches.shh(), null, callback, filterCreationErrorCallback);
 };
 
-var methods = function () { 
-
-    var post = new Method({
-        name: 'post', 
-        call: 'shh_post', 
-        params: 1,
-        inputFormatter: [formatters.inputPostFormatter]
-    });
-
-    var newIdentity = new Method({
-        name: 'newIdentity',
-        call: 'shh_newIdentity',
-        params: 0
-    });
-
-    var hasIdentity = new Method({
-        name: 'hasIdentity',
-        call: 'shh_hasIdentity',
-        params: 1
-    });
-
-    var newGroup = new Method({
-        name: 'newGroup',
-        call: 'shh_newGroup',
-        params: 0
-    });
-
-    var addToGroup = new Method({
-        name: 'addToGroup',
-        call: 'shh_addToGroup',
-        params: 0
-    });
+var methods = function () {
 
     return [
-        post,
-        newIdentity,
-        hasIdentity,
-        newGroup,
-        addToGroup
+        new Method({
+            name: 'version',
+            call: 'shh_version',
+            params: 0
+        }),
+        new Method({
+            name: 'info',
+            call: 'shh_info',
+            params: 0
+        }),
+        new Method({
+            name: 'setMaxMessageSize',
+            call: 'shh_setMaxMessageSize',
+            params: 1
+        }),
+        new Method({
+            name: 'setMinPoW',
+            call: 'shh_setMinPoW',
+            params: 1
+        }),
+        new Method({
+            name: 'markTrustedPeer',
+            call: 'shh_markTrustedPeer',
+            params: 1
+        }),
+        new Method({
+            name: 'newKeyPair',
+            call: 'shh_newKeyPair',
+            params: 0
+        }),
+        new Method({
+            name: 'addPrivateKey',
+            call: 'shh_addPrivateKey',
+            params: 1
+        }),
+        new Method({
+            name: 'deleteKeyPair',
+            call: 'shh_deleteKeyPair',
+            params: 1
+        }),
+        new Method({
+            name: 'hasKeyPair',
+            call: 'shh_hasKeyPair',
+            params: 1
+        }),
+        new Method({
+            name: 'getPublicKey',
+            call: 'shh_getPublicKey',
+            params: 1
+        }),
+        new Method({
+            name: 'getPrivateKey',
+            call: 'shh_getPrivateKey',
+            params: 1
+        }),
+        new Method({
+            name: 'newSymKey',
+            call: 'shh_newSymKey',
+            params: 0
+        }),
+        new Method({
+            name: 'addSymKey',
+            call: 'shh_addSymKey',
+            params: 1
+        }),
+        new Method({
+            name: 'generateSymKeyFromPassword',
+            call: 'shh_generateSymKeyFromPassword',
+            params: 1
+        }),
+        new Method({
+            name: 'hasSymKey',
+            call: 'shh_hasSymKey',
+            params: 1
+        }),
+        new Method({
+            name: 'getSymKey',
+            call: 'shh_getSymKey',
+            params: 1
+        }),
+        new Method({
+            name: 'deleteSymKey',
+            call: 'shh_deleteSymKey',
+            params: 1
+        }),
+
+        // subscribe and unsubscribe missing
+
+        new Method({
+            name: 'post',
+            call: 'shh_post',
+            params: 1,
+            inputFormatter: [null]
+        })
     ];
 };
 
 module.exports = Shh;
 
 
-},{"../filter":250,"../formatters":251,"../method":257,"./watches":264}],263:[function(require,module,exports){
+},{"../filter":250,"../method":257,"./watches":264}],263:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -43569,35 +43698,28 @@ var eth = function () {
 
 /// @returns an array of objects describing web3.shh.watch api methods
 var shh = function () {
-    var newFilter = new Method({
-        name: 'newFilter',
-        call: 'shh_newFilter',
-        params: 1
-    });
-
-    var uninstallFilter = new Method({
-        name: 'uninstallFilter',
-        call: 'shh_uninstallFilter',
-        params: 1
-    });
-
-    var getLogs = new Method({
-        name: 'getLogs',
-        call: 'shh_getMessages',
-        params: 1
-    });
-
-    var poll = new Method({
-        name: 'poll',
-        call: 'shh_getFilterChanges',
-        params: 1
-    });
 
     return [
-        newFilter,
-        uninstallFilter,
-        getLogs,
-        poll
+        new Method({
+            name: 'newFilter',
+            call: 'shh_newMessageFilter',
+            params: 1
+        }),
+        new Method({
+            name: 'uninstallFilter',
+            call: 'shh_deleteMessageFilter',
+            params: 1
+        }),
+        new Method({
+            name: 'getLogs',
+            call: 'shh_getFilterMessages',
+            params: 1
+        }),
+        new Method({
+            name: 'poll',
+            call: 'shh_getFilterMessages',
+            params: 1
+        })
     ];
 };
 
@@ -44546,7 +44668,7 @@ module.exports = {
             etherValue = parseInt(txObj.filledOutParams[txObj.filledOutParams.length - 1]);
             txObj.filledOutParams.pop();
         }
-        contract[txObj.functionCalled](txObj.filledOutParams, { value: etherValue }, (err, data) =>
+        contract[txObj.functionCalled](...txObj.filledOutParams, { value: etherValue }, (err, data) =>
         {
             if(err) throw err;
             cb(data)
