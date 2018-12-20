@@ -167,7 +167,7 @@ module.exports = {
 
     },
 
-    parseABI: (abi) =>
+    parseABIToJSON: (abi) =>
     {
         try
         {
@@ -184,6 +184,26 @@ module.exports = {
         {
             console.log("JSON parsing issue: " + exception);
             return {};
+        }
+    },
+
+    parseABIToString: (abi) =>
+    {
+        try
+        {
+            if(typeof abi == 'string')
+            {
+                return abi;
+            }
+            else
+            {
+                return JSON.stringify(abi);
+            }
+        }
+        catch(exception)
+        {
+            console.log("JSON parsing issue: " + exception);
+            return "";
         }
     }
 

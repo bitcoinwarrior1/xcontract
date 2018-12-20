@@ -122,7 +122,7 @@ $(() =>
             window.location.href = "/api/" + contractAddress;
             return;
         }
-        abi = web3Handler.parseABI(abi);
+        abi = web3Handler.parseABIToJSON(abi);
         setWeb3(abi, contractAddress);
         let functionCalled = e.target.id;
         console.log("Button " + functionCalled + " was clicked!");

@@ -23,7 +23,7 @@ function getRenderObjectDetails(contractAddress, abi, url)
     //add dapp into db so that user doesn't need to type the abi string anymore
     addDappToDatabase(abi, contractAddress, (result) => { console.log(result) });
     return {
-        abiVal: JSON.stringify(abi), //this is a bit dangerous, but without strong types hard to do better
+        abiVal: web3Handler.parseABIToString(abi),
         addressVal: contractAddress,
         functionNames: functionNameAndParamObj.names,
         functionParams: functionNameAndParamObj.params,
@@ -50,7 +50,7 @@ router.get("/api/:contractAddress", (req, res, next) =>
         {
             if(result[0] != undefined)
             {
-                let abi = web3Handler.parseABI(result[0].abi);
+                let abi = web3Handler.parseABIToJSON(result[0].abi);
                 let contractAddress = result[0].contractAddress;
                 renderObj = getRenderObjectDetails(contractAddress, abi, url);
             }
@@ -63,7 +63,7 @@ router.get("/api/:contractAddress", (req, res, next) =>
                 }
                 else
                 {
-                    let abi = web3Handler.parseABI(data.body.result);
+                    let abi = web3Handler.parseABIToJSON(data.body.result);
                     renderObj = getRenderObjectDetails(contractAddress, abi, url);
                     renderObj.warning = verifiedOnEtherscanMsg;
                 }
@@ -92,7 +92,7 @@ function addDappToDatabase(abi, contractAddress, cb)
     let dappObj = {
         dappName: contractAddress,
         contractAddress: contractAddress,
-        abi: abi
+        abi: web3Handler.parseABIToJSON(abi)
     };
     web3Handler.getName(contract, (err, name) => {
         if(!err) {
