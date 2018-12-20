@@ -44629,8 +44629,10 @@ module.exports = {
             let functionName = abiFunc.name;
             let functionParams = [];
             //for each specific function parameters
-            for(let input of abiFunc.inputs) functionParams.push(JSON.stringify(input));
-
+            for(let input of abiFunc.inputs)
+            {
+                functionParams.push(input);
+            }
             //create jade elements for each function with name and param
             functionNameFields.push(functionName);
             functionParamFields.push(functionParams);
@@ -44646,15 +44648,16 @@ module.exports = {
                 //add ability to attach ether to transaction
                 if(JSON.stringify(abiFunc).includes('"payable":true'))
                 {
-                    functionParams.push('{"name" : Optional_Ether_Amount, "type": uint256}');
+                    functionParams.push({
+                        "name":"Optional_Ether_Amount",
+                        "type":"uint256"
+                    });
                 }
             }
         }
         nameAndParamObj.names = functionNameFields;
         nameAndParamObj.params = functionParamFields;
         nameAndParamObj.readOnly = readOnlyParamInputs;
-
-        console.log(functionParamFields);
 
         return nameAndParamObj;
     },
@@ -44767,6 +44770,26 @@ module.exports = {
         {
             console.log("JSON parsing issue: " + exception);
             return {};
+        }
+    },
+
+    parseABIToString: (abi) =>
+    {
+        try
+        {
+            if(typeof abi == 'string')
+            {
+                return abi;
+            }
+            else
+            {
+                return JSON.stringify(abi);
+            }
+        }
+        catch(exception)
+        {
+            console.log("JSON parsing issue: " + exception);
+            return "";
         }
     }
 

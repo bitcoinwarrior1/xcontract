@@ -130,7 +130,7 @@ function logContactInteraction(timestamp, contractAddress)
 router.get('/api/:abi/:address', (req, res, next) =>
 {
     //parameters
-    let abi = JSON.parse(req.params.abi);
+    let abi = web3Handler.parseABIToJSON(req.params.abi);
     let contractAddress = req.params.address;
     //sets up function calls to contract from UI
     web3Handler.checkIfContractIsVerified(contractAddress, (err, data) =>

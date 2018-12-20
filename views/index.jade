@@ -71,7 +71,6 @@ html(lang='en')
               button#copyToClipboard Copy to Clipboard
             if(typeof (addressVal) != 'undefined')
               button#etherScanURLButton Etherscan
-
         #paramAndFunctionDiv
           h6 #{functionTitle}
           #functionsDiv
@@ -85,8 +84,7 @@ html(lang='en')
                 button(name=functionName, id=functionName + "&" + idNumber, value=count) #{functionName}
               if(functionParams[index] != "")
                 each functionParam in functionParams[index]
-                  -var parsedParams = JSON.parse(functionParam)
-                  -var paramText = parsedParams.name + " (" + parsedParams.type + ")"
+                  -var paramText = functionParam.name + " (" + functionParam.type + ")"
                   h6 #{paramText}
                   input(id = idNumber + argPos)
                   -argPos++
