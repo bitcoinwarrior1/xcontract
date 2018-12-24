@@ -44560,9 +44560,12 @@ $(() =>
     {
         for(let i = 0; i < abi.length; i++)
         {
-            if(abi[i].name.includes(functionName))
+            if(abi[i].name != undefined)
             {
-                return abi[i];
+                if(abi[i].name.includes(functionName))
+                {
+                    return abi[i];
+                }
             }
         }
     }
