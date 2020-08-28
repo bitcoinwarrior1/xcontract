@@ -4,7 +4,7 @@ let web3Handler = require("../public/javascripts/Web3Handler.js");
 let knexConfig = require('../knex/knexfile');
 let knex = require('knex')(knexConfig[process.env.NODE_ENV || "development"]);
 let Web3 = require("web3");
-let web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/llyrtzQ3YhkdESt2Fzrk'));
+let web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/da3717f25f824cc1baa32d812386d93f'));
 const DB_DAPP_TABLE = 'dapptable';
 const etherscanErrorMsg = "NOTOK";
 const verifiedOnEtherscanMsg = "Contract verified on Etherscan";
@@ -46,30 +46,46 @@ router.get("/api/:contractAddress", (req, res, next) =>
             functionTitle: "Smart Contract Functions",
             warning: "NO ABI FOUND",
         };
-        getDappDataFromDB(contractAddress, (result) =>
-        {
-            if(result[0] != undefined)
-            {
-                let abi = web3Handler.parseABIToJSON(result[0].abi);
-                let contractAddress = result[0].contractAddress;
+        web3Handler.checkIfContractIsVerified(contractAddress, (err, data) => {
+            if(data.body.message.includes(etherscanErrorMsg)) {
+                //No etherscan data, try DB
+                getDappDataFromDB(contractAddress, (err, result) => {
+                    if(err || result.length === 0) { //no db entries, use the decompiler instead
+                        web3.eth.getCode(contractAddress, (err, data) => {
+                            if(err) {
+                                renderObj.warning = "Bytecode not found!";
+                                res.render('index', renderObj);
+                            } else {
+                                let functionSignatures = web3Handler.getFunctionSignaturesFromBytecode(data);
+                                let functionNameAndParamObj = web3Handler.getContractFunctionNamesAndParamsFromResolvedFunctionSignatures(functionSignatures);
+                                let abi = web3Handler.functionDetailsToABI(functionNameAndParamObj);
+                                res.render('index', {
+                                    abiVal: web3Handler.parseABIToString(abi),
+                                    addressVal: contractAddress,
+                                    functionNames: functionNameAndParamObj.names,
+                                    functionParams: functionNameAndParamObj.params,
+                                    functionTitle: "Smart Contract Functions",
+                                    readOnlyAttribute: functionNameAndParamObj.readOnly,
+                                    url: url,
+                                    warning: "No ABI or source provided, relying on decompiler"
+                                });
+                            }
+                        })
+                    }
+                    else
+                    {
+                        let abi = web3Handler.parseABIToJSON(result[0].abi);
+                        let contractAddress = result[0].contractAddress;
+                        renderObj = getRenderObjectDetails(contractAddress, abi, url);
+                        return res.render('index', renderObj);
+                    }
+                });
+            } else {
+                let abi = web3Handler.parseABIToJSON(data.body.result);
                 renderObj = getRenderObjectDetails(contractAddress, abi, url);
-            }
-            // can still get details if verified on etherscan
-            web3Handler.checkIfContractIsVerified(contractAddress, (err, data) =>
-            {
-                if(data.body.message === etherscanErrorMsg)
-                {
-                    res.render('index', renderObj);
-                }
-                else
-                {
-                    let abi = web3Handler.parseABIToJSON(data.body.result);
-                    renderObj = getRenderObjectDetails(contractAddress, abi, url);
-                    renderObj.warning = verifiedOnEtherscanMsg;
-                }
+                renderObj.warning = verifiedOnEtherscanMsg;
                 res.render('index', renderObj);
-            });
-
+            }
         });
     }
     catch(exception)
@@ -109,9 +125,9 @@ function addDappToDatabase(abi, contractAddress, cb)
 function getDappDataFromDB(contractAddress, cb)
 {
     knex(DB_DAPP_TABLE).select().where({ contractAddress: contractAddress }).then((data) => {
-        cb(data);
+        cb(null, data);
     }).catch((err) => {
-        cb(err);
+        cb(err, null);
     });
 }
 

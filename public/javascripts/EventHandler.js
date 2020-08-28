@@ -150,12 +150,14 @@ $(() =>
         for(let i = start; i < end; i++)
         {
             let filledParam = $("#" + i).val();
-            if(filledParam.includes(","))
-            {
-                //if an array, cast it
-                filledParam = filledParam.split(",");
+            if(filledParam !== undefined) {
+                if(filledParam.includes(","))
+                {
+                    //if an array, cast it
+                    filledParam = filledParam.split(",");
+                }
+                parameters.push(filledParam);
             }
-            parameters.push(filledParam);
         }
         txObj.isPayable = false;
         if(JSON.stringify(functionObject).includes('"payable":true'))

@@ -1,5 +1,6 @@
-let request = require("superagent");
-let utils = require("ethereumjs-util");
+const request = require("superagent");
+const utils = require("ethereumjs-util");
+const { EVM } = require("evm");
 
 module.exports = {
 
@@ -18,6 +19,48 @@ module.exports = {
                 cb(null, data);
             }
         });
+    },
+
+    getFunctionSignaturesFromBytecode: (bytecode) => {
+        return new EVM(bytecode).getFunctions();
+    },
+
+    functionDetailsToABI: (nameAndParamObj) => {
+        let ABI = [];
+        for(let i = 0; i < nameAndParamObj.names.length; i++) {
+            let func = {};
+            func.inputs = [nameAndParamObj.params[i]];
+            func.type = "function";
+            func.name = nameAndParamObj.names[i];
+            ABI.push(func);
+        }
+        return ABI;
+    },
+
+    getContractFunctionNamesAndParamsFromResolvedFunctionSignatures: (functionSignatures) => {
+        let nameAndParamObj = {};
+        let functionNameFields = [];
+        let functionParamFields = [];
+        let readOnlyParamInputs = [];
+        for(let func of functionSignatures) {
+            functionNameFields.push(func.substring(0, func.indexOf("(")));
+            const functionParams = func.substring(func.indexOf("(") + 1, func.indexOf(")")).split(",");
+            let funcParamObject = {};
+            if(functionParams[0] !== "") {
+                funcParamObject = functionParams.map((param) => {
+                    return {
+                        "name": "unknown",
+                        "type": param
+                    }
+                });
+            }
+            functionParamFields.push(funcParamObject);
+            readOnlyParamInputs.push(false); //TODO figure it out
+        }
+        nameAndParamObj.names = functionNameFields;
+        nameAndParamObj.params = functionParamFields;
+        nameAndParamObj.readOnly = readOnlyParamInputs;
+        return nameAndParamObj;
     },
 
     extractAbiFunctions : (abi) =>
