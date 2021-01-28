@@ -11,9 +11,3 @@ https://xcontract.herokuapp.com/api/[%7B"constant":false,"inputs":[%7B"name":"ve
 
 #### Using other networks (testnet for example)
 Install Metamask and select the network or use a custom link for your node
-
-
-# Donations
-If you support the cause, we could certainly use donations to help fund development:
-
-0xbc8dAfeacA658Ae0857C80D8Aa6dE4D487577c63
